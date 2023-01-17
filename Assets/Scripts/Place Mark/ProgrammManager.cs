@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
@@ -6,19 +5,19 @@ using UnityEngine.XR.ARSubsystems;
 
 public class ProgrammManager : MonoBehaviour
 {
-    public bool placedMap = false;
-    
     [SerializeField] private GameObject PlaneMarkerPrefab;
     [SerializeField] private GameObject PlacedObjectPrefab;
 
     private ARRaycastManager ARRaycastManagerScript;
+    private bool placedMap = false;
+
     void Start()
     {
         ARRaycastManagerScript = FindObjectOfType<ARRaycastManager>();
         PlaneMarkerPrefab.SetActive(false);
+        PlacedObjectPrefab.SetActive(false);
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (!placedMap)
@@ -38,8 +37,8 @@ public class ProgrammManager : MonoBehaviour
         }
         if (Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began)
         {
-            Instantiate(PlacedObjectPrefab, hits[0].pose.position, PlacedObjectPrefab.transform.rotation);
-            PlaneMarkerPrefab.SetActive(true);
+            Instantiate(PlacedObjectPrefab, hits[0].pose.position, Quaternion.identity);
+            PlaneMarkerPrefab.SetActive(false);
             placedMap = true;
         }
     }
