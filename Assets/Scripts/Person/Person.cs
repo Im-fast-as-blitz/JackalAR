@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PersonScr : MonoBehaviour
+public class Person : MonoBehaviour
 {
     [SerializeField] private GameObject moveCircle;
     [SerializeField] private GameObject attackCircle;
@@ -24,11 +24,6 @@ public class PersonScr : MonoBehaviour
         _pos_x = 0;
     }
 
-    void Update()
-    {
-        
-    }
-
     private GameObject CreateMovement(Vector3 addPos)
     {
         GameObject result = Instantiate(moveCircle, transform.position, Quaternion.identity);
@@ -38,7 +33,7 @@ public class PersonScr : MonoBehaviour
 
     public void GenerateMovements()
     {
-        moveCircle.SetActive(true);
+        //moveCircle.SetActive(true);
         _moveCircles.Add(CreateMovement(new Vector3(-2, 0, 0)));
         _moveCircles.Add(CreateMovement(new Vector3(0, 0, 2)));
         _moveCircles.Add(CreateMovement(new Vector3(0, 0, -2)));
@@ -46,7 +41,8 @@ public class PersonScr : MonoBehaviour
         _moveCircles.Add(CreateMovement(new Vector3(-2, 0, -2)));
         _moveCircles.Add(CreateMovement(new Vector3(2, 0, 2)));
         _moveCircles.Add(CreateMovement(new Vector3(2, 0, -2)));
-        moveCircle.transform.position = transform.position + (new Vector3(2, 0, 0) * transform.localScale.x);
+        _moveCircles.Add(CreateMovement(new Vector3(2, 0, 0)));
+        //moveCircle.transform.position = transform.position + (new Vector3(2, 0, 0) * transform.localScale.x);
     }
 
     public void CleanUpMovements(Vector3 newPos)
@@ -57,7 +53,7 @@ public class PersonScr : MonoBehaviour
             Destroy(circle);
         }
         _moveCircles.Clear();
-        moveCircle.transform.localPosition = new Vector3(0, 0, 0);
-        moveCircle.SetActive(false);
+        //moveCircle.transform.localPosition = new Vector3(0, 0, 0);
+        //moveCircle.SetActive(false);
     }
 }
