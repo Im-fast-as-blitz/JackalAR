@@ -90,6 +90,7 @@ public class GameManagerScr : MonoBehaviour
         
         planeMarkerPrefab.SetActive(false);
         //placedObjectPrefab.SetActive(false);
+        //BuildPlayingField(new Vector3(0, 0, 0));
     }
     
     void Update()
@@ -100,7 +101,7 @@ public class GameManagerScr : MonoBehaviour
         }
         else
         {
-            DetechedMovePerson();
+            DetachedMovePerson();
         }
     }
     
@@ -115,15 +116,17 @@ public class GameManagerScr : MonoBehaviour
         }
         if (Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began)
         {
-            GameObject person = Instantiate(placedObjectPrefab, hits[0].pose.position, Quaternion.identity);
+            Vector3 gamePos = hits[0].pose.position + new Vector3(0, 0.1f, 0);
+            GameObject person = Instantiate(placedObjectPrefab, gamePos, Quaternion.identity);
+            person.GetComponent<Person>().currGame = CurrentGame;
             person.SetActive(true);
             planeMarkerPrefab.SetActive(false);
-            BuildPlayingField(hits[0].pose.position);
+            BuildPlayingField(gamePos);
             _placedMap = true;
         }
     }
 
-    void DetechedMovePerson()
+    void DetachedMovePerson()
     {
         if (Input.touchCount > 0)
         {
