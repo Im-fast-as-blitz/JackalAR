@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -26,18 +27,18 @@ public class Person : MonoBehaviour
     void Start()
     {
         _moveCircles = new List<GameObject>();
-        _pos = new Vector3(1, 0, 1);
+        _pos = new Vector3(2, 0, 2);
         transform.position += _pos * 0.1f;
     }
 
     private bool OnWaterCard(Vector3 pos)
     {
-        return !(currGame.PlayingField[(int)pos.x, (int)pos.z] is EmptyCard);
+        return currGame.PlayingField[(int)pos.x, (int)pos.z] is not EmptyCard;
     }
     
     private bool OnEmptyCard(Vector3 pos)
     {
-        return !(currGame.PlayingField[(int)pos.x, (int)pos.z] is WaterCard);
+        return currGame.PlayingField[(int)pos.x, (int)pos.z] is not WaterCard;
     }
 
     private void CreateMovement(Vector3 addPos, PossibilityToWalk func)
@@ -54,10 +55,10 @@ public class Person : MonoBehaviour
     public void GenerateMovements()
     {
         PossibilityToWalk func = OnEmptyCard;
-        if (currGame.PlayingField[(int)_pos.x, (int)_pos.y] is EmptyCard)
+        if (currGame.PlayingField[(int)_pos.x, (int)_pos.z] is EmptyCard)
         {
             func = OnEmptyCard;
-        } else if (currGame.PlayingField[(int)_pos.x, (int)_pos.y] is WaterCard)
+        } else if (currGame.PlayingField[(int)_pos.x, (int)_pos.z] is WaterCard)
         {
             func = OnWaterCard;
         }
@@ -71,7 +72,7 @@ public class Person : MonoBehaviour
         CreateMovement(new Vector3(1, 0, 0), func);
     }
 
-    public void CleanUpMovements(Vector3 newPos)
+    public void Move(Vector3 newPos)
     {
         Vector3 posChanges = transform.position - newPos;
         if (posChanges.x < 0)
@@ -88,7 +89,12 @@ public class Person : MonoBehaviour
         {
             --_pos.z;
         }
-        
+
+        if (!currGame.PlayingField[(int)_pos.x, (int)_pos.z].IsOpen)
+        {
+            currGame.PlayingField[(int)_pos.x, (int)_pos.z].Open();
+        }
+
         transform.position = newPos;
         foreach (var circle in _moveCircles)
         {

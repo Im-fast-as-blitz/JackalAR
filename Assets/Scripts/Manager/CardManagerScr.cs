@@ -24,6 +24,22 @@ public class Card
 
     public Card() { }
 
+    public void Open()
+    {
+        IsOpen = true;
+        Material gOMaterial = Resources.Load(LogoPath, typeof(Material)) as Material;
+        if (gOMaterial)
+        {
+            OwnGO.GetComponent<Renderer>().material = gOMaterial;
+        }
+        else
+        {
+            throw new Exception("Can't find path while opening");
+        }
+        OpenAction();
+        StepAction();
+    }
+
     public virtual void OpenAction() { }
     public virtual void StepAction() { }
     
