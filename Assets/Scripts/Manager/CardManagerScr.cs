@@ -26,6 +26,11 @@ public class Card
 
     public virtual void OpenAction() { }
     public virtual void StepAction() { }
+
+    public void UpdateLogo()
+    {
+        OwnGO.GetComponent<CardGOBehaviourScr>().UpdateLogo();
+    }
     
     public object NewObj() 
     {
@@ -45,10 +50,37 @@ public class EmptyCard : Card
 
 public class WaterCard : Card
 {
+    public Ship OwnShip = null;
+    
     public WaterCard()
     {
         LogoPath = "Cards/water";
     }
+    
+    public void LoadShipLogo()
+    {
+        OwnGO.GetComponent<CardGOBehaviourScr>().LoadShipLogo();
+    }
+
+    public void MoveShip(int x, int y, Game currGame)
+    {
+        if (OwnShip == null)
+        {
+            throw new Exception("Error: water card haven't ship");
+        }
+        
+        WaterCard waterCardToMove = currGame.PlayingField[x, y] as WaterCard;
+        if (waterCardToMove == null)
+        {
+            throw new Exception("Error: attempt to move the ship to the non water card");
+        }
+
+        waterCardToMove.OwnShip = OwnShip;
+        OwnShip = null;
+        UpdateLogo();
+        waterCardToMove.LoadShipLogo();
+    }
+    
     public override void OpenAction() { }
     public override void StepAction() { }
 }

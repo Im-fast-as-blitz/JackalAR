@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
@@ -14,13 +15,14 @@ public class Game
     public Game()
     {
         FillAndShufflePlayingField();
+        PlaceShips();
     }
 
     private void FillAndShufflePlayingField()
     {
         // Fill by water cards
-        int firstDim = PlayingFieldFirstDim;
-        int secondDim = PlayingFieldSecondDim;
+        const int firstDim = PlayingFieldFirstDim;
+        const int secondDim = PlayingFieldSecondDim;
         for (int j = 0; j < secondDim; j += secondDim - 1)
         {
             for (int i = 0; i < firstDim; i++)
@@ -68,6 +70,20 @@ public class Game
             }
         }
     }
+
+    private void PlaceShips()
+    {
+        foreach (var pair in Ships.AllShips)
+        {
+            WaterCard waterCard = PlayingField[pair.Value.Position.x, pair.Value.Position.y] as WaterCard;
+            if (waterCard == null)
+            {
+                throw new Exception("Wrong ship or water card position");
+            }
+            waterCard.OwnShip = pair.Value;
+            waterCard.LoadShipLogo();
+        }
+    }
 }
 
 public class GameManagerScr : MonoBehaviour
@@ -85,6 +101,7 @@ public class GameManagerScr : MonoBehaviour
     
     void Start()
     {
+        BuildPlayingField(new Vector3(0f, 0f, 0f));
         CurrentGame = new Game();
         _arRaycastManagerScript = FindObjectOfType<ARRaycastManager>();
         
@@ -100,7 +117,7 @@ public class GameManagerScr : MonoBehaviour
         }
         else
         {
-            DetechedMovePerson();
+            DetachedMovePerson();
         }
     }
     
@@ -123,7 +140,7 @@ public class GameManagerScr : MonoBehaviour
         }
     }
 
-    void DetechedMovePerson()
+    void DetachedMovePerson()
     {
         if (Input.touchCount > 0)
         {
@@ -173,7 +190,7 @@ public class GameManagerScr : MonoBehaviour
                 CurrentGame.GOCards[i, j] = cardGO;
                 
                 CardGOInfo gOInfo = cardGO.GetComponent<CardGOInfo>();
-                gOInfo.FieldPosition = new IntVector2(i, j);
+                gOInfo.FieldPosition = new Helpers.IntVector2(i, j);
 
                 Card ownCard = CurrentGame.PlayingField[i, j];
                 gOInfo.OwnCard = ownCard;
