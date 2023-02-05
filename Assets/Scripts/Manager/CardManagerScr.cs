@@ -90,11 +90,40 @@ public static class Cards
     public static List<Helpers.PairCardInt> AllCards = new List<Helpers.PairCardInt>();
 }
 
+public class Ship
+{
+    public string LogoPath;
+    public List<Person> Figures = new List<Person>();
+    public Helpers.IntVector2 Position;
+
+    public Ship(string logoPath, Helpers.IntVector2 position)
+    {
+        LogoPath = logoPath;
+        Position = position;
+    }
+}
+
+public static class Ships
+{
+    public static Dictionary<string, Ship> AllShips = new Dictionary<string, Ship>();
+    
+    public static void GenerateShips()
+    {
+        Ships.AllShips.Add("white", new Ship("Ships/white", new Helpers.IntVector2(6, 0)));
+        Ships.AllShips.Add("black", new Ship("Ships/black", new Helpers.IntVector2(0, 6)));
+        Ships.AllShips.Add("red", new Ship("Ships/red", new Helpers.IntVector2(12, 6)));
+        Ships.AllShips.Add("yellow", new Ship("Ships/yellow", new Helpers.IntVector2(6, 12)));
+    }
+}
+
 public class CardManagerScr : MonoBehaviour
 {
     public void Awake()
     {   // Total 169 cards (52 water cards + 117 other). Water must stay first
         Cards.AllCards.Add(new Helpers.PairCardInt(new WaterCard(), 52));
         Cards.AllCards.Add(new Helpers.PairCardInt(new EmptyCard(), 117));
+        Ships.GenerateShips();
     }
 }
+
+

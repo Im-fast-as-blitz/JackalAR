@@ -81,7 +81,6 @@ public class Game
                 throw new Exception("Wrong ship or water card position");
             }
             waterCard.OwnShip = pair.Value;
-            waterCard.LoadShipLogo();
         }
     }
 }
@@ -101,7 +100,7 @@ public class GameManagerScr : MonoBehaviour
     
     void Start()
     {
-        BuildPlayingField(new Vector3(0f, 0f, 0f));
+//        BuildPlayingField(new Vector3(0f, 0f, 0f));
         CurrentGame = new Game();
         _arRaycastManagerScript = FindObjectOfType<ARRaycastManager>();
         
@@ -166,10 +165,10 @@ public class GameManagerScr : MonoBehaviour
 
     void OnApplicationQuit()
     {
-        foreach (GameObject gO in CurrentGame.GOCards)
-        {
-            Destroy(gO);
-        }
+        // foreach (GameObject gO in CurrentGame.GOCards)
+        // {
+        //     Destroy(gO);
+        // }
     }
     
     void BuildPlayingField(Vector3 firstCardPosition)
@@ -198,6 +197,10 @@ public class GameManagerScr : MonoBehaviour
                 if (ownCard is WaterCard)
                 {
                     cardGO.GetComponent<CardGOBehaviourScr>().Open();
+                    if ((ownCard as WaterCard).OwnShip != null)
+                    {
+                        cardGO.GetComponent<CardGOBehaviourScr>().LoadShipLogo();
+                    }
                 }
             }
         }
