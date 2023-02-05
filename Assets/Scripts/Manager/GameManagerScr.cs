@@ -78,16 +78,22 @@ public class GameManagerScr : MonoBehaviour
     [SerializeField] private GameObject planeMarkerPrefab;
     [SerializeField] private GameObject placedObjectPrefab;
     [SerializeField] private Camera arCamera;
+    [SerializeField] private GameObject startText;
 
     private ARRaycastManager _arRaycastManagerScript;
     private bool _placedMap = false;
     private Person _personScr;
-    
+    private LayerMask _ignoreMask;
+
+    private Person.Command _currCommand = Person.Command.GREEN;
+
     void Start()
     {
-        CurrentGame = new Game();
         _arRaycastManagerScript = FindObjectOfType<ARRaycastManager>();
+        _ignoreMask = LayerMask.NameToLayer("Person");
         
+        CurrentGame = new Game();
+
         planeMarkerPrefab.SetActive(false);
     }
     
@@ -114,10 +120,20 @@ public class GameManagerScr : MonoBehaviour
         }
         if (Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began)
         {
+            startText.SetActive(false);
             Vector3 gamePos = hits[0].pose.position + new Vector3(0, 0.01f, 0);
             GameObject person = Instantiate(placedObjectPrefab, gamePos, Quaternion.identity);
             person.GetComponent<Person>().currGame = CurrentGame;
             person.SetActive(true);
+            
+            //Enemy
+            person = Instantiate(placedObjectPrefab, gamePos, Quaternion.identity);
+            //person.GetComponent<Renderer>().material = Resources.Load("Person/Red", typeof(Material)) as Material;
+            person.GetComponent<Person>().currGame = CurrentGame;
+            person.GetComponent<Person>().commandType = Person.Command.RED;
+            person.SetActive(true);
+            //
+            
             planeMarkerPrefab.SetActive(false);
             BuildPlayingField(gamePos);
             _placedMap = true;
@@ -133,16 +149,33 @@ public class GameManagerScr : MonoBehaviour
             Ray ray = arCamera.ScreenPointToRay(touch.position);
             RaycastHit hitObject;
 
-            if (Physics.Raycast(ray, out hitObject))
+            if (Physics.Raycast(ray, out hitObject, _ignoreMask))
             {
                 if (hitObject.collider.CompareTag("Person"))
                 {
-                    _personScr = hitObject.collider.gameObject.GetComponent<Person>();
-                    _personScr.GenerateMovements();
+                    Person currPerson = hitObject.collider.gameObject.GetComponent<Person>();
+                    if (currPerson.commandType == _currCommand)
+                    {
+                        //TODO Tap again on person
+                        _personScr = currPerson;
+                        _personScr.gameObject.layer = LayerMask.NameToLayer("Default");
+                        _ignoreMask = ~LayerMask.NameToLayer("Person");
+                        _personScr.GenerateMovements();
+                    }
                 } else if (hitObject.collider.CompareTag("Movement"))
                 {
                     _personScr.Move(hitObject.collider.gameObject.transform.position);
+                    _personScr.gameObject.layer = LayerMask.NameToLayer("Person");
+                    _ignoreMask = LayerMask.NameToLayer("Person");
                     _personScr = null;
+                    if (_currCommand == Person.Command.GREEN)
+                    {
+                        _currCommand = Person.Command.RED;
+                    }
+                    else
+                    {
+                        _currCommand = Person.Command.GREEN;
+                    }
                 }
             }
         }

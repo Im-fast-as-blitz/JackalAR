@@ -7,7 +7,7 @@ public class Card
 {
     public GameObject OwnGO;
     public string LogoPath;
-    public List<Person> Figures = new List<Person>();
+    public List<Person> Figures = new List<Person>() {null, null, null};
     public bool IsOpen = false;
 
     public Card(string logoPath)
