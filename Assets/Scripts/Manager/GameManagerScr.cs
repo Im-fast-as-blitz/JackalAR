@@ -83,14 +83,14 @@ public class GameManagerScr : MonoBehaviour
     private ARRaycastManager _arRaycastManagerScript;
     private bool _placedMap = false;
     private Person _personScr;
-    private LayerMask _ignoreMask;
+    private LayerMask _layerMask;
 
     private Person.Command _currCommand = Person.Command.GREEN;
 
     void Start()
     {
         _arRaycastManagerScript = FindObjectOfType<ARRaycastManager>();
-        _ignoreMask = LayerMask.NameToLayer("Person");
+        _layerMask = LayerMask.NameToLayer("Person");
         
         CurrentGame = new Game();
 
@@ -142,31 +142,40 @@ public class GameManagerScr : MonoBehaviour
 
     void DetachedMovePerson()
     {
-        if (Input.touchCount > 0)
+        if (Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began)
         {
             Touch touch = Input.GetTouch(0);
             Vector2 touchPosition = touch.position;
             Ray ray = arCamera.ScreenPointToRay(touch.position);
             RaycastHit hitObject;
 
-            if (Physics.Raycast(ray, out hitObject, _ignoreMask))
+            if (Physics.Raycast(ray, out hitObject, _layerMask))
             {
                 if (hitObject.collider.CompareTag("Person"))
                 {
                     Person currPerson = hitObject.collider.gameObject.GetComponent<Person>();
                     if (currPerson.commandType == _currCommand)
                     {
-                        //TODO Tap again on person
-                        _personScr = currPerson;
-                        _personScr.gameObject.layer = LayerMask.NameToLayer("Default");
-                        _ignoreMask = ~LayerMask.NameToLayer("Person");
-                        _personScr.GenerateMovements();
+                        if (!_personScr)
+                        {
+                            _personScr = currPerson;
+                            _personScr.gameObject.layer = LayerMask.NameToLayer("Circles");
+                            _layerMask = LayerMask.NameToLayer("Circles");
+                            _personScr.GenerateMovements();
+                        }
+                        else
+                        {
+                            _personScr.DestroyCircles();
+                            _personScr.gameObject.layer = LayerMask.NameToLayer("Person");
+                            _layerMask = LayerMask.NameToLayer("Person");
+                            _personScr = null;
+                        }
                     }
                 } else if (hitObject.collider.CompareTag("Movement"))
                 {
                     _personScr.Move(hitObject.collider.gameObject.transform.position);
                     _personScr.gameObject.layer = LayerMask.NameToLayer("Person");
-                    _ignoreMask = LayerMask.NameToLayer("Person");
+                    _layerMask = LayerMask.NameToLayer("Person");
                     _personScr = null;
                     if (_currCommand == Person.Command.GREEN)
                     {

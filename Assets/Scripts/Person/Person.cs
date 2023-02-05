@@ -113,6 +113,15 @@ public class Person : MonoBehaviour
         CreateMovement(new Vector3(1, 0, -1), func);
         CreateMovement(new Vector3(1, 0, 0), func);
     }
+
+    public void DestroyCircles()
+    {
+        foreach (var circle in _moveCircles)
+        {
+            Destroy(circle);
+        }
+        _moveCircles.Clear();
+    }
     
     public void Move(Vector3 newPos)
     {
@@ -168,11 +177,6 @@ public class Person : MonoBehaviour
             currGame.PlayingField[(int)_pos.x, (int)_pos.z].Open();
         }
         
-        //Destroy move circles
-        foreach (var circle in _moveCircles)
-        {
-            Destroy(circle);
-        }
-        _moveCircles.Clear();
+        DestroyCircles();
     }
 }
