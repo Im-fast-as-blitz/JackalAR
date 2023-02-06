@@ -1,4 +1,4 @@
-public class Helpers
+public static class Helpers
 {
     public class PairCardInt
     {
@@ -9,6 +9,18 @@ public class Helpers
         {
             CardPair = otherCard;
             Amount = amount;
+        }
+    };
+    
+    public class IntVector2
+    {
+        public int x;
+        public int y;
+
+        public IntVector2(int first, int second)
+        {
+            x = first;
+            y = second;
         }
     };
 }
