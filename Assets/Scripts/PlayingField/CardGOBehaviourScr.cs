@@ -3,14 +3,6 @@ using UnityEngine;
 
 public class CardGOBehaviourScr : MonoBehaviour {
     
-    private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Person"))
-        {
-            Open();
-        }
-    }
-
     public void UpdateLogo()
     {
         CardGOInfo gOInfo = GetComponent<CardGOInfo>();
