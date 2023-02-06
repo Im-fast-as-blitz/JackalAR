@@ -153,8 +153,8 @@ public class Person : MonoBehaviour
         }
         transform.position = newPos;
 
-        bool findPlace = false;
         //Look at new card
+        bool findPlace = false;
         for (int i = 0; i < 3; ++i)
         {
             if (currGame.PlayingField[(int)_pos.x, (int)_pos.z].Figures[i])

@@ -122,17 +122,18 @@ public class GameManagerScr : MonoBehaviour
         {
             startText.SetActive(false);
             Vector3 gamePos = hits[0].pose.position + new Vector3(0, 0.01f, 0);
+            
+            //Generate two persons
             GameObject person = Instantiate(placedObjectPrefab, gamePos, Quaternion.identity);
             person.GetComponent<Person>().currGame = CurrentGame;
             person.SetActive(true);
             
             //Enemy
             person = Instantiate(placedObjectPrefab, gamePos, Quaternion.identity);
-            //person.GetComponent<Renderer>().material = Resources.Load("Person/Red", typeof(Material)) as Material;
             person.GetComponent<Person>().currGame = CurrentGame;
             person.GetComponent<Person>().commandType = Person.Command.RED;
             person.SetActive(true);
-            //
+            //End of generate
             
             planeMarkerPrefab.SetActive(false);
             BuildPlayingField(gamePos);
