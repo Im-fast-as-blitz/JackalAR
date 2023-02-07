@@ -24,9 +24,8 @@ public class Card
 
     public Card() { }
 
-    public void Open()
+    public void UpdateLogo()
     {
-        IsOpen = true;
         Material gOMaterial = Resources.Load(LogoPath, typeof(Material)) as Material;
         if (gOMaterial)
         {
@@ -36,17 +35,20 @@ public class Card
         {
             throw new Exception("Can't find path while opening");
         }
+    }
+    
+    public void Open()
+    {
+        IsOpen = true;
+        
+        UpdateLogo();
+        
         OpenAction();
         StepAction();
     }
 
     public virtual void OpenAction() { }
     public virtual void StepAction() { }
-
-    public void UpdateLogo()
-    {
-        OwnGO.GetComponent<CardGOBehaviourScr>().UpdateLogo();
-    }
     
     public object NewObj() 
     {
@@ -67,7 +69,6 @@ public class EmptyCard : Card
 public class WaterCard : Card
 {
     public Ship OwnShip = null;
-    
     public WaterCard()
     {
         LogoPath = "Cards/water";
@@ -75,7 +76,15 @@ public class WaterCard : Card
     
     public void LoadShipLogo()
     {
-        OwnGO.GetComponent<CardGOBehaviourScr>().LoadShipLogo();
+        Material gOMaterial = Resources.Load(OwnShip.LogoPath, typeof(Material)) as Material;
+        if (gOMaterial)
+        {
+            OwnGO.GetComponent<Renderer>().material = gOMaterial;
+        }
+        else
+        {
+            throw new Exception("Can't find path while loading ship logo");
+        }
     }
 
     public void MoveShip(int x, int y, Game currGame)
@@ -141,5 +150,3 @@ public class CardManagerScr : MonoBehaviour
         Ships.GenerateShips();
     }
 }
-
-

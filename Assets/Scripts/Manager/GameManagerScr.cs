@@ -21,8 +21,8 @@ public class Game
     private void FillAndShufflePlayingField()
     {
         // Fill by water cards
-        const int firstDim = PlayingFieldFirstDim;
-        const int secondDim = PlayingFieldSecondDim;
+        int firstDim = PlayingFieldFirstDim;
+        int secondDim = PlayingFieldSecondDim;
         for (int j = 0; j < secondDim; j += secondDim - 1)
         {
             for (int i = 0; i < firstDim; i++)
@@ -70,7 +70,6 @@ public class Game
             }
         }
     }
-
     private void PlaceShips()
     {
         foreach (var pair in Ships.AllShips)
@@ -208,10 +207,10 @@ public class GameManagerScr : MonoBehaviour
 
     void OnApplicationQuit()
     {
-        // foreach (GameObject gO in CurrentGame.GOCards)
-        // {
-        //     Destroy(gO);
-        // }
+        foreach (GameObject gO in CurrentGame.GOCards)
+        {
+            Destroy(gO);
+        }
     }
     
     void BuildPlayingField(Vector3 firstCardPosition)
@@ -239,10 +238,12 @@ public class GameManagerScr : MonoBehaviour
                 ownCard.OwnGO = cardGO;
                 if (ownCard is WaterCard)
                 {
-                    cardGO.GetComponent<CardGOBehaviourScr>().Open();
-                    if ((ownCard as WaterCard).OwnShip != null)
+                    ownCard.Open();
+
+                    WaterCard ownWaterCard = ownCard as WaterCard;
+                    if (ownWaterCard.OwnShip != null)
                     {
-                        cardGO.GetComponent<CardGOBehaviourScr>().LoadShipLogo();
+                        ownWaterCard.LoadShipLogo();
                     }
                 }
             }
