@@ -2,12 +2,11 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class Card
 {
     public GameObject OwnGO;
     public string LogoPath;
-    public List<Person> Figures = new List<Person>() {null, null, null};
+    public List<Person> Figures = new List<Person>() { null, null, null };
     public bool IsOpen = false;
 
     public Card(string logoPath)
@@ -22,7 +21,9 @@ public class Card
         IsOpen = other.IsOpen;
     }
 
-    public Card() { }
+    public Card()
+    {
+    }
 
     public void UpdateLogo()
     {
@@ -36,21 +37,26 @@ public class Card
             throw new Exception("Can't find path while opening");
         }
     }
-    
+
     public void Open()
     {
         IsOpen = true;
-        
+
         UpdateLogo();
-        
+
         OpenAction();
         StepAction();
     }
 
-    public virtual void OpenAction() { }
-    public virtual void StepAction() { }
-    
-    public object NewObj() 
+    public virtual void OpenAction()
+    {
+    }
+
+    public virtual void StepAction()
+    {
+    }
+
+    public object NewObj()
     {
         return Activator.CreateInstance(GetType());
     }
@@ -62,18 +68,25 @@ public class EmptyCard : Card
     {
         LogoPath = "Cards/empty";
     }
-    public override void OpenAction() { }
-    public override void StepAction() { }
+
+    public override void OpenAction()
+    {
+    }
+
+    public override void StepAction()
+    {
+    }
 }
 
 public class WaterCard : Card
 {
     public Ship OwnShip = null;
+
     public WaterCard()
     {
         LogoPath = "Cards/water";
     }
-    
+
     public void LoadShipLogo()
     {
         Material gOMaterial = Resources.Load(OwnShip.LogoPath, typeof(Material)) as Material;
@@ -93,7 +106,7 @@ public class WaterCard : Card
         {
             throw new Exception("Error: water card haven't ship");
         }
-        
+
         WaterCard waterCardToMove = currGame.PlayingField[x, y] as WaterCard;
         if (waterCardToMove == null)
         {
@@ -105,9 +118,14 @@ public class WaterCard : Card
         UpdateLogo();
         waterCardToMove.LoadShipLogo();
     }
-    
-    public override void OpenAction() { }
-    public override void StepAction() { }
+
+    public override void OpenAction()
+    {
+    }
+
+    public override void StepAction()
+    {
+    }
 }
 
 public static class Cards
@@ -117,6 +135,7 @@ public static class Cards
 
 public class Ship
 {
+    public Helpers.Teams team;
     public string LogoPath;
     public List<Person> Figures = new List<Person>();
     public Helpers.IntVector2 Position;
@@ -130,21 +149,22 @@ public class Ship
 
 public static class Ships
 {
-    public static Dictionary<string, Ship> AllShips = new Dictionary<string, Ship>();
+    public static Dictionary<Helpers.Teams, Ship> AllShips = new Dictionary<Helpers.Teams, Ship>();
     
     public static void GenerateShips()
     {
-        Ships.AllShips.Add("white", new Ship("Ships/white", new Helpers.IntVector2(6, 0)));
-        Ships.AllShips.Add("black", new Ship("Ships/black", new Helpers.IntVector2(0, 6)));
-        Ships.AllShips.Add("red", new Ship("Ships/red", new Helpers.IntVector2(12, 6)));
-        Ships.AllShips.Add("yellow", new Ship("Ships/yellow", new Helpers.IntVector2(6, 12)));
+        Ships.AllShips.Add(Helpers.Teams.White, new Ship("Ships/white", new Helpers.IntVector2(6, 0)));
+        Ships.AllShips.Add(Helpers.Teams.Red, new Ship("Ships/red", new Helpers.IntVector2(12, 6)));
+        Ships.AllShips.Add(Helpers.Teams.Black, new Ship("Ships/black", new Helpers.IntVector2(0, 6)));
+        Ships.AllShips.Add(Helpers.Teams.Yellow, new Ship("Ships/yellow", new Helpers.IntVector2(6, 12)));
     }
 }
 
 public class CardManagerScr : MonoBehaviour
 {
     public void Awake()
-    {   // Total 169 cards (52 water cards + 117 other). Water must stay first
+    {
+        // Total 169 cards (52 water cards + 117 other). Water must stay first
         Cards.AllCards.Add(new Helpers.PairCardInt(new WaterCard(), 52));
         Cards.AllCards.Add(new Helpers.PairCardInt(new EmptyCard(), 117));
         Ships.GenerateShips();

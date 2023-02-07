@@ -11,6 +11,8 @@ public class Game
     public const int PlayingFieldFirstDim = 13, PlayingFieldSecondDim = 13; // size of playing field
     public Card[,] PlayingField = new Card[PlayingFieldFirstDim, PlayingFieldSecondDim];
     public GameObject[,] GOCards = new GameObject[PlayingFieldFirstDim, PlayingFieldSecondDim];
+    public Dictionary<Helpers.Teams, Person[]> Persons = new Dictionary<Helpers.Teams, Person[]>();
+    public int NumTeams = 2;
 
     public Game()
     {
@@ -74,7 +76,7 @@ public class Game
     {
         foreach (var pair in Ships.AllShips)
         {
-            WaterCard waterCard = PlayingField[pair.Value.Position.x, pair.Value.Position.y] as WaterCard;
+            WaterCard waterCard = PlayingField[pair.Value.Position.x, pair.Value.Position.z] as WaterCard;
             if (waterCard == null)
             {
                 throw new Exception("Wrong ship or water card position");
@@ -99,7 +101,7 @@ public class GameManagerScr : MonoBehaviour
     private Person _personScr;
     private LayerMask _layerMask;
 
-    private Person.Command _currCommand = Person.Command.GREEN;
+    private Helpers.Teams _currTeam = Helpers.Teams.White;
 
     void Start()
     {
@@ -107,6 +109,8 @@ public class GameManagerScr : MonoBehaviour
         _layerMask = LayerMask.NameToLayer("Person");
         
         CurrentGame = new Game();
+        
+//        BuildPlayingField(new Vector3(0, 0, 0)); // for tests
 
         planeMarkerPrefab.SetActive(false);
     }
@@ -129,25 +133,14 @@ public class GameManagerScr : MonoBehaviour
         _arRaycastManagerScript.Raycast(new Vector2(Screen.width / 2, Screen.height / 2), hits, TrackableType.Planes);
         if (hits.Count > 0)
         {
-            planeMarkerPrefab.transform.position = hits[0].pose.position + new Vector3(0, 0.01f, 0);
+            planeMarkerPrefab.transform.position = hits[0].pose.position + new Vector3(0, 0.03f, 0);
             planeMarkerPrefab.SetActive(true);
         }
         if (Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began)
         {
             startText.SetActive(false);
-            Vector3 gamePos = hits[0].pose.position + new Vector3(0, 0.01f, 0);
+            Vector3 gamePos = hits[0].pose.position + new Vector3(0, 0.03f, 0);
             
-            //Generate two persons
-            GameObject person = Instantiate(placedObjectPrefab, gamePos, Quaternion.identity);
-            person.GetComponent<Person>().currGame = CurrentGame;
-            person.SetActive(true);
-            
-            //Enemy
-            person = Instantiate(placedObjectPrefab, gamePos, Quaternion.identity);
-            person.GetComponent<Person>().currGame = CurrentGame;
-            person.GetComponent<Person>().commandType = Person.Command.RED;
-            person.SetActive(true);
-            //End of generate
             
             planeMarkerPrefab.SetActive(false);
             BuildPlayingField(gamePos);
@@ -169,7 +162,7 @@ public class GameManagerScr : MonoBehaviour
                 if (hitObject.collider.CompareTag("Person"))
                 {
                     Person currPerson = hitObject.collider.gameObject.GetComponent<Person>();
-                    if (currPerson.commandType == _currCommand)
+                    if (currPerson.team == _currTeam)
                     {
                         if (!_personScr)
                         {
@@ -192,32 +185,37 @@ public class GameManagerScr : MonoBehaviour
                     _personScr.gameObject.layer = LayerMask.NameToLayer("Person");
                     _layerMask = LayerMask.NameToLayer("Person");
                     _personScr = null;
-                    if (_currCommand == Person.Command.GREEN)
+                    if (_currTeam == Helpers.Teams.White)
                     {
-                        _currCommand = Person.Command.RED;
+                        _currTeam = Helpers.Teams.White;
                     }
                     else
                     {
-                        _currCommand = Person.Command.GREEN;
+                        _currTeam = Helpers.Teams.White;
                     }
                 }
             }
         }
     }
 
-    void OnApplicationQuit()
-    {
-        foreach (GameObject gO in CurrentGame.GOCards)
-        {
-            Destroy(gO);
-        }
-    }
+    // void OnApplicationQuit()
+    // {
+    //     foreach (GameObject gO in CurrentGame.GOCards)
+    //     {
+    //         Destroy(gO);
+    //     }
+    // }
     
-    void BuildPlayingField(Vector3 firstCardPosition)
+    void BuildPlayingField(Vector3 middleCardPosition)
     {
         MeshRenderer rendererCardPrefab = cardPrefab.GetComponent<MeshRenderer>();
         Vector3 sizeCardPrefab = rendererCardPrefab.bounds.size;
 
+        float firstCardX = middleCardPosition.x - 6 * sizeCardPrefab.x;
+        float firstCardY = middleCardPosition.y;
+        float firstCardZ = middleCardPosition.z - 6 * sizeCardPrefab.z;
+        Vector3 firstCardPosition = new Vector3(firstCardX, firstCardY, firstCardZ);
+        
         for (int j = 0; j < CurrentGame.PlayingField.GetLength(1); j++)
         {
             for (int i = 0; i < CurrentGame.PlayingField.GetLength(0); i++)
@@ -247,6 +245,31 @@ public class GameManagerScr : MonoBehaviour
                     }
                 }
             }
+        }
+        // Generate persons on ships
+        for (int team = 0; team < CurrentGame.NumTeams; team++)
+        {
+            const int numPersonsInTeam = 1;
+            Person[] personsInTeam = new Person[numPersonsInTeam];
+            
+            for (int player = 0; player < numPersonsInTeam; player++)
+            {
+                Helpers.IntVector2 shipPostion = Ships.AllShips[(Helpers.Teams)team].Position;
+                float persX = firstCardX + shipPostion.x * sizeCardPrefab.x;
+                float persY = firstCardY;
+                float persZ = firstCardZ + shipPostion.z * sizeCardPrefab.z;
+                Vector3 persPosition = new Vector3(persX, persY, persZ);
+            
+                GameObject personGO = Instantiate(placedObjectPrefab, persPosition, Quaternion.identity);
+                Person pers = personGO.GetComponent<Person>();
+                pers.currGame = CurrentGame;
+                pers.team = (Helpers.Teams)team;
+                pers.Position = shipPostion;
+            
+                personGO.SetActive(true);
+            }
+
+            CurrentGame.Persons.Add((Helpers.Teams)team, personsInTeam);
         }
     }
 }

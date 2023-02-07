@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class Person : MonoBehaviour
@@ -8,41 +9,42 @@ public class Person : MonoBehaviour
     [SerializeField] private GameObject attackCircle;
     public int mulCoef = 5;
 
-    private Vector3 _pos;
+    [NonSerialized] public Helpers.IntVector2 Position;
     public Game currGame;
 
-    private List<GameObject> _moveCircles;
+    private List<GameObject> _moveCircles = new List<GameObject>();
 
-    private delegate bool PossibilityToWalk(Vector3 pos);
+    private delegate bool PossibilityToWalk(Helpers.IntVector2 pos);
 
-    public enum Command
-    {
-        GREEN,
-        RED,
-        BLACK,
-        YELLOW
-    }
-    public Command commandType = Command.GREEN;
+    // public enum Team
+    // {
+    //     GREEN,
+    //     RED,
+    //     BLACK,
+    //     YELLOW
+    // }
 
-    void Start()
-    {
-        _moveCircles = new List<GameObject>();
-        switch (commandType)
-        {
-            case Command.GREEN:
-                _pos = new Vector3(2, 0, 2);
-                break;
-            case Command.RED:
-                _pos = new Vector3(5, 0, 5);
-                break;
-            case Command.YELLOW:
-                break;
-            case Command.BLACK:
-                break;
-        }
-        transform.position += _pos * 0.1f;
-    }
-    
+    public Helpers.Teams team = Helpers.Teams.White;
+
+    // void Start()
+    // {
+    //     switch (team)
+    //     {
+    //         case Helpers.Teams.White:
+    //             _pos = new Vector3(2, 0, 2);
+    //             break;
+    //         case Helpers.Teams.Red:
+    //             _pos = new Vector3(5, 0, 5);
+    //             break;
+    //         case Helpers.Teams.Yellow:
+    //             break;
+    //         case Helpers.Teams.Black:
+    //             break;
+    //     }
+    //
+    //     transform.position += _pos * 0.1f;
+    // }
+
     //Return to the ship
     void ReturnToShip()
     {
@@ -51,32 +53,33 @@ public class Person : MonoBehaviour
     }
 
     //Check where person is
-    private bool OnWaterCard(Vector3 pos)
+    private bool OnWaterCard(Helpers.IntVector2 pos)
     {
-        return currGame.PlayingField[(int)pos.x, (int)pos.z] is not EmptyCard;
-    }
-    
-    private bool OnEmptyCard(Vector3 pos)
-    {
-        return currGame.PlayingField[(int)pos.x, (int)pos.z] is not WaterCard;
+        return currGame.PlayingField[pos.x, pos.z] is not EmptyCard;
     }
 
-    private bool EnemyOnCard(Vector3 pos)
+    private bool OnEmptyCard(Helpers.IntVector2 pos)
     {
-        foreach (var figure in currGame.PlayingField[(int)pos.x, (int)pos.z].Figures)
+        return currGame.PlayingField[pos.x, pos.z] is not WaterCard;
+    }
+
+    private bool EnemyOnCard(Helpers.IntVector2 pos)
+    {
+        foreach (var figure in currGame.PlayingField[pos.x, pos.z].Figures)
         {
-            if (figure && figure.commandType != commandType)
+            if (figure && figure.team != team)
             {
                 return true;
             }
         }
+
         return false;
     }
 
     //Create curr circle to move
-    private void CreateMovement(Vector3 addPos, PossibilityToWalk func)
+    private void CreateMovement(Helpers.IntVector2 addPos, PossibilityToWalk func)
     {
-        Vector3 newPos = _pos + addPos;
+        Helpers.IntVector2 newPos = Position + addPos;
         if (0 <= newPos.x && newPos.x <= 12 && 0 <= newPos.z && newPos.z <= 12 && func(newPos))
         {
             GameObject result;
@@ -88,30 +91,33 @@ public class Person : MonoBehaviour
             {
                 result = Instantiate(moveCircle, transform.position, Quaternion.identity);
             }
-            result.transform.position += addPos * (transform.localScale.x * mulCoef);
+            
+            result.transform.position += addPos.ToVector3() * (transform.localScale.x * mulCoef);
             _moveCircles.Add(result);
         }
     }
-    
+
     //Create all circles to move
     public void GenerateMovements()
     {
         PossibilityToWalk func = OnEmptyCard;
-        if (currGame.PlayingField[(int)_pos.x, (int)_pos.z] is EmptyCard)
+        if (currGame.PlayingField[Position.x, Position.z] is EmptyCard)
         {
             func = OnEmptyCard;
-        } else if (currGame.PlayingField[(int)_pos.x, (int)_pos.z] is WaterCard)
+        }
+        else if (currGame.PlayingField[Position.x, Position.z] is WaterCard)
         {
             func = OnWaterCard;
         }
-        CreateMovement(new Vector3(-1, 0, 0), func);
-        CreateMovement(new Vector3(0, 0, 1), func);
-        CreateMovement(new Vector3(0, 0, -1), func);
-        CreateMovement(new Vector3(-1, 0, 1), func);
-        CreateMovement(new Vector3(-1, 0, -1), func);
-        CreateMovement(new Vector3(1, 0, 1), func);
-        CreateMovement(new Vector3(1, 0, -1), func);
-        CreateMovement(new Vector3(1, 0, 0), func);
+
+        CreateMovement(new Helpers.IntVector2(-1, 0), func);
+        CreateMovement(new Helpers.IntVector2(0, 1), func);
+        CreateMovement(new Helpers.IntVector2(0, -1), func);
+        CreateMovement(new Helpers.IntVector2(-1, 1), func);
+        CreateMovement(new Helpers.IntVector2(-1, -1), func);
+        CreateMovement(new Helpers.IntVector2(1, 1), func);
+        CreateMovement(new Helpers.IntVector2(1, -1), func);
+        CreateMovement(new Helpers.IntVector2(1, 0), func);
     }
 
     public void DestroyCircles()
@@ -120,63 +126,69 @@ public class Person : MonoBehaviour
         {
             Destroy(circle);
         }
+
         _moveCircles.Clear();
     }
-    
+
     public void Move(Vector3 newPos)
     {
         //Remove person from prev card
         for (int i = 0; i < 3; ++i)
         {
-            if (currGame.PlayingField[(int)_pos.x, (int)_pos.z].Figures[i] == this)
+            if (currGame.PlayingField[Position.x, Position.z].Figures[i] == this)
             {
-                currGame.PlayingField[(int)_pos.x, (int)_pos.z].Figures[i] = null;
+                currGame.PlayingField[Position.x, Position.z].Figures[i] = null;
                 break;
             }
         }
-        
+
         //Change person's pos (in game and in scene)
         Vector3 posChanges = transform.position - newPos;
         if (posChanges.x < 0)
         {
-            ++_pos.x;
-        } else if (posChanges.x > 0)
-        {
-            --_pos.x;
+            Position.x++;
         }
+        else if (posChanges.x > 0)
+        {
+            Position.x--;
+        }
+
         if (posChanges.z < 0)
         {
-            ++_pos.z;
-        } else if (posChanges.z > 0)
-        {
-            --_pos.z;
+            Position.z++;
         }
+        else if (posChanges.z > 0)
+        {
+            Position.z--;
+        }
+
         transform.position = newPos;
 
         //Look at new card
         bool findPlace = false;
         for (int i = 0; i < 3; ++i)
         {
-            if (currGame.PlayingField[(int)_pos.x, (int)_pos.z].Figures[i])
+            if (currGame.PlayingField[Position.x, Position.z].Figures[i])
             {
-                if (currGame.PlayingField[(int)_pos.x, (int)_pos.z].Figures[i].commandType != commandType)
+                if (currGame.PlayingField[Position.x, Position.z].Figures[i].team != team)
                 {
-                    currGame.PlayingField[(int)_pos.x, (int)_pos.z].Figures[i].ReturnToShip();
-                    currGame.PlayingField[(int)_pos.x, (int)_pos.z].Figures[i] = null;
+                    currGame.PlayingField[Position.x, Position.z].Figures[i].ReturnToShip();
+                    currGame.PlayingField[Position.x, Position.z].Figures[i] = null;
                 }
             }
-            if (!currGame.PlayingField[(int)_pos.x, (int)_pos.z].Figures[i] && !findPlace)
+
+            if (!currGame.PlayingField[Position.x, Position.z].Figures[i] && !findPlace)
             {
-                currGame.PlayingField[(int)_pos.x, (int)_pos.z].Figures[i] = this;
+                currGame.PlayingField[Position.x, Position.z].Figures[i] = this;
                 findPlace = true;
             }
         }
-        
-        if (!currGame.PlayingField[(int)_pos.x, (int)_pos.z].IsOpen)
+
+        if (!currGame.PlayingField[Position.x, Position.z].IsOpen)
         {
-            currGame.PlayingField[(int)_pos.x, (int)_pos.z].Open();
+            currGame.PlayingField[Position.x, Position.z].Open();
         }
-        
+
         DestroyCircles();
     }
 }
