@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
@@ -14,6 +15,7 @@ public class Game
     public Game()
     {
         FillAndShufflePlayingField();
+        PlaceShips();
     }
 
     private void FillAndShufflePlayingField()
@@ -66,6 +68,18 @@ public class Game
                 PlayingField[i, j] = cardsWithoutWater[tempArrayInd];
                 tempArrayInd++;
             }
+        }
+    }
+    private void PlaceShips()
+    {
+        foreach (var pair in Ships.AllShips)
+        {
+            WaterCard waterCard = PlayingField[pair.Value.Position.x, pair.Value.Position.y] as WaterCard;
+            if (waterCard == null)
+            {
+                throw new Exception("Wrong ship or water card position");
+            }
+            waterCard.OwnShip = pair.Value;
         }
     }
 }
@@ -217,7 +231,7 @@ public class GameManagerScr : MonoBehaviour
                 CurrentGame.GOCards[i, j] = cardGO;
                 
                 CardGOInfo gOInfo = cardGO.GetComponent<CardGOInfo>();
-                gOInfo.FieldPosition = new IntVector2(i, j);
+                gOInfo.FieldPosition = new Helpers.IntVector2(i, j);
 
                 Card ownCard = CurrentGame.PlayingField[i, j];
                 gOInfo.OwnCard = ownCard;
@@ -225,6 +239,12 @@ public class GameManagerScr : MonoBehaviour
                 if (ownCard is WaterCard)
                 {
                     ownCard.Open();
+
+                    WaterCard ownWaterCard = ownCard as WaterCard;
+                    if (ownWaterCard.OwnShip != null)
+                    {
+                        ownWaterCard.LoadShipLogo();
+                    }
                 }
             }
         }
