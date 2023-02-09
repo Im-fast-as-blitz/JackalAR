@@ -9,7 +9,8 @@ public class Card
         Undefined,
         Empty,
         Water,
-        Ship
+        Ship,
+        Horse
     }
 
     public GameObject OwnGO;
@@ -109,6 +110,7 @@ public class WaterCard : Card
             throw new Exception("Can't find path while loading ship logo");
         }
     }
+    
 
     public void MoveShip(int x, int y, Game currGame)
     {
@@ -129,6 +131,23 @@ public class WaterCard : Card
         Type = CardType.Water;
         UpdateLogo();
         waterCardToMove.LoadShipLogo();
+    }
+
+    public override void OpenAction()
+    {
+    }
+
+    public override void StepAction()
+    {
+    }
+}
+
+public class HorseCard : Card 
+{
+    public HorseCard()
+    {
+        LogoPath = "Cards/horse";
+        Type = CardType.Horse;
     }
 
     public override void OpenAction()
@@ -180,7 +199,8 @@ public class CardManagerScr : MonoBehaviour
     {
         // Total 169 cards (52 water cards + 117 other). Water must stay first
         Cards.AllCards.Add(new Helpers.PairCardInt(new WaterCard(), 52));
-        Cards.AllCards.Add(new Helpers.PairCardInt(new EmptyCard(), 117));
+        Cards.AllCards.Add(new Helpers.PairCardInt(new EmptyCard(), 67));
+        Cards.AllCards.Add(new Helpers.PairCardInt(new HorseCard(), 50));
         Ships.GenerateShips();
     }
 }

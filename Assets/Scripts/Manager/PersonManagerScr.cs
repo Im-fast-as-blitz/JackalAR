@@ -39,6 +39,15 @@ public class PersonManagerScr : MonoBehaviour
         DiagonalDirections.Add(new Helpers.IntVector2(-1, 1));
         DiagonalDirections.Add(new Helpers.IntVector2(1, -1));
         DiagonalDirections.Add(new Helpers.IntVector2(-1, -1));
+        
+        HorseDirections.Add(new Helpers.IntVector2(1, 2));
+        HorseDirections.Add(new Helpers.IntVector2(-1, 2));
+        HorseDirections.Add(new Helpers.IntVector2(2, 1));
+        HorseDirections.Add(new Helpers.IntVector2(2, -1));
+        HorseDirections.Add(new Helpers.IntVector2(1, -2));
+        HorseDirections.Add(new Helpers.IntVector2(-1, -2));
+        HorseDirections.Add(new Helpers.IntVector2(-2, -1));
+        HorseDirections.Add(new Helpers.IntVector2(-2, 1));
 
         DefaultDirections.AddRange(CrossDirections);
         DefaultDirections.AddRange(DiagonalDirections);
@@ -46,18 +55,22 @@ public class PersonManagerScr : MonoBehaviour
         // Fill Dictionaries
         PossibilityToWalkByType = new Dictionary<Card.CardType, PossibilityToWalk>();
         DirectionsToWalkByType = new Dictionary<Card.CardType, List<Helpers.IntVector2>>();
-
+        // Empty
         PossibilityToWalkByType.Add(Card.CardType.Empty, OnEmptyCard);
         DirectionsToWalkByType.Add(Card.CardType.Empty, DefaultDirections);
-
+        // Water
         PossibilityToWalkByType.Add(Card.CardType.Water, OnWaterCard);
         DirectionsToWalkByType.Add(Card.CardType.Water, DefaultDirections);
-
+        // Ship
         PossibilityToWalkByType.Add(Card.CardType.Ship, OnShipCard);
         DirectionsToWalkByType.Add(Card.CardType.Ship, CrossDirections);
+        // Horse
+        PossibilityToWalkByType.Add(Card.CardType.Horse, OnEmptyCard);
+        DirectionsToWalkByType.Add(Card.CardType.Horse, HorseDirections);
     }
 
     public static List<Helpers.IntVector2> DefaultDirections = new List<Helpers.IntVector2>();
     public static List<Helpers.IntVector2> CrossDirections = new List<Helpers.IntVector2>();
     public static List<Helpers.IntVector2> DiagonalDirections = new List<Helpers.IntVector2>();
+    public static List<Helpers.IntVector2> HorseDirections = new List<Helpers.IntVector2>();
 }
