@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 using Random = UnityEngine.Random;
+using Photon.Pun;
 
 
 public class Game
@@ -270,7 +271,7 @@ public class GameManagerScr : MonoBehaviour
                 float persZ = firstCardZ + shipPostion.z * sizeCardPrefab.z;
                 Vector3 persPosition = new Vector3(persX, persY, persZ);
 
-                GameObject personGO = Instantiate(placedObjectPrefab, persPosition, Quaternion.identity);
+                GameObject personGO = PhotonNetwork.Instantiate(placedObjectPrefab.name, persPosition, Quaternion.identity);
                 personGO.SetActive(true);
                 Person pers = personGO.GetComponent<Person>();
                 pers.currGame = CurrentGame;
