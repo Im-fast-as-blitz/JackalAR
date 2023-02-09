@@ -9,7 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 458426838133080981}
-  m_Layer: 0
+  - component: {fileID: 226168458536604098}
+  m_Layer: 7
   m_Name: Attack circle
   m_TagString: Movement
   m_Icon: {fileID: 0}
@@ -25,14 +26,35 @@ Transform:
   m_GameObject: {fileID: 584274825645328005}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.15, y: 0.001, z: 0.15}
+  m_LocalScale: {x: 0.05, y: 0.001, z: 0.05}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6628538430447706160}
   - {fileID: 1609743955174632756}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &226168458536604098
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 584274825645328005}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1, y: 5.0352015, z: 1}
+  m_Center: {x: 0, y: 1.2676021, z: 0}
 --- !u!1 &2105273870117404576
 GameObject:
   m_ObjectHideFlags: 0
@@ -45,7 +67,7 @@ GameObject:
   - component: {fileID: 6323158439139426956}
   - component: {fileID: 3215196201378453873}
   - component: {fileID: 2133176359190006071}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -152,7 +174,7 @@ GameObject:
   - component: {fileID: 1743972694389883539}
   - component: {fileID: 40891577944095964}
   - component: {fileID: 3286993983324939412}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}

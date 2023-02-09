@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8914289364441132635}
   - component: {fileID: 3341771447203797925}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Move circle
   m_TagString: Movement
   m_Icon: {fileID: 0}
@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 861046135716733024}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.15, y: 0.001, z: 0.15}
+  m_LocalScale: {x: 0.05, y: 0.001, z: 0.05}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 3561809005083949337}
@@ -53,8 +53,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 2.5, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1, y: 5.611269, z: 1}
+  m_Center: {x: 0, y: 1.5556366, z: 0}
 --- !u!1 &3888527521442287100
 GameObject:
   m_ObjectHideFlags: 0
@@ -67,7 +67,7 @@ GameObject:
   - component: {fileID: 5165367828850937402}
   - component: {fileID: 512413770428330106}
   - component: {fileID: 7621068875257056429}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}

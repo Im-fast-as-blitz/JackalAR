@@ -244,8 +244,12 @@ GameObject:
   - component: {fileID: 3222703447991866609}
   - component: {fileID: 7069353722301663469}
   - component: {fileID: 2076928821482232395}
+<<<<<<< HEAD:Assets/Resources/Person.prefab
   - component: {fileID: -3681426255510863268}
   m_Layer: 0
+=======
+  m_Layer: 6
+>>>>>>> BranchFromCommitBeforeShipMerge:Assets/Prefabs/Person.prefab
   m_Name: Person
   m_TagString: Person
   m_Icon: {fileID: 0}
@@ -261,7 +265,7 @@ Transform:
   m_GameObject: {fileID: 8761814907763584528}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.02, y: 0.02, z: 0.02}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5997725722593433194}
@@ -306,6 +310,7 @@ MonoBehaviour:
     type: 3}
   attackCircle: {fileID: 584274825645328005, guid: 8d0b99343e2e04562b056d0da627aa3f,
     type: 3}
+<<<<<<< HEAD:Assets/Resources/Person.prefab
   command_type: 0
 --- !u!114 &-3681426255510863268
 MonoBehaviour:
@@ -329,3 +334,7 @@ MonoBehaviour:
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
+=======
+  mulCoef: 5
+  commandType: 0
+>>>>>>> BranchFromCommitBeforeShipMerge:Assets/Prefabs/Person.prefab
