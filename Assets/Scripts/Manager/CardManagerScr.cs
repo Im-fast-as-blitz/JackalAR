@@ -4,26 +4,36 @@ using UnityEngine;
 
 public class Card
 {
+    public enum CardType
+    {
+        Undefined,
+        Empty,
+        Water,
+        Ship
+    }
+
     public GameObject OwnGO;
     public string LogoPath;
     public List<Person> Figures = new List<Person>() { null, null, null };
     public bool IsOpen = false;
+    public CardType Type = CardType.Undefined;
 
-    public Card(string logoPath)
-    {
-        LogoPath = logoPath;
-    }
+    // public Card(string logoPath)
+    // {
+    //     LogoPath = logoPath;
+    // }
 
-    public Card(Card other)
-    {
-        LogoPath = other.LogoPath;
-        Figures = other.Figures;
-        IsOpen = other.IsOpen;
-    }
+    // public Card(Card other)
+    // {
+    //     LogoPath = other.LogoPath;
+    //     Figures = other.Figures;
+    //     IsOpen = other.IsOpen;
+    //     Type = other.Type;
+    // }
 
-    public Card()
-    {
-    }
+    // public Card()
+    // {
+    // }
 
     public void UpdateLogo()
     {
@@ -41,9 +51,7 @@ public class Card
     public void Open()
     {
         IsOpen = true;
-
         UpdateLogo();
-
         OpenAction();
         StepAction();
     }
@@ -67,6 +75,7 @@ public class EmptyCard : Card
     public EmptyCard()
     {
         LogoPath = "Cards/empty";
+        Type = CardType.Empty;
     }
 
     public override void OpenAction()
@@ -85,6 +94,7 @@ public class WaterCard : Card
     public WaterCard()
     {
         LogoPath = "Cards/water";
+        Type = CardType.Water;
     }
 
     public void LoadShipLogo()
@@ -114,7 +124,9 @@ public class WaterCard : Card
         }
 
         waterCardToMove.OwnShip = OwnShip;
+        waterCardToMove.Type = CardType.Ship;
         OwnShip = null;
+        Type = CardType.Water;
         UpdateLogo();
         waterCardToMove.LoadShipLogo();
     }
@@ -150,13 +162,13 @@ public class Ship
 public static class Ships
 {
     public static Dictionary<Helpers.Teams, Ship> AllShips = new Dictionary<Helpers.Teams, Ship>();
-    
+
     public static void GenerateShips()
     {
-        Ships.AllShips.Add(Helpers.Teams.White, new Ship("Ships/white", new Helpers.IntVector2(6, 0)));
-        Ships.AllShips.Add(Helpers.Teams.Red, new Ship("Ships/red", new Helpers.IntVector2(12, 6)));
-        Ships.AllShips.Add(Helpers.Teams.Black, new Ship("Ships/black", new Helpers.IntVector2(0, 6)));
-        Ships.AllShips.Add(Helpers.Teams.Yellow, new Ship("Ships/yellow", new Helpers.IntVector2(6, 12)));
+        AllShips.Add(Helpers.Teams.White, new Ship("Ships/white", new Helpers.IntVector2(6, 0)));
+        AllShips.Add(Helpers.Teams.Red, new Ship("Ships/red", new Helpers.IntVector2(12, 6)));
+        AllShips.Add(Helpers.Teams.Black, new Ship("Ships/black", new Helpers.IntVector2(0, 6)));
+        AllShips.Add(Helpers.Teams.Yellow, new Ship("Ships/yellow", new Helpers.IntVector2(6, 12)));
     }
 }
 

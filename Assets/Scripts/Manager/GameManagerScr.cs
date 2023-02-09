@@ -32,6 +32,7 @@ public class Game
                 PlayingField[i, j] = new WaterCard();
             }
         }
+
         for (int j = 1; j < secondDim - 1; j++)
         {
             for (int i = 0; i < firstDim; i += firstDim - 1)
@@ -39,6 +40,7 @@ public class Game
                 PlayingField[i, j] = new WaterCard();
             }
         }
+
         // Fill by other cards temporary array
         List<Card> cardsWithoutWater = new List<Card>();
         for (int i = 1; i < Cards.AllCards.Count; i++)
@@ -48,13 +50,16 @@ public class Game
                 cardsWithoutWater.Add((Card)Cards.AllCards[i].CardPair.NewObj());
             }
         }
+
         // Shuffle temporary array
-        for (int i = 0; i < cardsWithoutWater.Count; i++) {
+        for (int i = 0; i < cardsWithoutWater.Count; i++)
+        {
             Card temp = cardsWithoutWater[i];
             int randomIndex = Random.Range(i, cardsWithoutWater.Count);
             cardsWithoutWater[i] = cardsWithoutWater[randomIndex];
             cardsWithoutWater[randomIndex] = temp;
         }
+
         // Fill Playing Field by temporary array
         int tempArrayInd = 0;
         for (int j = 1; j < secondDim - 1; j++)
@@ -67,11 +72,13 @@ public class Game
                     PlayingField[i, j] = new WaterCard();
                     continue;
                 }
+
                 PlayingField[i, j] = cardsWithoutWater[tempArrayInd];
                 tempArrayInd++;
             }
         }
     }
+
     private void PlaceShips()
     {
         foreach (var pair in Ships.AllShips)
@@ -81,7 +88,9 @@ public class Game
             {
                 throw new Exception("Wrong ship or water card position");
             }
+
             waterCard.OwnShip = pair.Value;
+            waterCard.Type = Card.CardType.Ship;
         }
     }
 }
@@ -90,7 +99,7 @@ public class GameManagerScr : MonoBehaviour
 {
     public Game CurrentGame;
     public GameObject cardPrefab;
-    
+
     [SerializeField] private GameObject planeMarkerPrefab;
     [SerializeField] private GameObject placedObjectPrefab;
     [SerializeField] private Camera arCamera;
@@ -107,14 +116,16 @@ public class GameManagerScr : MonoBehaviour
     {
         _arRaycastManagerScript = FindObjectOfType<ARRaycastManager>();
         _layerMask = LayerMask.NameToLayer("Person");
-        
+
         CurrentGame = new Game();
         
-//        BuildPlayingField(new Vector3(0, 0, 0)); // for tests
+        PersonManagerScr.currGame = CurrentGame;
+
+        // BuildPlayingField(new Vector3(0, 0, 0)); // for tests
 
         planeMarkerPrefab.SetActive(false);
     }
-    
+
     void Update()
     {
         if (!_placedMap)
@@ -126,7 +137,7 @@ public class GameManagerScr : MonoBehaviour
             DetachedMovePerson();
         }
     }
-    
+
     void ShowMarker()
     {
         List<ARRaycastHit> hits = new List<ARRaycastHit>();
@@ -136,12 +147,13 @@ public class GameManagerScr : MonoBehaviour
             planeMarkerPrefab.transform.position = hits[0].pose.position + new Vector3(0, 0.03f, 0);
             planeMarkerPrefab.SetActive(true);
         }
+
         if (Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began)
         {
             startText.SetActive(false);
             Vector3 gamePos = hits[0].pose.position + new Vector3(0, 0.03f, 0);
-            
-            
+
+
             planeMarkerPrefab.SetActive(false);
             BuildPlayingField(gamePos);
             _placedMap = true;
@@ -179,7 +191,8 @@ public class GameManagerScr : MonoBehaviour
                             _personScr = null;
                         }
                     }
-                } else if (hitObject.collider.CompareTag("Movement"))
+                }
+                else if (hitObject.collider.CompareTag("Movement"))
                 {
                     _personScr.Move(hitObject.collider.gameObject.transform.position);
                     _personScr.gameObject.layer = LayerMask.NameToLayer("Person");
@@ -205,7 +218,7 @@ public class GameManagerScr : MonoBehaviour
     //         Destroy(gO);
     //     }
     // }
-    
+
     void BuildPlayingField(Vector3 middleCardPosition)
     {
         MeshRenderer rendererCardPrefab = cardPrefab.GetComponent<MeshRenderer>();
@@ -215,7 +228,7 @@ public class GameManagerScr : MonoBehaviour
         float firstCardY = middleCardPosition.y;
         float firstCardZ = middleCardPosition.z - 6 * sizeCardPrefab.z;
         Vector3 firstCardPosition = new Vector3(firstCardX, firstCardY, firstCardZ);
-        
+
         for (int j = 0; j < CurrentGame.PlayingField.GetLength(1); j++)
         {
             for (int i = 0; i < CurrentGame.PlayingField.GetLength(0); i++)
@@ -225,14 +238,10 @@ public class GameManagerScr : MonoBehaviour
                 float newZ = firstCardPosition.z + j * sizeCardPrefab.z;
                 Vector3 newPosition = new Vector3(newX, newY, newZ);
                 GameObject cardGO = Instantiate(cardPrefab, newPosition, Quaternion.identity);
-                
+
                 CurrentGame.GOCards[i, j] = cardGO;
-                
-                CardGOInfo gOInfo = cardGO.GetComponent<CardGOInfo>();
-                gOInfo.FieldPosition = new Helpers.IntVector2(i, j);
 
                 Card ownCard = CurrentGame.PlayingField[i, j];
-                gOInfo.OwnCard = ownCard;
                 ownCard.OwnGO = cardGO;
                 if (ownCard is WaterCard)
                 {
@@ -246,12 +255,13 @@ public class GameManagerScr : MonoBehaviour
                 }
             }
         }
+
         // Generate persons on ships
         for (int team = 0; team < CurrentGame.NumTeams; team++)
         {
             const int numPersonsInTeam = 1;
             Person[] personsInTeam = new Person[numPersonsInTeam];
-            
+
             for (int player = 0; player < numPersonsInTeam; player++)
             {
                 Helpers.IntVector2 shipPostion = Ships.AllShips[(Helpers.Teams)team].Position;
@@ -259,16 +269,16 @@ public class GameManagerScr : MonoBehaviour
                 float persY = firstCardY;
                 float persZ = firstCardZ + shipPostion.z * sizeCardPrefab.z;
                 Vector3 persPosition = new Vector3(persX, persY, persZ);
-            
+
                 GameObject personGO = Instantiate(placedObjectPrefab, persPosition, Quaternion.identity);
+                personGO.SetActive(true);
                 Person pers = personGO.GetComponent<Person>();
                 pers.currGame = CurrentGame;
                 pers.team = (Helpers.Teams)team;
                 pers.Position = shipPostion;
-            
-                personGO.SetActive(true);
-            }
 
+                personsInTeam[player] = pers;
+            }
             CurrentGame.Persons.Add((Helpers.Teams)team, personsInTeam);
         }
     }
