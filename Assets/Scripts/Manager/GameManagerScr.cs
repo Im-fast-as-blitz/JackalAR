@@ -265,10 +265,10 @@ public class GameManagerScr : MonoBehaviour
 
             for (int player = 0; player < numPersonsInTeam; player++)
             {
-                Helpers.IntVector2 shipPostion = Ships.AllShips[(Helpers.Teams)team].Position;
-                float persX = firstCardX + shipPostion.x * sizeCardPrefab.x;
+                Helpers.IntVector2 shipPosition = Ships.AllShips[(Helpers.Teams)team].Position;
+                float persX = firstCardX + shipPosition.x * sizeCardPrefab.x;
                 float persY = firstCardY;
-                float persZ = firstCardZ + shipPostion.z * sizeCardPrefab.z;
+                float persZ = firstCardZ + shipPosition.z * sizeCardPrefab.z;
                 Vector3 persPosition = new Vector3(persX, persY, persZ);
 
                 GameObject personGO = PhotonNetwork.Instantiate(placedObjectPrefab.name, persPosition, Quaternion.identity);
@@ -276,7 +276,16 @@ public class GameManagerScr : MonoBehaviour
                 Person pers = personGO.GetComponent<Person>();
                 pers.currGame = CurrentGame;
                 pers.team = (Helpers.Teams)team;
-                pers.Position = shipPostion;
+                pers.Position = shipPosition;
+                // Add person to card's list of persons
+                for (int i = 0; i < 3; ++i)
+                {
+                    if (!CurrentGame.PlayingField[shipPosition.x, shipPosition.z].Figures[i])
+                    {
+                        CurrentGame.PlayingField[shipPosition.x, shipPosition.z].Figures[i] = pers;
+                        break;
+                    }
+                }
 
                 personsInTeam[player] = pers;
             }

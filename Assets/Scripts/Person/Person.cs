@@ -46,7 +46,7 @@ public class Person : MonoBehaviour
                 return true;
             }
         }
-
+        
         return false;
     }
 
@@ -58,7 +58,7 @@ public class Person : MonoBehaviour
         if (0 <= newPos.x && newPos.x <= 12 && 0 <= newPos.z && newPos.z <= 12 && func(newPos))
         {
             Card currCard = currGame.PlayingField[newPos.x, newPos.z];
-            bool isEnemyShip = currCard.Type == Card.CardType.Ship && (currCard as WaterCard).OwnShip.team != team;
+            bool isEnemyShip = ((currCard.Type == Card.CardType.Ship) && ((currCard as WaterCard).OwnShip.team != team));
             if (isEnemyShip)
             {
                 return;
@@ -148,7 +148,7 @@ public class Person : MonoBehaviour
                     currGame.PlayingField[Position.x, Position.z].Figures[i] = null;
                 }
             }
-
+        
             if (!currGame.PlayingField[Position.x, Position.z].Figures[i] && !findPlace)
             {
                 currGame.PlayingField[Position.x, Position.z].Figures[i] = this;

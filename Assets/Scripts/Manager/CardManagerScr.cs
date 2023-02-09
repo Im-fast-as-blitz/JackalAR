@@ -152,8 +152,9 @@ public class Ship
     public List<Person> Figures = new List<Person>();
     public Helpers.IntVector2 Position;
 
-    public Ship(string logoPath, Helpers.IntVector2 position)
+    public Ship(Helpers.Teams shipTeam, string logoPath, Helpers.IntVector2 position)
     {
+        team = shipTeam;
         LogoPath = logoPath;
         Position = position;
     }
@@ -165,10 +166,11 @@ public static class Ships
 
     public static void GenerateShips()
     {
-        AllShips.Add(Helpers.Teams.White, new Ship("Ships/white", new Helpers.IntVector2(6, 0)));
-        AllShips.Add(Helpers.Teams.Red, new Ship("Ships/red", new Helpers.IntVector2(12, 6)));
-        AllShips.Add(Helpers.Teams.Black, new Ship("Ships/black", new Helpers.IntVector2(0, 6)));
-        AllShips.Add(Helpers.Teams.Yellow, new Ship("Ships/yellow", new Helpers.IntVector2(6, 12)));
+        AllShips.Add(Helpers.Teams.White, new Ship(Helpers.Teams.White, "Ships/white", new Helpers.IntVector2(6, 0)));
+        AllShips.Add(Helpers.Teams.Red, new Ship(Helpers.Teams.Red, "Ships/red", new Helpers.IntVector2(12, 6)));
+        AllShips.Add(Helpers.Teams.Black, new Ship(Helpers.Teams.Black, "Ships/black", new Helpers.IntVector2(0, 6)));
+        AllShips.Add(Helpers.Teams.Yellow,
+            new Ship(Helpers.Teams.Yellow, "Ships/yellow", new Helpers.IntVector2(6, 12)));
     }
 }
 
