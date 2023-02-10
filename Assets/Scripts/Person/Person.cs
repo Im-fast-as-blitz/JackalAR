@@ -115,25 +115,30 @@ public class Person : MonoBehaviour
         }
 
         //Change person's pos (in game and in scene)
-        Vector3 posChanges = transform.position - newPos;
-        if (posChanges.x < 0)
-        {
-            Position.x++;
-        }
-        else if (posChanges.x > 0)
-        {
-            Position.x--;
-        }
+        
+        // Vector3 posChanges = transform.position - newPos;
+        // if (posChanges.x < 0)
+        // {
+        //     Position.x++;
+        // }
+        // else if (posChanges.x > 0)
+        // {
+        //     Position.x--;
+        // }
+        //
+        // if (posChanges.z < 0)
+        // {
+        //     Position.z++;
+        // }
+        // else if (posChanges.z > 0)
+        // {
+        //     Position.z--;
+        // }
 
-        if (posChanges.z < 0)
-        {
-            Position.z++;
-        }
-        else if (posChanges.z > 0)
-        {
-            Position.z--;
-        }
-
+        Vector3 posChanges = newPos - transform.position;
+        Position.x += (int) Math.Round(posChanges.x / currGame.sizeCardPrefab.x);
+        Position.z += (int) Math.Round(posChanges.z / currGame.sizeCardPrefab.z);
+        
         transform.position = newPos;
 
         //Look at new card
