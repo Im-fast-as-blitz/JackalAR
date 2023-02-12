@@ -114,17 +114,13 @@ public class WaterCard : Card
 
     public void MoveShip(int x, int y, Game currGame)
     {
-        if (OwnShip == null)
-        {
-            throw new Exception("Error: water card haven't ship");
-        }
-
         WaterCard waterCardToMove = currGame.PlayingField[x, y] as WaterCard;
         if (waterCardToMove == null)
         {
             throw new Exception("Error: attempt to move the ship to the non water card");
         }
 
+        OwnShip.Position = new Helpers.IntVector2(x, y);
         waterCardToMove.OwnShip = OwnShip;
         waterCardToMove.Type = CardType.Ship;
         OwnShip = null;

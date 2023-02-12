@@ -115,31 +115,15 @@ public class Person : MonoBehaviour
         }
 
         //Change person's pos (in game and in scene)
-        
-        // Vector3 posChanges = transform.position - newPos;
-        // if (posChanges.x < 0)
-        // {
-        //     Position.x++;
-        // }
-        // else if (posChanges.x > 0)
-        // {
-        //     Position.x--;
-        // }
-        //
-        // if (posChanges.z < 0)
-        // {
-        //     Position.z++;
-        // }
-        // else if (posChanges.z > 0)
-        // {
-        //     Position.z--;
-        // }
-
+        Helpers.IntVector2 prevPos = new Helpers.IntVector2(Position);
         Vector3 posChanges = newPos - transform.position;
         Position.x += (int) Math.Round(posChanges.x / currGame.sizeCardPrefab.x);
         Position.z += (int) Math.Round(posChanges.z / currGame.sizeCardPrefab.z);
-        
         transform.position = newPos;
+        if (currGame.PlayingField[prevPos.x, prevPos.z].Type == Card.CardType.Ship && currGame.PlayingField[Position.x, Position.z].Type == Card.CardType.Water)
+        {
+            (currGame.PlayingField[prevPos.x, prevPos.z] as WaterCard).MoveShip(Position.x, Position.z, currGame);
+        }
 
         //Look at new card
         bool findPlace = false;
