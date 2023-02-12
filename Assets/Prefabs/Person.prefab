@@ -306,4 +306,4 @@ MonoBehaviour:
   attackCircle: {fileID: 584274825645328005, guid: 8d0b99343e2e04562b056d0da627aa3f,
     type: 3}
   mulCoef: 5
-  commandType: 0
+  team: 0

@@ -53,8 +53,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 5.0352015, z: 1}
-  m_Center: {x: 0, y: 1.2676021, z: 0}
+  m_Size: {x: 1.0603056, y: 5.0352015, z: 1.0459472}
+  m_Center: {x: 0.0014360622, y: 1.2676021, z: 0}
 --- !u!1 &2105273870117404576
 GameObject:
   m_ObjectHideFlags: 0
@@ -67,7 +67,7 @@ GameObject:
   - component: {fileID: 6323158439139426956}
   - component: {fileID: 3215196201378453873}
   - component: {fileID: 2133176359190006071}
-  m_Layer: 7
+  m_Layer: 2
   m_Name: Cylinder
   m_TagString: Untagged
   m_Icon: {fileID: 0}

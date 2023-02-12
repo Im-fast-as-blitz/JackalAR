@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 using Random = UnityEngine.Random;
@@ -116,7 +117,7 @@ public class GameManagerScr : MonoBehaviour
     void Start()
     {
         _arRaycastManagerScript = FindObjectOfType<ARRaycastManager>();
-        _layerMask = LayerMask.NameToLayer("Person");
+        _layerMask = 1 << LayerMask.NameToLayer("Person");
 
         CurrentGame = new Game();
         
@@ -166,11 +167,10 @@ public class GameManagerScr : MonoBehaviour
         if (Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began)
         {
             Touch touch = Input.GetTouch(0);
-            Vector2 touchPosition = touch.position;
             Ray ray = arCamera.ScreenPointToRay(touch.position);
             RaycastHit hitObject;
 
-            if (Physics.Raycast(ray, out hitObject, _layerMask))
+            if (Physics.Raycast(ray, out hitObject, Mathf.Infinity, _layerMask))
             {
                 if (hitObject.collider.CompareTag("Person"))
                 {
@@ -181,14 +181,14 @@ public class GameManagerScr : MonoBehaviour
                         {
                             _personScr = currPerson;
                             _personScr.gameObject.layer = LayerMask.NameToLayer("Circles");
-                            _layerMask = LayerMask.NameToLayer("Circles");
+                            _layerMask = 1 << LayerMask.NameToLayer("Circles");
                             _personScr.GenerateMovements();
                         }
                         else
                         {
                             _personScr.DestroyCircles();
                             _personScr.gameObject.layer = LayerMask.NameToLayer("Person");
-                            _layerMask = LayerMask.NameToLayer("Person");
+                            _layerMask = 1 << LayerMask.NameToLayer("Person");
                             _personScr = null;
                         }
                     }
@@ -197,11 +197,11 @@ public class GameManagerScr : MonoBehaviour
                 {
                     _personScr.Move(hitObject.collider.gameObject.transform.position);
                     _personScr.gameObject.layer = LayerMask.NameToLayer("Person");
-                    _layerMask = LayerMask.NameToLayer("Person");
+                    _layerMask = 1 << LayerMask.NameToLayer("Person");
                     _personScr = null;
                     if (_currTeam == Helpers.Teams.White)
                     {
-                        _currTeam = Helpers.Teams.White;
+                        _currTeam = Helpers.Teams.Red;
                     }
                     else
                     {
@@ -211,14 +211,6 @@ public class GameManagerScr : MonoBehaviour
             }
         }
     }
-
-    // void OnApplicationQuit()
-    // {
-    //     foreach (GameObject gO in CurrentGame.GOCards)
-    //     {
-    //         Destroy(gO);
-    //     }
-    // }
 
     void BuildPlayingField(Vector3 middleCardPosition)
     {
@@ -276,16 +268,9 @@ public class GameManagerScr : MonoBehaviour
                 Person pers = personGO.GetComponent<Person>();
                 pers.currGame = CurrentGame;
                 pers.team = (Helpers.Teams)team;
-                pers.Position = shipPosition;
+                pers.Position = new Helpers.IntVector2(shipPosition);
                 // Add person to card's list of persons
-                for (int i = 0; i < 3; ++i)
-                {
-                    if (!CurrentGame.PlayingField[shipPosition.x, shipPosition.z].Figures[i])
-                    {
-                        CurrentGame.PlayingField[shipPosition.x, shipPosition.z].Figures[i] = pers;
-                        break;
-                    }
-                }
+                CurrentGame.PlayingField[shipPosition.x, shipPosition.z].Figures[player] = pers;
 
                 personsInTeam[player] = pers;
             }

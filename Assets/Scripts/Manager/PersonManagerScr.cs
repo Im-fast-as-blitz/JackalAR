@@ -23,8 +23,7 @@ public class PersonManagerScr : MonoBehaviour
 
     public static bool OnShipCard(Helpers.IntVector2 pos)
     {
-        return !((pos.x == 1 && pos.z == 1) || (pos.x == 11 && pos.z == 1) || (pos.x == 11 && pos.z == 11) ||
-               (pos.x == 1 && pos.z == 11));
+        return !(((pos.x is 1 or 11) && (pos.z is 0 or 12)) || ((pos.x is 0 or 12) && (pos.z is 1 or 11)));
     }
 
     private void Awake()
