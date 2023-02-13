@@ -118,7 +118,12 @@ public class GameManagerScr : MonoBehaviour
         _arRaycastManagerScript = FindObjectOfType<ARRaycastManager>();
         _layerMask = LayerMask.NameToLayer("Person");
 
-        CurrentGame = new Game();
+        if (PhotonNetwork.IsMasterClient)
+        {
+            CurrentGame = new Game();
+            Debug.LogFormat("PhotonNetwork : Trying to Load a level by master client");
+        }
+        
         
         PersonManagerScr.currGame = CurrentGame;
 
@@ -238,7 +243,7 @@ public class GameManagerScr : MonoBehaviour
                 float newY = firstCardPosition.y;
                 float newZ = firstCardPosition.z + j * sizeCardPrefab.z;
                 Vector3 newPosition = new Vector3(newX, newY, newZ);
-                GameObject cardGO = Instantiate(cardPrefab, newPosition, Quaternion.identity);
+                GameObject cardGO = PhotonNetwork.Instantiate(cardPrefab.name, newPosition, Quaternion.identity);
 
                 CurrentGame.GOCards[i, j] = cardGO;
 
