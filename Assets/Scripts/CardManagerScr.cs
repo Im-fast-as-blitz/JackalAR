@@ -15,25 +15,10 @@ public class Card
     public GameObject OwnGO;
     public string LogoPath;
     public List<Person> Figures = new List<Person>() { null, null, null };
+    public List<PersonNoAR> FiguresNoAR = new List<PersonNoAR>() { null, null, null };
     public bool IsOpen = false;
     public CardType Type = CardType.Undefined;
-
-    // public Card(string logoPath)
-    // {
-    //     LogoPath = logoPath;
-    // }
-
-    // public Card(Card other)
-    // {
-    //     LogoPath = other.LogoPath;
-    //     Figures = other.Figures;
-    //     IsOpen = other.IsOpen;
-    //     Type = other.Type;
-    // }
-
-    // public Card()
-    // {
-    // }
+    
 
     public void UpdateLogo()
     {
