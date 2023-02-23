@@ -69,14 +69,17 @@ public class GameManNoARScr : MonoBehaviour
     {
         if (Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began)
         {
+            Debug.Log("touched first");
             Touch touch = Input.GetTouch(0);
             Ray ray = mainCamera.ScreenPointToRay(touch.position);
             RaycastHit hitObject;
 
             if (Physics.Raycast(ray, out hitObject, Mathf.Infinity, _layerMask))
             {
+                Debug.Log("touched second");
                 if (hitObject.collider.CompareTag("Person"))
                 {
+                    Debug.Log("touched Person");
                     PersonNoAR currPerson = hitObject.collider.gameObject.GetComponent<PersonNoAR>();
                     if (currPerson.team == _currTeam)
                     {

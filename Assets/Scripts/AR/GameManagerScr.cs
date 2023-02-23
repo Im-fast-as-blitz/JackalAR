@@ -78,7 +78,6 @@ public class GameManagerScr : MonoBehaviour
             Touch touch = Input.GetTouch(0);
             Ray ray = arCamera.ScreenPointToRay(touch.position);
             RaycastHit hitObject;
-
             if (Physics.Raycast(ray, out hitObject, Mathf.Infinity, _layerMask))
             {
                 if (hitObject.collider.CompareTag("Person"))
