@@ -25,6 +25,12 @@ static public class Helpers
             z = second;
         }
 
+        public IntVector2(IntVector2 other)
+        {
+            x = other.x;
+            z = other.z;
+        }
+
         public Vector3 ToVector3()
         {
             return new Vector3(x, 0, z);

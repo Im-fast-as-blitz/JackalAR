@@ -70,11 +70,10 @@ public class GameManNoARScr : MonoBehaviour
         if (Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began)
         {
             Touch touch = Input.GetTouch(0);
-            Vector2 touchPosition = touch.position;
             Ray ray = mainCamera.ScreenPointToRay(touch.position);
             RaycastHit hitObject;
 
-            if (Physics.Raycast(ray, out hitObject, _layerMask))
+            if (Physics.Raycast(ray, out hitObject, Mathf.Infinity, _layerMask))
             {
                 if (hitObject.collider.CompareTag("Person"))
                 {
@@ -85,14 +84,14 @@ public class GameManNoARScr : MonoBehaviour
                         {
                             _personScr = currPerson;
                             _personScr.gameObject.layer = LayerMask.NameToLayer("Circles");
-                            _layerMask = LayerMask.NameToLayer("Circles");
+                            _layerMask = 1 << LayerMask.NameToLayer("Circles");
                             _personScr.GenerateMovements();
                         }
                         else
                         {
                             _personScr.DestroyCircles();
                             _personScr.gameObject.layer = LayerMask.NameToLayer("Person");
-                            _layerMask = LayerMask.NameToLayer("Person");
+                            _layerMask = 1 << LayerMask.NameToLayer("Person");
                             _personScr = null;
                         }
                     }
@@ -101,11 +100,11 @@ public class GameManNoARScr : MonoBehaviour
                 {
                     _personScr.Move(hitObject.collider.gameObject.transform.position);
                     _personScr.gameObject.layer = LayerMask.NameToLayer("Person");
-                    _layerMask = LayerMask.NameToLayer("Person");
+                    _layerMask = 1 << LayerMask.NameToLayer("Person");
                     _personScr = null;
                     if (_currTeam == Helpers.Teams.White)
                     {
-                        _currTeam = Helpers.Teams.White;
+                        _currTeam = Helpers.Teams.Red;
                     }
                     else
                     {
@@ -132,20 +131,20 @@ public class GameManNoARScr : MonoBehaviour
     void BuildPlayingField(Vector3 middleCardPosition)
     {
         MeshRenderer rendererCardPrefab = cardPrefab.GetComponent<MeshRenderer>();
-        Vector3 sizeCardPrefab = rendererCardPrefab.bounds.size;
+        CurrentGame.sizeCardPrefab = rendererCardPrefab.bounds.size;
 
-        float firstCardX = middleCardPosition.x - 6 * sizeCardPrefab.x;
+        float firstCardX = middleCardPosition.x - 6 * CurrentGame.sizeCardPrefab.x;
         float firstCardY = middleCardPosition.y;
-        float firstCardZ = middleCardPosition.z - 6 * sizeCardPrefab.z;
+        float firstCardZ = middleCardPosition.z - 6 * CurrentGame.sizeCardPrefab.z;
         Vector3 firstCardPosition = new Vector3(firstCardX, firstCardY, firstCardZ);
 
         for (int j = 0; j < CurrentGame.PlayingField.GetLength(1); j++)
         {
             for (int i = 0; i < CurrentGame.PlayingField.GetLength(0); i++)
             {
-                float newX = firstCardPosition.x + i * sizeCardPrefab.x;
+                float newX = firstCardPosition.x + i * CurrentGame.sizeCardPrefab.x;
                 float newY = firstCardPosition.y;
-                float newZ = firstCardPosition.z + j * sizeCardPrefab.z;
+                float newZ = firstCardPosition.z + j * CurrentGame.sizeCardPrefab.z;
                 Vector3 newPosition = new Vector3(newX, newY, newZ);
                 GameObject cardGO = Instantiate(cardPrefab, newPosition, Quaternion.identity);
 
@@ -175,9 +174,9 @@ public class GameManNoARScr : MonoBehaviour
             for (int player = 0; player < numPersonsInTeam; player++)
             {
                 Helpers.IntVector2 shipPosition = Ships.AllShips[(Helpers.Teams)team].Position;
-                float persX = firstCardX + shipPosition.x * sizeCardPrefab.x;
+                float persX = firstCardX + shipPosition.x * CurrentGame.sizeCardPrefab.x;
                 float persY = firstCardY;
-                float persZ = firstCardZ + shipPosition.z * sizeCardPrefab.z;
+                float persZ = firstCardZ + shipPosition.z * CurrentGame.sizeCardPrefab.z;
                 Vector3 persPosition = new Vector3(persX, persY, persZ);
 
                 GameObject personGO = Instantiate(placedObjectPrefab, persPosition, Quaternion.identity);
@@ -186,16 +185,9 @@ public class GameManNoARScr : MonoBehaviour
                 PersonNoAR pers = personGO.GetComponent<PersonNoAR>();
                 pers.currGame = CurrentGame;
                 pers.team = (Helpers.Teams)team;
-                pers.Position = shipPosition;
+                pers.Position = new Helpers.IntVector2(shipPosition);
                 // Add person to card's list of persons
-                for (int i = 0; i < 3; ++i)
-                {
-                    if (!CurrentGame.PlayingField[shipPosition.x, shipPosition.z].FiguresNoAR[i])
-                    {
-                        CurrentGame.PlayingField[shipPosition.x, shipPosition.z].FiguresNoAR[i] = pers;
-                        break;
-                    }
-                }
+                CurrentGame.PlayingField[shipPosition.x, shipPosition.z].FiguresNoAR[player] = pers;
 
                 personsInTeam[player] = pers;
             }

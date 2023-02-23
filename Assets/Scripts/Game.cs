@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.XR.ARFoundation;
+using UnityEngine.XR.ARSubsystems;
 using Random = UnityEngine.Random;
+
 
 public class Game
 {
@@ -12,6 +16,7 @@ public class Game
     public Dictionary<Helpers.Teams, PersonNoAR[]> PersonsNoAR = new Dictionary<Helpers.Teams, PersonNoAR[]>();
     public List<GameObject> GOPersons = new List<GameObject>();
     public int NumTeams = 2;
+    public Vector3 sizeCardPrefab = new Vector3(0, 0, 0);
 
     public Game()
     {

@@ -13,27 +13,14 @@ public class PersonNoAR : MonoBehaviour
 
     private List<GameObject> _moveCircles = new List<GameObject>();
 
-//    private delegate bool PossibilityToWalk(Helpers.IntVector2 pos);
-
     public Helpers.Teams team = Helpers.Teams.White;
 
     //Return to the ship
     void ReturnToShip()
     {
-        //Simple
-        gameObject.SetActive(false);
+        Position = new Helpers.IntVector2(Ships.AllShips[team].Position);
+        transform.position = currGame.PlayingField[Position.x, Position.z].OwnGO.transform.position;
     }
-
-    //Check where person is
-    // private bool OnWaterCard(Helpers.IntVector2 pos)
-    // {
-    //     return currGame.PlayingField[pos.x, pos.z] is WaterCard;
-    // }
-    //
-    // private bool OnEmptyCard(Helpers.IntVector2 pos)
-    // {
-    //     return currGame.PlayingField[pos.x, pos.z] is not WaterCard;
-    // }
 
     private bool EnemyOnCard(Helpers.IntVector2 pos)
     {
@@ -102,6 +89,8 @@ public class PersonNoAR : MonoBehaviour
 
     public void Move(Vector3 newPos)
     {
+        DestroyCircles();
+        
         //Remove person from prev card
         for (int i = 0; i < 3; ++i)
         {
@@ -113,26 +102,15 @@ public class PersonNoAR : MonoBehaviour
         }
 
         //Change person's pos (in game and in scene)
-        Vector3 posChanges = transform.position - newPos;
-        if (posChanges.x < 0)
-        {
-            Position.x++;
-        }
-        else if (posChanges.x > 0)
-        {
-            Position.x--;
-        }
-
-        if (posChanges.z < 0)
-        {
-            Position.z++;
-        }
-        else if (posChanges.z > 0)
-        {
-            Position.z--;
-        }
-
+        Helpers.IntVector2 prevPos = new Helpers.IntVector2(Position);
+        Vector3 posChanges = newPos - transform.position;
+        Position.x += (int) Math.Round(posChanges.x / currGame.sizeCardPrefab.x);
+        Position.z += (int) Math.Round(posChanges.z / currGame.sizeCardPrefab.z);
         transform.position = newPos;
+        if (currGame.PlayingField[prevPos.x, prevPos.z].Type == Card.CardType.Ship && currGame.PlayingField[Position.x, Position.z].Type == Card.CardType.Water)
+        {
+            (currGame.PlayingField[prevPos.x, prevPos.z] as WaterCard).MoveShip(Position.x, Position.z, currGame);
+        }
 
         //Look at new card
         bool findPlace = false;
@@ -158,7 +136,5 @@ public class PersonNoAR : MonoBehaviour
         {
             currGame.PlayingField[Position.x, Position.z].Open();
         }
-
-        DestroyCircles();
     }
 }

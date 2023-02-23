@@ -9,16 +9,16 @@ public class Card
         Undefined,
         Empty,
         Water,
-        Ship
+        Ship,
+        Horse
     }
 
     public GameObject OwnGO;
     public string LogoPath;
-    public List<Person> Figures = new List<Person>() { null, null, null };
+    public List<Person> Figures = new List<Person>() {null, null, null};
     public List<PersonNoAR> FiguresNoAR = new List<PersonNoAR>() { null, null, null };
     public bool IsOpen = false;
     public CardType Type = CardType.Undefined;
-    
 
     public void UpdateLogo()
     {
@@ -94,26 +94,40 @@ public class WaterCard : Card
             throw new Exception("Can't find path while loading ship logo");
         }
     }
+    
 
     public void MoveShip(int x, int y, Game currGame)
     {
-        if (OwnShip == null)
-        {
-            throw new Exception("Error: water card haven't ship");
-        }
-
         WaterCard waterCardToMove = currGame.PlayingField[x, y] as WaterCard;
         if (waterCardToMove == null)
         {
             throw new Exception("Error: attempt to move the ship to the non water card");
         }
 
+        OwnShip.Position = new Helpers.IntVector2(x, y);
         waterCardToMove.OwnShip = OwnShip;
         waterCardToMove.Type = CardType.Ship;
         OwnShip = null;
         Type = CardType.Water;
         UpdateLogo();
         waterCardToMove.LoadShipLogo();
+    }
+
+    public override void OpenAction()
+    {
+    }
+
+    public override void StepAction()
+    {
+    }
+}
+
+public class HorseCard : Card 
+{
+    public HorseCard()
+    {
+        LogoPath = "Cards/horse";
+        Type = CardType.Horse;
     }
 
     public override void OpenAction()
@@ -165,7 +179,8 @@ public class CardManagerScr : MonoBehaviour
     {
         // Total 169 cards (52 water cards + 117 other). Water must stay first
         Cards.AllCards.Add(new Helpers.PairCardInt(new WaterCard(), 52));
-        Cards.AllCards.Add(new Helpers.PairCardInt(new EmptyCard(), 117));
+        Cards.AllCards.Add(new Helpers.PairCardInt(new EmptyCard(), 67));
+        Cards.AllCards.Add(new Helpers.PairCardInt(new HorseCard(), 50));
         Ships.GenerateShips();
     }
 }
