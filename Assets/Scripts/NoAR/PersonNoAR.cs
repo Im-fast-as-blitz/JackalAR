@@ -38,6 +38,7 @@ public class PersonNoAR : MonoBehaviour
     //Create curr circle to move
     private void CreateMovement(Helpers.IntVector2 addPos, PersonManagerScr.PossibilityToWalk func)
     {
+        Debug.Log("In create movement");
         Helpers.IntVector2 newPos = Position + addPos;
 
         if (0 <= newPos.x && newPos.x <= 12 && 0 <= newPos.z && newPos.z <= 12 && func(newPos))
@@ -50,6 +51,7 @@ public class PersonNoAR : MonoBehaviour
             }
             
             GameObject result;
+            Debug.Log("Have to instantiate movement");
             if (EnemyOnCard(newPos))
             {
                 result = Instantiate(attackCircle, transform.position, Quaternion.identity);
@@ -59,7 +61,8 @@ public class PersonNoAR : MonoBehaviour
                 result = Instantiate(moveCircle, transform.position, Quaternion.identity);
             }
 
-            result.transform.position += addPos.ToVector3() * (transform.localScale.x * mulCoef);
+            //result.transform.position += addPos.ToVector3() * (transform.localScale.x * mulCoef);
+            result.transform.position += addPos.ToVector3() * currGame.sizeCardPrefab.x;
             _moveCircles.Add(result);
         }
     }

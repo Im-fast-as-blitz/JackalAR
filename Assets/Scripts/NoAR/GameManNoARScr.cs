@@ -67,24 +67,35 @@ public class GameManNoARScr : MonoBehaviour
 
     void DetachedMovePerson()
     {
-        if (Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began)
+        if ((Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began) || Input.GetMouseButtonDown(0))
         {
-            Debug.Log("touched first");
-            Touch touch = Input.GetTouch(0);
-            Ray ray = mainCamera.ScreenPointToRay(touch.position);
+            Ray ray;
+            if (Input.GetMouseButtonDown(0))
+            {
+                Debug.Log("clicked");
+                ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+            }
+            else
+            {
+                Debug.Log("touched");
+                ray = mainCamera.ScreenPointToRay(Input.GetTouch(0).position);
+            }
             RaycastHit hitObject;
 
             if (Physics.Raycast(ray, out hitObject, Mathf.Infinity, _layerMask))
+            // if (Physics.Raycast(ray, out hitObject))   // it works
             {
-                Debug.Log("touched second");
+                Debug.Log("after mask");
                 if (hitObject.collider.CompareTag("Person"))
                 {
                     Debug.Log("touched Person");
                     PersonNoAR currPerson = hitObject.collider.gameObject.GetComponent<PersonNoAR>();
                     if (currPerson.team == _currTeam)
                     {
+                        Debug.Log("After team check");
                         if (!_personScr)
                         {
+                            Debug.Log("after magick check");
                             _personScr = currPerson;
                             _personScr.gameObject.layer = LayerMask.NameToLayer("Circles");
                             _layerMask = 1 << LayerMask.NameToLayer("Circles");
@@ -92,6 +103,7 @@ public class GameManNoARScr : MonoBehaviour
                         }
                         else
                         {
+                            Debug.Log("after magick else");
                             _personScr.DestroyCircles();
                             _personScr.gameObject.layer = LayerMask.NameToLayer("Person");
                             _layerMask = 1 << LayerMask.NameToLayer("Person");
