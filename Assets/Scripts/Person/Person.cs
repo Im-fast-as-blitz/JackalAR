@@ -9,13 +9,14 @@ public class Person : MonoBehaviour
     [SerializeField] private GameObject moveCircle;
     [SerializeField] private GameObject attackCircle;
     public int mulCoef = 5;
+    private List<GameObject> _moveCircles = new List<GameObject>();
 
     [NonSerialized] public Helpers.IntVector2 Position;
     public Game currGame;
 
-    private List<GameObject> _moveCircles = new List<GameObject>();
-
     public Helpers.Teams team = Helpers.Teams.White;
+
+    public bool _isAlive = true;
 
     //Return to the ship
     void ReturnToShip()
@@ -24,6 +25,14 @@ public class Person : MonoBehaviour
         //Vector3 newPos = currGame.PlayingField[Position.x, Position.z].OwnGO.transform.position;
         //transform.position = new Vector3(newPos.x, newPos.y, newPos.z);
         transform.position = currGame.PlayingField[Position.x, Position.z].OwnGO.transform.position;
+    }
+    
+    //Deth
+    public void Deth()
+    {
+        ReturnToShip();
+        _isAlive = false;
+        transform.gameObject.SetActive(false);
     }
 
     private bool EnemyOnCard(Helpers.IntVector2 pos)
@@ -118,22 +127,31 @@ public class Person : MonoBehaviour
             (currGame.PlayingField[prevPos.x, prevPos.z] as WaterCard).MoveShip(Position.x, Position.z, currGame);
         }
 
+        Card curCard = currGame.PlayingField[Position.x, Position.z];
+
         //Look at new card
         bool findPlace = false;
         for (int i = 0; i < 3; ++i)
         {
-            if (currGame.PlayingField[Position.x, Position.z].Figures[i])
+            if (curCard.Figures[i])
             {
-                if (currGame.PlayingField[Position.x, Position.z].Figures[i].team != team)
+                if (curCard.Figures[i].team != team)
                 {
-                    currGame.PlayingField[Position.x, Position.z].Figures[i].ReturnToShip();
-                    currGame.PlayingField[Position.x, Position.z].Figures[i] = null;
+                    if (currGame.PlayingField[Position.x, Position.z].Type == Card.CardType.Ship)
+                    {
+                        curCard.Figures[i].Deth();
+                    }
+                    else
+                    {
+                        curCard.Figures[i].ReturnToShip();
+                    }
+                    curCard.Figures[i] = null;
                 }
             }
         
-            if (!currGame.PlayingField[Position.x, Position.z].Figures[i] && !findPlace)
+            if (!curCard.Figures[i] && !findPlace)
             {
-                currGame.PlayingField[Position.x, Position.z].Figures[i] = this;
+                curCard.Figures[i] = this;
                 findPlace = true;
             }
         }
@@ -149,9 +167,13 @@ public class Person : MonoBehaviour
         currGame.PlayingField[Position.x, Position.z].Figures.Add(this);
         */
 
-        if (!currGame.PlayingField[Position.x, Position.z].IsOpen)
+        if (!curCard.IsOpen)
         {
-            currGame.PlayingField[Position.x, Position.z].Open();
+            curCard.Open();
+        }
+        else
+        {
+            curCard.StepAction();
         }
     }
 }

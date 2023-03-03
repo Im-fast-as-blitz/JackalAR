@@ -152,6 +152,13 @@ public class OgreCard : Card
 
     public override void StepAction()
     {
+        if (!Figures[0])
+        {
+            throw new Exception("Can't find a person");
+        }
+
+        Figures[0].Deth();
+        Figures[0] = null;
     }
 }
 
