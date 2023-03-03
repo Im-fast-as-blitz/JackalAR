@@ -106,6 +106,7 @@ public class GameManagerScr : MonoBehaviour
     [SerializeField] private GameObject placedObjectPrefab;
     [SerializeField] private Camera arCamera;
     [SerializeField] private GameObject startText;
+    public bool isGameAR = false;
 
     private ARRaycastManager _arRaycastManagerScript;
     private bool _placedMap = false;
@@ -123,7 +124,10 @@ public class GameManagerScr : MonoBehaviour
         
         PersonManagerScr.currGame = CurrentGame;
 
-        // BuildPlayingField(new Vector3(0, 0, 0)); // for tests
+        if (!isGameAR)
+        {
+            BuildPlayingField(new Vector3(0, 0, 0));
+        }
 
         planeMarkerPrefab.SetActive(false);
     }
@@ -132,7 +136,10 @@ public class GameManagerScr : MonoBehaviour
     {
         if (!_placedMap)
         {
-            ShowMarker();
+            if (isGameAR)
+            {
+                ShowMarker();
+            }
         }
         else
         {
@@ -164,8 +171,9 @@ public class GameManagerScr : MonoBehaviour
 
     void DetachedMovePerson()
     {
-        if (Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began)
+        if ((Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began) || Input.GetMouseButtonDown(1))
         {
+            Debug.Log("lol");
             Touch touch = Input.GetTouch(0);
             Ray ray = arCamera.ScreenPointToRay(touch.position);
             RaycastHit hitObject;

@@ -13,7 +13,8 @@ public class MenuManager : MonoBehaviour
 
     public void StartGame()
     {
-        SceneManager.LoadScene("GameAR");
+        //SceneManager.LoadScene("GameAR");
+        SceneManager.LoadScene("Game");
     }
 
     // Update is called once per frame

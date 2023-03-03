@@ -914,6 +914,7 @@ MonoBehaviour:
   placedObjectPrefab: {fileID: 1405789545}
   arCamera: {fileID: 931570075}
   startText: {fileID: 1038866961}
+  isGameAR: 1
 --- !u!4 &1401574889
 Transform:
   m_ObjectHideFlags: 0
