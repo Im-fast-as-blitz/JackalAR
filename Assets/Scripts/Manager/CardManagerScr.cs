@@ -138,6 +138,23 @@ public class HorseCard : Card
     }
 }
 
+public class OgreCard : Card 
+{
+    public OgreCard()
+    {
+        LogoPath = "Cards/ogre";
+        Type = CardType.Horse;
+    }
+
+    public override void OpenAction()
+    {
+    }
+
+    public override void StepAction()
+    {
+    }
+}
+
 public static class Cards
 {
     public static List<Helpers.PairCardInt> AllCards = new List<Helpers.PairCardInt>();
@@ -178,8 +195,9 @@ public class CardManagerScr : MonoBehaviour
     {
         // Total 169 cards (52 water cards + 117 other). Water must stay first
         Cards.AllCards.Add(new Helpers.PairCardInt(new WaterCard(), 52));
-        Cards.AllCards.Add(new Helpers.PairCardInt(new EmptyCard(), 67));
+        Cards.AllCards.Add(new Helpers.PairCardInt(new EmptyCard(), 60));
         Cards.AllCards.Add(new Helpers.PairCardInt(new HorseCard(), 50));
+        Cards.AllCards.Add(new Helpers.PairCardInt(new OgreCard(), 7));
         Ships.GenerateShips();
     }
 }
