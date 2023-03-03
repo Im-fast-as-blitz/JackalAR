@@ -105,13 +105,13 @@ public class Person : MonoBehaviour
                 break;
             }
         }
-        //currGame.PlayingField[Position.x, Position.z].Figures.Remove(this);
 
         //Change person's pos (in game and in scene)
         Helpers.IntVector2 prevPos = new Helpers.IntVector2(Position);
         Vector3 posChanges = newPos - transform.position;
         Position.x += (int) Math.Round(posChanges.x / currGame.sizeCardPrefab.x);
         Position.z += (int) Math.Round(posChanges.z / currGame.sizeCardPrefab.z);
+        Debug.Log("must change position");
         transform.position = newPos;
         if (currGame.PlayingField[prevPos.x, prevPos.z].Type == Card.CardType.Ship && currGame.PlayingField[Position.x, Position.z].Type == Card.CardType.Water)
         {
@@ -137,21 +137,11 @@ public class Person : MonoBehaviour
                 findPlace = true;
             }
         }
-        /*
-        foreach (var figure in currGame.PlayingField[Position.x, Position.z].Figures)
-        {
-            if (figure.team != team)
-            {
-                figure.ReturnToShip();
-                currGame.PlayingField[Position.x, Position.z].Figures.Remove(figure);
-            }
-        }
-        currGame.PlayingField[Position.x, Position.z].Figures.Add(this);
-        */
 
         if (!currGame.PlayingField[Position.x, Position.z].IsOpen)
         {
             currGame.PlayingField[Position.x, Position.z].Open();
         }
+        currGame.PlayingField[Position.x, Position.z].StepAction();
     }
 }

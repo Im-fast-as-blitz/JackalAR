@@ -10,7 +10,8 @@ public class Card
         Empty,
         Water,
         Ship,
-        Horse
+        Horse,
+        Cannon
     }
 
     public GameObject OwnGO;
@@ -138,6 +139,42 @@ public class HorseCard : Card
     }
 }
 
+public enum CannonRotation{
+    Down, Left, Up, Right
+}
+public class CannonCard : Card 
+{
+    public CannonRotation Rotation;
+    public CannonCard()
+    {
+        LogoPath = "Cards/cannon";
+        Type = CardType.Cannon;
+    }
+
+    public override void OpenAction()
+    {
+    }
+
+    public override void StepAction()
+    {
+    //     Helpers.IntVector2 newPos = Figures[0].Position;
+    //     if (Rotation == CannonRotation.Down)
+    //     {
+    //         newPos.z = 0;
+    //     } else if (Rotation == CannonRotation.Left)
+    //     {
+    //         newPos.x = 0;
+    //     } else if (Rotation == CannonRotation.Up)
+    //     {
+    //         newPos.z = 12;
+    //     } else if (Rotation == CannonRotation.Right)
+    //     {
+    //         newPos.x = 12;
+    //     }
+    //     Figures[0].Move(OwnGO.transform.position);
+    }
+}
+
 public static class Cards
 {
     public static List<Helpers.PairCardInt> AllCards = new List<Helpers.PairCardInt>();
@@ -178,8 +215,9 @@ public class CardManagerScr : MonoBehaviour
     {
         // Total 169 cards (52 water cards + 117 other). Water must stay first
         Cards.AllCards.Add(new Helpers.PairCardInt(new WaterCard(), 52));
-        Cards.AllCards.Add(new Helpers.PairCardInt(new EmptyCard(), 67));
+        Cards.AllCards.Add(new Helpers.PairCardInt(new EmptyCard(), 30));
         Cards.AllCards.Add(new Helpers.PairCardInt(new HorseCard(), 50));
+        Cards.AllCards.Add(new Helpers.PairCardInt(new CannonCard(), 37));
         Ships.GenerateShips();
     }
 }

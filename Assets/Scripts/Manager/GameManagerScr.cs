@@ -240,16 +240,17 @@ public class GameManagerScr : MonoBehaviour
         {
             for (int i = 0; i < CurrentGame.PlayingField.GetLength(0); i++)
             {
+                Card ownCard = CurrentGame.PlayingField[i, j];
                 float newX = firstCardPosition.x + i * CurrentGame.sizeCardPrefab.x;
                 float newY = firstCardPosition.y;
                 float newZ = firstCardPosition.z + j * CurrentGame.sizeCardPrefab.z;
                 Vector3 newPosition = new Vector3(newX, newY, newZ);
+                
                 GameObject cardGO = Instantiate(cardPrefab, newPosition, Quaternion.identity);
 
                 CurrentGame.GOCards[i, j] = cardGO;
-
-                Card ownCard = CurrentGame.PlayingField[i, j];
                 ownCard.OwnGO = cardGO;
+                
                 if (ownCard is WaterCard)
                 {
                     ownCard.Open();
@@ -259,6 +260,11 @@ public class GameManagerScr : MonoBehaviour
                     {
                         ownWaterCard.LoadShipLogo();
                     }
+                } else if (ownCard is CannonCard)
+                {
+                    int rotation = Random.Range(0, 4);
+                    (ownCard as CannonCard).Rotation = (CannonRotation) rotation;
+                    cardGO.transform.eulerAngles = new Vector3(0, 90 * rotation, 0);
                 }
             }
         }

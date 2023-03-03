@@ -25,6 +25,8 @@ public class PersonManagerScr : MonoBehaviour
     {
         return !(((pos.x is 1 or 11) && (pos.z is 0 or 12)) || ((pos.x is 0 or 12) && (pos.z is 1 or 11)));
     }
+    
+    
 
     private void Awake()
     {
@@ -66,6 +68,9 @@ public class PersonManagerScr : MonoBehaviour
         // Horse
         PossibilityToWalkByType.Add(Card.CardType.Horse, OnEmptyCard);
         DirectionsToWalkByType.Add(Card.CardType.Horse, HorseDirections);
+        // Cannon
+        PossibilityToWalkByType.Add(Card.CardType.Cannon, OnEmptyCard);
+        DirectionsToWalkByType.Add(Card.CardType.Cannon, HorseDirections);
     }
 
     public static List<Helpers.IntVector2> DefaultDirections = new List<Helpers.IntVector2>();
