@@ -546,6 +546,7 @@ MonoBehaviour:
   arCamera: {fileID: 1668834003}
   startText: {fileID: 0}
   isGameAR: 0
+  isDebug: 1
 --- !u!114 &1120077347
 MonoBehaviour:
   m_ObjectHideFlags: 0
