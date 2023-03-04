@@ -38,7 +38,6 @@ public class Card
         IsOpen = true;
         UpdateLogo();
         OpenAction();
-        StepAction();
     }
 
     public virtual void OpenAction()
@@ -104,7 +103,7 @@ public class WaterCard : Card
             throw new Exception("Error: attempt to move the ship to the non water card");
         }
 
-        OwnShip.Position = new Helpers.IntVector2(x, y);
+        OwnShip.Position = new IntVector2(x, y);
         waterCardToMove.OwnShip = OwnShip;
         waterCardToMove.Type = CardType.Ship;
         OwnShip = null;
@@ -140,7 +139,7 @@ public class HorseCard : Card
 }
 
 public enum CannonRotation{
-    Down, Left, Up, Right
+    Up = 0, Right = 1, Down = 2, Left = 3
 }
 public class CannonCard : Card 
 {
@@ -153,41 +152,27 @@ public class CannonCard : Card
 
     public override void OpenAction()
     {
+        OwnGO.transform.eulerAngles = new Vector3(0, 90 * (int) Rotation, 0);
     }
 
     public override void StepAction()
     {
-    //     Helpers.IntVector2 newPos = Figures[0].Position;
-    //     if (Rotation == CannonRotation.Down)
-    //     {
-    //         newPos.z = 0;
-    //     } else if (Rotation == CannonRotation.Left)
-    //     {
-    //         newPos.x = 0;
-    //     } else if (Rotation == CannonRotation.Up)
-    //     {
-    //         newPos.z = 12;
-    //     } else if (Rotation == CannonRotation.Right)
-    //     {
-    //         newPos.x = 12;
-    //     }
-    //     Figures[0].Move(OwnGO.transform.position);
     }
 }
 
 public static class Cards
 {
-    public static List<Helpers.PairCardInt> AllCards = new List<Helpers.PairCardInt>();
+    public static List<PairCardInt> AllCards = new List<PairCardInt>();
 }
 
 public class Ship
 {
-    public Helpers.Teams team;
+    public Teams team;
     public string LogoPath;
     public List<Person> Figures = new List<Person>();
-    public Helpers.IntVector2 Position;
+    public IntVector2 Position;
 
-    public Ship(Helpers.Teams shipTeam, string logoPath, Helpers.IntVector2 position)
+    public Ship(Teams shipTeam, string logoPath, IntVector2 position)
     {
         team = shipTeam;
         LogoPath = logoPath;
@@ -197,15 +182,15 @@ public class Ship
 
 public static class Ships
 {
-    public static Dictionary<Helpers.Teams, Ship> AllShips = new Dictionary<Helpers.Teams, Ship>();
+    public static Dictionary<Teams, Ship> AllShips = new Dictionary<Teams, Ship>();
 
     public static void GenerateShips()
     {
-        AllShips.Add(Helpers.Teams.White, new Ship(Helpers.Teams.White, "Ships/white", new Helpers.IntVector2(6, 0)));
-        AllShips.Add(Helpers.Teams.Red, new Ship(Helpers.Teams.Red, "Ships/red", new Helpers.IntVector2(12, 6)));
-        AllShips.Add(Helpers.Teams.Black, new Ship(Helpers.Teams.Black, "Ships/black", new Helpers.IntVector2(0, 6)));
-        AllShips.Add(Helpers.Teams.Yellow,
-            new Ship(Helpers.Teams.Yellow, "Ships/yellow", new Helpers.IntVector2(6, 12)));
+        AllShips.Add(Teams.White, new Ship(Teams.White, "Ships/white", new IntVector2(6, 0)));
+        AllShips.Add(Teams.Red, new Ship(Teams.Red, "Ships/red", new IntVector2(12, 6)));
+        AllShips.Add(Teams.Black, new Ship(Teams.Black, "Ships/black", new IntVector2(0, 6)));
+        AllShips.Add(Teams.Yellow,
+            new Ship(Teams.Yellow, "Ships/yellow", new IntVector2(6, 12)));
     }
 }
 
@@ -214,10 +199,10 @@ public class CardManagerScr : MonoBehaviour
     public void Awake()
     {
         // Total 169 cards (52 water cards + 117 other). Water must stay first
-        Cards.AllCards.Add(new Helpers.PairCardInt(new WaterCard(), 52));
-        Cards.AllCards.Add(new Helpers.PairCardInt(new EmptyCard(), 30));
-        Cards.AllCards.Add(new Helpers.PairCardInt(new HorseCard(), 50));
-        Cards.AllCards.Add(new Helpers.PairCardInt(new CannonCard(), 37));
+        Cards.AllCards.Add(new PairCardInt(new WaterCard(), 52));
+        Cards.AllCards.Add(new PairCardInt(new EmptyCard(), 30));
+        Cards.AllCards.Add(new PairCardInt(new HorseCard(), 30));
+        Cards.AllCards.Add(new PairCardInt(new CannonCard(), 57));
         Ships.GenerateShips();
     }
 }

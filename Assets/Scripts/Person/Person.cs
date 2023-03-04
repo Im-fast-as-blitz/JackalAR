@@ -10,23 +10,23 @@ public class Person : MonoBehaviour
     [SerializeField] private GameObject attackCircle;
     public int mulCoef = 5;
 
-    [NonSerialized] public Helpers.IntVector2 Position;
+    [NonSerialized] public IntVector2 Position;
     public Game currGame;
 
     private List<GameObject> _moveCircles = new List<GameObject>();
 
-    public Helpers.Teams team = Helpers.Teams.White;
+    public Teams team = Teams.White;
 
     //Return to the ship
     void ReturnToShip()
     {
-        Position = new Helpers.IntVector2(Ships.AllShips[team].Position);
+        Position = new IntVector2(Ships.AllShips[team].Position);
         //Vector3 newPos = currGame.PlayingField[Position.x, Position.z].OwnGO.transform.position;
         //transform.position = new Vector3(newPos.x, newPos.y, newPos.z);
         transform.position = currGame.PlayingField[Position.x, Position.z].OwnGO.transform.position;
     }
 
-    private bool EnemyOnCard(Helpers.IntVector2 pos)
+    private bool EnemyOnCard(IntVector2 pos)
     {
         foreach (var figure in currGame.PlayingField[pos.x, pos.z].Figures)
         {
@@ -35,32 +35,34 @@ public class Person : MonoBehaviour
                 return true;
             }
         }
-        
+
         return false;
     }
 
     //Create curr circle to move
-    private void CreateMovement(Helpers.IntVector2 addPos, PersonManagerScr.PossibilityToWalk func)
+    private void CreateMovement(IntVector2 addPos, PersonManagerScr.PossibilityToWalk func1,
+        PersonManagerScr.PossibilityToWalk func2)
     {
-        Helpers.IntVector2 newPos = Position + addPos;
+        IntVector2 newPos = Position + addPos;
 
-        if ((newPos.x is >= 0 and <= 12) && (newPos.z is >= 0 and <= 12) && func(newPos))
+        if ((newPos.x is >= 0 and <= 12) && (newPos.z is >= 0 and <= 12) && func1(newPos) && func2(addPos))
         {
             Card currCard = currGame.PlayingField[newPos.x, newPos.z];
-            bool isEnemyShip = ((currCard.Type == Card.CardType.Ship) && ((currCard as WaterCard).OwnShip.team != team));
+            bool isEnemyShip =
+                ((currCard.Type == Card.CardType.Ship) && ((currCard as WaterCard).OwnShip.team != team));
             if (isEnemyShip)
             {
                 return;
             }
-            
+
             GameObject result;
             if (EnemyOnCard(newPos))
             {
-                result = Instantiate(attackCircle, transform.position, Quaternion.identity);
+                result = Instantiate(attackCircle, transform.position, new Quaternion(0, 0, 0, 0));
             }
             else
             {
-                result = Instantiate(moveCircle, transform.position, Quaternion.identity);
+                result = Instantiate(moveCircle, transform.position, new Quaternion(0, 0, 0, 0));
             }
 
             result.transform.position += addPos.ToVector3() * (transform.localScale.x * mulCoef);
@@ -72,12 +74,19 @@ public class Person : MonoBehaviour
     public void GenerateMovements()
     {
         Card currentCard = currGame.PlayingField[Position.x, Position.z];
-        PersonManagerScr.PossibilityToWalk func = PersonManagerScr.PossibilityToWalkByType[currentCard.Type];
-        List<Helpers.IntVector2> directions = PersonManagerScr.DirectionsToWalkByType[currentCard.Type];
+        PersonManagerScr.PossibilityToWalk possByType = PersonManagerScr.PossibilityToWalkByType[currentCard.Type];
+        List<IntVector2> directions = PersonManagerScr.DirectionsToWalkByType[currentCard.Type];
+        PersonManagerScr.PossibilityToWalk possByRotation = PersonManagerScr.PossibilityToWalkByRotation[-1];
+        if (currentCard is CannonCard)
+        {
+            possByRotation = PersonManagerScr.PossibilityToWalkByRotation[(int)(currentCard as CannonCard).Rotation];
+        }
+
+
 
         foreach (var direction in directions)
         {
-            CreateMovement(direction, func);
+            CreateMovement(direction, possByType, possByRotation);
         }
     }
 
@@ -94,9 +103,9 @@ public class Person : MonoBehaviour
     public void Move(Vector3 newPos)
     {
         DestroyCircles();
-        
+
         //Remove person from prev card
-        
+
         for (int i = 0; i < 3; ++i)
         {
             if (currGame.PlayingField[Position.x, Position.z].Figures[i] == this)
@@ -107,13 +116,13 @@ public class Person : MonoBehaviour
         }
 
         //Change person's pos (in game and in scene)
-        Helpers.IntVector2 prevPos = new Helpers.IntVector2(Position);
+        IntVector2 prevPos = new IntVector2(Position);
         Vector3 posChanges = newPos - transform.position;
-        Position.x += (int) Math.Round(posChanges.x / currGame.sizeCardPrefab.x);
-        Position.z += (int) Math.Round(posChanges.z / currGame.sizeCardPrefab.z);
-        Debug.Log("must change position");
+        Position.x += (int)Math.Round(posChanges.x / currGame.sizeCardPrefab.x);
+        Position.z += (int)Math.Round(posChanges.z / currGame.sizeCardPrefab.z);
         transform.position = newPos;
-        if (currGame.PlayingField[prevPos.x, prevPos.z].Type == Card.CardType.Ship && currGame.PlayingField[Position.x, Position.z].Type == Card.CardType.Water)
+        if (currGame.PlayingField[prevPos.x, prevPos.z].Type == Card.CardType.Ship &&
+            currGame.PlayingField[Position.x, Position.z].Type == Card.CardType.Water)
         {
             (currGame.PlayingField[prevPos.x, prevPos.z] as WaterCard).MoveShip(Position.x, Position.z, currGame);
         }
@@ -130,7 +139,7 @@ public class Person : MonoBehaviour
                     currGame.PlayingField[Position.x, Position.z].Figures[i] = null;
                 }
             }
-        
+
             if (!currGame.PlayingField[Position.x, Position.z].Figures[i] && !findPlace)
             {
                 currGame.PlayingField[Position.x, Position.z].Figures[i] = this;
@@ -142,6 +151,7 @@ public class Person : MonoBehaviour
         {
             currGame.PlayingField[Position.x, Position.z].Open();
         }
+
         currGame.PlayingField[Position.x, Position.z].StepAction();
     }
 }

@@ -12,7 +12,7 @@ public class Game
     public const int PlayingFieldFirstDim = 13, PlayingFieldSecondDim = 13; // size of playing field
     public Card[,] PlayingField = new Card[PlayingFieldFirstDim, PlayingFieldSecondDim];
     public GameObject[,] GOCards = new GameObject[PlayingFieldFirstDim, PlayingFieldSecondDim];
-    public Dictionary<Helpers.Teams, Person[]> Persons = new Dictionary<Helpers.Teams, Person[]>();
+    public Dictionary<Teams, Person[]> Persons = new Dictionary<Teams, Person[]>();
     public int NumTeams = 2;
     public Vector3 sizeCardPrefab = new Vector3(0, 0, 0);
 
@@ -114,7 +114,7 @@ public class GameManagerScr : MonoBehaviour
     private Person _personScr;
     private LayerMask _layerMask;
 
-    private Helpers.Teams _currTeam = Helpers.Teams.White;
+    private Teams _currTeam = Teams.White;
 
     void Start()
     {
@@ -213,13 +213,13 @@ public class GameManagerScr : MonoBehaviour
                     _personScr.gameObject.layer = LayerMask.NameToLayer("Person");
                     _layerMask = 1 << LayerMask.NameToLayer("Person");
                     _personScr = null;
-                    if (_currTeam == Helpers.Teams.White)
+                    if (_currTeam == Teams.White)
                     {
-                        _currTeam = Helpers.Teams.Red;
+                        _currTeam = Teams.Red;
                     }
                     else
                     {
-                        _currTeam = Helpers.Teams.White;
+                        _currTeam = Teams.White;
                     }
                 }
             }
@@ -264,7 +264,6 @@ public class GameManagerScr : MonoBehaviour
                 {
                     int rotation = Random.Range(0, 4);
                     (ownCard as CannonCard).Rotation = (CannonRotation) rotation;
-                    cardGO.transform.eulerAngles = new Vector3(0, 90 * rotation, 0);
                 }
             }
         }
@@ -277,7 +276,7 @@ public class GameManagerScr : MonoBehaviour
 
             for (int player = 0; player < numPersonsInTeam; player++)
             {
-                Helpers.IntVector2 shipPosition = Ships.AllShips[(Helpers.Teams)team].Position;
+                IntVector2 shipPosition = Ships.AllShips[(Teams)team].Position;
                 float persX = firstCardX + shipPosition.x * CurrentGame.sizeCardPrefab.x;
                 float persY = firstCardY;
                 float persZ = firstCardZ + shipPosition.z * CurrentGame.sizeCardPrefab.z;
@@ -287,14 +286,14 @@ public class GameManagerScr : MonoBehaviour
                 personGO.SetActive(true);
                 Person pers = personGO.GetComponent<Person>();
                 pers.currGame = CurrentGame;
-                pers.team = (Helpers.Teams)team;
-                pers.Position = new Helpers.IntVector2(shipPosition);
+                pers.team = (Teams)team;
+                pers.Position = new IntVector2(shipPosition);
                 // Add person to card's list of persons
                 CurrentGame.PlayingField[shipPosition.x, shipPosition.z].Figures[player] = pers;
 
                 personsInTeam[player] = pers;
             }
-            CurrentGame.Persons.Add((Helpers.Teams)team, personsInTeam);
+            CurrentGame.Persons.Add((Teams)team, personsInTeam);
         }
     }
 }
