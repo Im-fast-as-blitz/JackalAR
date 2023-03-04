@@ -28,8 +28,8 @@ public class Person : MonoBehaviour
         transform.position = currGame.PlayingField[Position.x, Position.z].OwnGO.transform.position;
     }
     
-    //Deth
-    public void Deth()
+    //Death
+    public void Death()
     {
         ReturnToShip();
         _isAlive = false;
@@ -149,7 +149,7 @@ public class Person : MonoBehaviour
                 {
                     if (currGame.PlayingField[Position.x, Position.z].Type == Card.CardType.Ship)
                     {
-                        curCard.Figures[i].Deth();
+                        curCard.Figures[i].Death();
                     }
                     else
                     {

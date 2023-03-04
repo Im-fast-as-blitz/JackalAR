@@ -181,7 +181,7 @@ public class OgreCard : Card
             throw new Exception("Can't find a person");
         }
 
-        Figures[0].Deth();
+        Figures[0].Death();
         Figures[0] = null;
     }
 }
@@ -228,7 +228,8 @@ public class CardManagerScr : MonoBehaviour
         Cards.AllCards.Add(new PairCardInt(new WaterCard(), 52));
         Cards.AllCards.Add(new PairCardInt(new EmptyCard(), 30));
         Cards.AllCards.Add(new PairCardInt(new HorseCard(), 30));
-        Cards.AllCards.Add(new PairCardInt(new CannonCard(), 57));
+        Cards.AllCards.Add(new PairCardInt(new CannonCard(), 27));
+        Cards.AllCards.Add(new PairCardInt(new OgreCard(), 30));
         Ships.GenerateShips();
     }
 }
