@@ -10,7 +10,10 @@ public class Card
         Empty,
         Water,
         Ship,
-        Horse
+        Horse,
+        Ogre,
+        Shaman,
+        Fortress
     }
 
     public GameObject OwnGO;
@@ -143,7 +146,7 @@ public class OgreCard : Card
     public OgreCard()
     {
         LogoPath = "Cards/ogre";
-        Type = CardType.Horse;
+        Type = CardType.Ogre;
     }
 
     public override void OpenAction()
@@ -162,12 +165,30 @@ public class OgreCard : Card
     }
 }
 
+public class FortressCard : Card 
+{
+    public FortressCard()
+    {
+        LogoPath = "Cards/fortress";
+        Type = CardType.Fortress;
+    }
+
+    public override void OpenAction()
+    {
+    }
+
+    public override void StepAction()
+    {
+        
+    }
+}
+    
 public class ShamanCard : Card 
 {
     public ShamanCard()
     {
         LogoPath = "Cards/shaman";
-        Type = CardType.Horse;
+        Type = CardType.Shaman;
     }
 
     public override void OpenAction()
@@ -221,9 +242,10 @@ public class CardManagerScr : MonoBehaviour
         // Total 169 cards (52 water cards + 117 other). Water must stay first
         Cards.AllCards.Add(new Helpers.PairCardInt(new WaterCard(), 52));
         Cards.AllCards.Add(new Helpers.PairCardInt(new EmptyCard(), 50));
-        Cards.AllCards.Add(new Helpers.PairCardInt(new HorseCard(), 47));
+        Cards.AllCards.Add(new Helpers.PairCardInt(new HorseCard(), 37));
         Cards.AllCards.Add(new Helpers.PairCardInt(new OgreCard(), 10));
         Cards.AllCards.Add(new Helpers.PairCardInt(new ShamanCard(), 10));
+        Cards.AllCards.Add(new Helpers.PairCardInt(new FortressCard(), 10));
         Ships.GenerateShips();
     }
 }

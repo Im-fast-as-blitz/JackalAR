@@ -66,6 +66,12 @@ public class PersonManagerScr : MonoBehaviour
         // Horse
         PossibilityToWalkByType.Add(Card.CardType.Horse, OnEmptyCard);
         DirectionsToWalkByType.Add(Card.CardType.Horse, HorseDirections);
+        // Fortress
+        PossibilityToWalkByType.Add(Card.CardType.Fortress, OnEmptyCard);
+        DirectionsToWalkByType.Add(Card.CardType.Fortress, DefaultDirections);
+        // Shaman
+        PossibilityToWalkByType.Add(Card.CardType.Shaman, OnEmptyCard);
+        DirectionsToWalkByType.Add(Card.CardType.Shaman, DefaultDirections);
     }
 
     public static List<Helpers.IntVector2> DefaultDirections = new List<Helpers.IntVector2>();

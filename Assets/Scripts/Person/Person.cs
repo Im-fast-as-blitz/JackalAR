@@ -62,18 +62,25 @@ public class Person : MonoBehaviour
                 return;
             }
             
-            GameObject result;
+            GameObject result = null;
             if (EnemyOnCard(newPos))
             {
-                result = Instantiate(attackCircle, transform.position, Quaternion.identity);
+                if (currGame.PlayingField[newPos.x, newPos.z].Type != Card.CardType.Fortress && 
+                    currGame.PlayingField[newPos.x, newPos.z].Type != Card.CardType.Shaman)
+                {
+                    result = Instantiate(attackCircle, transform.position, Quaternion.identity);
+                }
             }
             else
             {
                 result = Instantiate(moveCircle, transform.position, Quaternion.identity);
             }
 
-            result.transform.position += addPos.ToVector3() * (transform.localScale.x * mulCoef);
-            _moveCircles.Add(result);
+            if (result)
+            {
+                result.transform.position += addPos.ToVector3() * (transform.localScale.x * mulCoef);
+                _moveCircles.Add(result);
+            }
         }
     }
 
@@ -122,12 +129,18 @@ public class Person : MonoBehaviour
         Position.x += (int) Math.Round(posChanges.x / currGame.sizeCardPrefab.x);
         Position.z += (int) Math.Round(posChanges.z / currGame.sizeCardPrefab.z);
         transform.position = newPos;
-        if (currGame.PlayingField[prevPos.x, prevPos.z].Type == Card.CardType.Ship && currGame.PlayingField[Position.x, Position.z].Type == Card.CardType.Water)
+        Card curCard = currGame.PlayingField[Position.x, Position.z];
+        if (currGame.PlayingField[prevPos.x, prevPos.z].Type == Card.CardType.Ship && curCard.Type == Card.CardType.Water)
         {
             (currGame.PlayingField[prevPos.x, prevPos.z] as WaterCard).MoveShip(Position.x, Position.z, currGame);
+            for (int i = 0; i < 3; ++i)
+            {
+                if (currGame.PlayingField[prevPos.x, prevPos.z].Figures[i] && currGame.PlayingField[prevPos.x, prevPos.z].Figures[i] != this)
+                {
+                    currGame.PlayingField[prevPos.x, prevPos.z].Figures[i].Move(newPos);
+                }
+            }
         }
-
-        Card curCard = currGame.PlayingField[Position.x, Position.z];
 
         //Look at new card
         bool findPlace = false;
