@@ -129,6 +129,7 @@ public class GameManagerScr : MonoBehaviour
         {
             BuildPlayingField(new Vector3(0, 0, 0));
             _placedMap = true;
+            arCamera.transform.position = new Vector3(0, 2f, 0);
         }
 
         planeMarkerPrefab.SetActive(false);
@@ -271,7 +272,7 @@ public class GameManagerScr : MonoBehaviour
         // Generate persons on ships
         for (int team = 0; team < CurrentGame.NumTeams; team++)
         {
-            const int numPersonsInTeam = 1;
+            const int numPersonsInTeam = 2;
             Person[] personsInTeam = new Person[numPersonsInTeam];
 
             for (int player = 0; player < numPersonsInTeam; player++)

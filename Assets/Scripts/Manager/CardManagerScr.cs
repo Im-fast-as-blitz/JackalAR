@@ -11,7 +11,8 @@ public class Card
         Water,
         Ship,
         Horse,
-        Cannon
+        Cannon,
+        Ogre
     }
 
     public GameObject OwnGO;
@@ -141,15 +142,16 @@ public class HorseCard : Card
 public enum CannonRotation{
     Up = 0, Right = 1, Down = 2, Left = 3
 }
-public class CannonCard : Card 
+
+public class CannonCard : Card
 {
     public CannonRotation Rotation;
+
     public CannonCard()
     {
         LogoPath = "Cards/cannon";
         Type = CardType.Cannon;
     }
-
     public override void OpenAction()
     {
         OwnGO.transform.eulerAngles = new Vector3(0, 90 * (int) Rotation, 0);
@@ -157,6 +159,30 @@ public class CannonCard : Card
 
     public override void StepAction()
     {
+    }
+}
+
+public class OgreCard : Card 
+{
+    public OgreCard()
+    {
+        LogoPath = "Cards/ogre";
+        Type = CardType.Ogre;
+    }
+
+    public override void OpenAction()
+    {
+    }
+
+    public override void StepAction()
+    {
+        if (!Figures[0])
+        {
+            throw new Exception("Can't find a person");
+        }
+
+        Figures[0].Deth();
+        Figures[0] = null;
     }
 }
 
