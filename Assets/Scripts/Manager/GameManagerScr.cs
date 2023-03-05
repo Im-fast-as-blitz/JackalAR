@@ -122,7 +122,7 @@ public class GameManagerScr : MonoBehaviour
         _layerMask = 1 << LayerMask.NameToLayer("Person");
 
         CurrentGame = new Game();
-        
+
         PersonManagerScr.currGame = CurrentGame;
 
         if (!isGameAR)
@@ -171,18 +171,20 @@ public class GameManagerScr : MonoBehaviour
 
     void DetachedMovePerson()
     {
-        if ((Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began) || (isDebug && Input.GetMouseButtonDown(0)))
+        if ((Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began) ||
+            (isDebug && Input.GetMouseButtonDown(0)))
         {
             Ray ray;
             if (!isDebug)
             {
-                Touch touch = Input.GetTouch(0); 
+                Touch touch = Input.GetTouch(0);
                 ray = arCamera.ScreenPointToRay(touch.position);
             }
             else
             {
                 ray = arCamera.ScreenPointToRay(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 1));
             }
+
             RaycastHit hitObject;
 
             if (Physics.Raycast(ray, out hitObject, Mathf.Infinity, _layerMask))
@@ -246,12 +248,12 @@ public class GameManagerScr : MonoBehaviour
                 float newY = firstCardPosition.y;
                 float newZ = firstCardPosition.z + j * CurrentGame.sizeCardPrefab.z;
                 Vector3 newPosition = new Vector3(newX, newY, newZ);
-                
+
                 GameObject cardGO = Instantiate(cardPrefab, newPosition, Quaternion.identity);
 
                 CurrentGame.GOCards[i, j] = cardGO;
                 ownCard.OwnGO = cardGO;
-                
+
                 if (ownCard is WaterCard)
                 {
                     ownCard.Open();
@@ -261,10 +263,54 @@ public class GameManagerScr : MonoBehaviour
                     {
                         ownWaterCard.LoadShipLogo();
                     }
-                } else if (ownCard is CannonCard)
+                }
+                else if (ownCard is CannonCard)
                 {
-                    int rotation = Random.Range(0, 4);
-                    (ownCard as CannonCard).Rotation = (CannonRotation) rotation;
+                    (ownCard as CannonCard).Rotation = (Rotation)Random.Range(0, 4);
+                }
+                else if (ownCard is ArrowCard)
+                {
+                    int arrowType = Random.Range(0, 7);
+                    if (arrowType == 0)
+                    {
+                        ownCard.Type = Card.CardType.ArrowStraight;
+                        ownCard.LogoPath = "Cards/Arrows/straight";
+                    }
+                    else if (arrowType == 1)
+                    {
+                        ownCard.Type = Card.CardType.ArrowDiagonal;
+                        ownCard.LogoPath = "Cards/Arrows/diagonal";
+                    }
+                    else if (arrowType == 2)
+                    {
+                        ownCard.Type = Card.CardType.ArrowStraight2;
+                        ownCard.LogoPath = "Cards/Arrows/straight2";
+                    }
+                    else if (arrowType == 3)
+                    {
+                        ownCard.Type = Card.CardType.ArrowDiagonal2;
+                        ownCard.LogoPath = "Cards/Arrows/diagonal2";
+                    }
+                    else if (arrowType == 4)
+                    {
+                        ownCard.Type = Card.CardType.Arrow3;
+                        ownCard.LogoPath = "Cards/Arrows/3";
+                    }
+                    else if (arrowType == 5)
+                    {
+                        ownCard.Type = Card.CardType.ArrowStraight4;
+                        ownCard.LogoPath = "Cards/Arrows/straight4";
+                    }
+                    else if (arrowType == 6)
+                    {
+                        ownCard.Type = Card.CardType.ArrowDiagonal4;
+                        ownCard.LogoPath = "Cards/Arrows/diagonal4";
+                    }
+
+                    if (ownCard.Type != Card.CardType.ArrowStraight4 && ownCard.Type != Card.CardType.ArrowDiagonal4)
+                    {
+                        (ownCard as ArrowCard).Rotation = (Rotation)Random.Range(0, 4);
+                    }
                 }
             }
         }
@@ -294,6 +340,7 @@ public class GameManagerScr : MonoBehaviour
 
                 personsInTeam[player] = pers;
             }
+
             CurrentGame.Persons.Add((Teams)team, personsInTeam);
         }
     }

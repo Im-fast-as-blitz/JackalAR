@@ -13,7 +13,7 @@ public class Person : MonoBehaviour
 
     [NonSerialized] public IntVector2 Position;
     public Game currGame;
-    
+
     public Teams team = Teams.White;
 
 
@@ -27,7 +27,7 @@ public class Person : MonoBehaviour
         //transform.position = new Vector3(newPos.x, newPos.y, newPos.z);
         transform.position = currGame.PlayingField[Position.x, Position.z].OwnGO.transform.position;
     }
-    
+
     //Death
     public void Death()
     {
@@ -86,12 +86,17 @@ public class Person : MonoBehaviour
         Card currentCard = currGame.PlayingField[Position.x, Position.z];
         PersonManagerScr.PossibilityToWalk possByType = PersonManagerScr.PossibilityToWalkByType[currentCard.Type];
         List<IntVector2> directions = PersonManagerScr.DirectionsToWalkByType[currentCard.Type];
-        PersonManagerScr.PossibilityToWalk possByRotation = PersonManagerScr.PossibilityToWalkByRotation[-1];
+        PersonManagerScr.PossibilityToWalk possByRotation = PersonManagerScr.RotationDefault;
         if (currentCard is CannonCard)
         {
-            possByRotation = PersonManagerScr.PossibilityToWalkByRotation[(int)(currentCard as CannonCard).Rotation];
+            possByRotation = PersonManagerScr.PossibilityToWalkByRotation[
+                new Tuple<int, Card.CardType>((int)(currentCard as CannonCard).Rotation, currentCard.Type)];
         }
-
+        else if (currentCard is ArrowCard)
+        {
+            possByRotation = PersonManagerScr.PossibilityToWalkByRotation[
+                new Tuple<int, Card.CardType>((int)(currentCard as ArrowCard).Rotation, currentCard.Type)];
+        }
 
 
         foreach (var direction in directions)
@@ -155,6 +160,7 @@ public class Person : MonoBehaviour
                     {
                         curCard.Figures[i].ReturnToShip();
                     }
+
                     curCard.Figures[i] = null;
                 }
             }

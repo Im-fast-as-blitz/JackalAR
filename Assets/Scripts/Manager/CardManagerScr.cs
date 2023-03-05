@@ -6,18 +6,25 @@ public class Card
 {
     public enum CardType
     {
-        Undefined,
-        Empty,
-        Water,
-        Ship,
-        Horse,
-        Cannon,
-        Ogre
+        Undefined = -1,
+        Empty = 0,
+        Water = 1,
+        Ship = 2,
+        Horse = 3,
+        Cannon = 4,
+        Ogre = 5,
+        ArrowStraight = 6,
+        ArrowStraight2 = 7,
+        ArrowDiagonal = 8,
+        ArrowDiagonal2 = 9,
+        Arrow3 = 10,
+        ArrowStraight4 = 11,
+        ArrowDiagonal4 = 12
     }
 
     public GameObject OwnGO;
     public string LogoPath;
-    public List<Person> Figures = new List<Person>() {null, null, null};
+    public List<Person> Figures = new List<Person>() { null, null, null };
     public bool IsOpen = false;
     public CardType Type = CardType.Undefined;
 
@@ -94,7 +101,7 @@ public class WaterCard : Card
             throw new Exception("Can't find path while loading ship logo");
         }
     }
-    
+
 
     public void MoveShip(int x, int y, Game currGame)
     {
@@ -122,7 +129,7 @@ public class WaterCard : Card
     }
 }
 
-public class HorseCard : Card 
+public class HorseCard : Card
 {
     public HorseCard()
     {
@@ -139,22 +146,28 @@ public class HorseCard : Card
     }
 }
 
-public enum CannonRotation{
-    Up = 0, Right = 1, Down = 2, Left = 3
+public enum Rotation
+{
+    None = -1,
+    Up = 0,
+    Right = 1,
+    Down = 2,
+    Left = 3
 }
 
 public class CannonCard : Card
 {
-    public CannonRotation Rotation;
+    public Rotation Rotation;
 
     public CannonCard()
     {
         LogoPath = "Cards/cannon";
         Type = CardType.Cannon;
     }
+
     public override void OpenAction()
     {
-        OwnGO.transform.eulerAngles = new Vector3(0, 90 * (int) Rotation, 0);
+        OwnGO.transform.eulerAngles = new Vector3(0, 90 * (int)Rotation, 0);
     }
 
     public override void StepAction()
@@ -162,7 +175,27 @@ public class CannonCard : Card
     }
 }
 
-public class OgreCard : Card 
+public class ArrowCard : Card
+{
+    public Rotation Rotation = Rotation.None;
+
+    public ArrowCard()
+    {
+        LogoPath = "Cards/Arrows/straight";
+        Type = CardType.ArrowStraight;
+    }
+
+    public override void OpenAction()
+    {
+        OwnGO.transform.eulerAngles = new Vector3(0, 90 * (int)Rotation, 0);
+    }
+
+    public override void StepAction()
+    {
+    }
+}
+
+public class OgreCard : Card
 {
     public OgreCard()
     {
@@ -227,9 +260,10 @@ public class CardManagerScr : MonoBehaviour
         // Total 169 cards (52 water cards + 117 other). Water must stay first
         Cards.AllCards.Add(new PairCardInt(new WaterCard(), 52));
         Cards.AllCards.Add(new PairCardInt(new EmptyCard(), 30));
-        Cards.AllCards.Add(new PairCardInt(new HorseCard(), 30));
-        Cards.AllCards.Add(new PairCardInt(new CannonCard(), 27));
-        Cards.AllCards.Add(new PairCardInt(new OgreCard(), 30));
+        Cards.AllCards.Add(new PairCardInt(new HorseCard(), 10));
+        Cards.AllCards.Add(new PairCardInt(new CannonCard(), 17));
+        Cards.AllCards.Add(new PairCardInt(new OgreCard(), 10));
+        Cards.AllCards.Add(new PairCardInt(new ArrowCard(), 50));
         Ships.GenerateShips();
     }
 }

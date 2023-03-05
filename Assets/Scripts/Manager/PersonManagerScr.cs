@@ -7,7 +7,7 @@ public class PersonManagerScr : MonoBehaviour
     public delegate bool PossibilityToWalk(IntVector2 pos);
     
     public static Dictionary<Card.CardType, PossibilityToWalk> PossibilityToWalkByType;
-    public static Dictionary<int, PossibilityToWalk> PossibilityToWalkByRotation;
+    public static Dictionary<Tuple<int, Card.CardType>, PossibilityToWalk> PossibilityToWalkByRotation;
     public static Dictionary<Card.CardType, List<IntVector2>> DirectionsToWalkByType;
     
     public static Game currGame;
@@ -33,31 +33,86 @@ public class PersonManagerScr : MonoBehaviour
         return pos.x == 0 || pos.x == 12 || pos.z == 0 || pos.z == 12;
     }
     
-    
-    public static bool RotDefault(IntVector2 pos)
+    public static bool OnArrowCard(IntVector2 pos)
     {
         return true;
     }
     
-    public static bool RotCannonDown(IntVector2 pos)
+    
+    public static bool RotationDefault(IntVector2 pos)
+    {
+        return true;
+    }
+    
+    public static bool RotationDown(IntVector2 pos)
     {
         return pos.z < 0;
     }
-    public static bool RotCannonRight(IntVector2 pos)
+    public static bool RotationRight(IntVector2 pos)
     {
         return pos.x > 0;
     }
-    public static bool RotCannonUp(IntVector2 pos)
+    public static bool RotationUp(IntVector2 pos)
     {
         return pos.z > 0;
     }
-    public static bool RotCannonLeft(IntVector2 pos)
+    public static bool RotationLeft(IntVector2 pos)
     {
         return pos.x < 0;
     }
     
+    public static bool RotationLU(IntVector2 pos)
+    {
+        return pos.x < 0 && pos.z > 0;
+    }
+    public static bool RotationUR(IntVector2 pos)
+    {
+        return pos.z > 0 && pos.x > 0;
+    }
+    public static bool RotationRD(IntVector2 pos)
+    {
+        return pos.x > 0 && pos.z < 0;
+    }
+    public static bool RotationDL(IntVector2 pos)
+    {
+        return pos.z < 0 && pos.x < 0;
+    }
     
-
+    public static bool RotationUOrD(IntVector2 pos)
+    {
+        return RotationUp(pos) || RotationDown(pos);
+    }
+    public static bool RotationLOrR(IntVector2 pos)
+    {
+        return RotationLeft(pos) || RotationRight(pos);
+    }
+    
+    public static bool RotationLUOrRD(IntVector2 pos)
+    {
+        return RotationLU(pos) || RotationRD(pos);
+    }
+    public static bool RotationUROrDL(IntVector2 pos)
+    {
+        return RotationUR(pos) || RotationDL(pos);
+    }
+    
+    public static bool RotationLU3(IntVector2 pos)
+    {
+        return (pos.x == -1 && pos.z == 1) || (pos.x == 1 && pos.z == 0) || (pos.x == 0 && pos.z == -1);
+    }
+    public static bool RotationUR3(IntVector2 pos)
+    {
+        return (pos.x == 1 && pos.z == 1) || (pos.x == -1 && pos.z == 0) || (pos.x == 0 && pos.z == -1);
+    }
+    public static bool RotationRD3(IntVector2 pos)
+    {
+        return (pos.x == 1 && pos.z == -1) || (pos.x == -1 && pos.z == 0) || (pos.x == 0 && pos.z == 1);
+    }
+    public static bool RotationDL3(IntVector2 pos)
+    {
+        return (pos.x == -1 && pos.z == -1) || (pos.x == 1 && pos.z == 0) || (pos.x == 0 && pos.z == 1);
+    }
+    
     private void Awake()
     {
         // Generate directions
@@ -96,7 +151,6 @@ public class PersonManagerScr : MonoBehaviour
 
         // Fill Dictionaries
         PossibilityToWalkByType = new Dictionary<Card.CardType, PossibilityToWalk>();
-        PossibilityToWalkByRotation = new Dictionary<int, PossibilityToWalk>{{-1, RotDefault}};
         DirectionsToWalkByType = new Dictionary<Card.CardType, List<IntVector2>>();
         // Empty
         PossibilityToWalkByType.Add(Card.CardType.Empty, OnEmptyCard);
@@ -113,10 +167,49 @@ public class PersonManagerScr : MonoBehaviour
         // Cannon
         PossibilityToWalkByType.Add(Card.CardType.Cannon, OnCannonCard);
         DirectionsToWalkByType.Add(Card.CardType.Cannon, CannonDirections);
-        PossibilityToWalkByRotation.Add((int)CannonRotation.Left, RotCannonLeft);
-        PossibilityToWalkByRotation.Add((int)CannonRotation.Down, RotCannonDown);
-        PossibilityToWalkByRotation.Add((int)CannonRotation.Right, RotCannonRight);
-        PossibilityToWalkByRotation.Add((int)CannonRotation.Up, RotCannonUp);
+        PossibilityToWalkByRotation.Add(new Tuple<int, Card.CardType>((int)Rotation.Up, Card.CardType.Cannon), RotationUp);
+        PossibilityToWalkByRotation.Add(new Tuple<int, Card.CardType>((int)Rotation.Right, Card.CardType.Cannon), RotationRight);
+        PossibilityToWalkByRotation.Add(new Tuple<int, Card.CardType>((int)Rotation.Down, Card.CardType.Cannon), RotationDown);
+        PossibilityToWalkByRotation.Add(new Tuple<int, Card.CardType>((int)Rotation.Left, Card.CardType.Cannon), RotationLeft);
+
+        // Arrows
+        for (int i = 6; i <= 12; ++i)
+        {
+            PossibilityToWalkByType.Add((Card.CardType) i , OnArrowCard);
+        }
+        // Straight
+        DirectionsToWalkByType.Add(Card.CardType.ArrowStraight, CrossDirections);
+        PossibilityToWalkByRotation.Add(new Tuple<int, Card.CardType>((int)Rotation.Up, Card.CardType.ArrowStraight), RotationUp);
+        PossibilityToWalkByRotation.Add(new Tuple<int, Card.CardType>((int)Rotation.Right, Card.CardType.ArrowStraight), RotationRight);
+        PossibilityToWalkByRotation.Add(new Tuple<int, Card.CardType>((int)Rotation.Down, Card.CardType.ArrowStraight), RotationDown);
+        PossibilityToWalkByRotation.Add(new Tuple<int, Card.CardType>((int)Rotation.Left, Card.CardType.ArrowStraight), RotationLeft);
+        // Diagonal
+        DirectionsToWalkByType.Add(Card.CardType.ArrowDiagonal, DiagonalDirections);
+        PossibilityToWalkByRotation.Add(new Tuple<int, Card.CardType>((int)Rotation.Up, Card.CardType.ArrowDiagonal), RotationLU);
+        PossibilityToWalkByRotation.Add(new Tuple<int, Card.CardType>((int)Rotation.Right, Card.CardType.ArrowDiagonal), RotationUR);
+        PossibilityToWalkByRotation.Add(new Tuple<int, Card.CardType>((int)Rotation.Down, Card.CardType.ArrowDiagonal), RotationRD);
+        PossibilityToWalkByRotation.Add(new Tuple<int, Card.CardType>((int)Rotation.Left, Card.CardType.ArrowDiagonal), RotationDL);
+        // Straight 2
+        DirectionsToWalkByType.Add(Card.CardType.ArrowStraight2, CrossDirections);
+        PossibilityToWalkByRotation.Add(new Tuple<int, Card.CardType>((int)Rotation.Up, Card.CardType.ArrowStraight2), RotationUOrD);
+        PossibilityToWalkByRotation.Add(new Tuple<int, Card.CardType>((int)Rotation.Right, Card.CardType.ArrowStraight2), RotationLOrR);
+        PossibilityToWalkByRotation.Add(new Tuple<int, Card.CardType>((int)Rotation.Down, Card.CardType.ArrowStraight2), RotationUOrD);
+        PossibilityToWalkByRotation.Add(new Tuple<int, Card.CardType>((int)Rotation.Left, Card.CardType.ArrowStraight2), RotationLOrR);
+        // Diagonal 2
+        DirectionsToWalkByType.Add(Card.CardType.ArrowDiagonal2, DiagonalDirections);
+        PossibilityToWalkByRotation.Add(new Tuple<int, Card.CardType>((int)Rotation.Up, Card.CardType.ArrowDiagonal2), RotationLUOrRD);
+        PossibilityToWalkByRotation.Add(new Tuple<int, Card.CardType>((int)Rotation.Right, Card.CardType.ArrowDiagonal2), RotationUROrDL);
+        PossibilityToWalkByRotation.Add(new Tuple<int, Card.CardType>((int)Rotation.Down, Card.CardType.ArrowDiagonal2), RotationLUOrRD);
+        PossibilityToWalkByRotation.Add(new Tuple<int, Card.CardType>((int)Rotation.Left, Card.CardType.ArrowDiagonal2), RotationUROrDL);
+        // 3
+        DirectionsToWalkByType.Add(Card.CardType.Arrow3, DefaultDirections);
+        PossibilityToWalkByRotation.Add(new Tuple<int, Card.CardType>((int)Rotation.Up, Card.CardType.Arrow3), RotationLU3);
+        PossibilityToWalkByRotation.Add(new Tuple<int, Card.CardType>((int)Rotation.Right, Card.CardType.Arrow3), RotationUR3);
+        PossibilityToWalkByRotation.Add(new Tuple<int, Card.CardType>((int)Rotation.Down, Card.CardType.Arrow3), RotationRD3);
+        PossibilityToWalkByRotation.Add(new Tuple<int, Card.CardType>((int)Rotation.Left, Card.CardType.Arrow3), RotationDL3);
+        // Straight 4
+        DirectionsToWalkByType.Add(Card.CardType.ArrowStraight4, CrossDirections);
+        PossibilityToWalkByRotation.Add(new Tuple<int, Card.CardType>(-1, Card.CardType.ArrowStraight4), RotationDefault);
     }
 
     public static List<IntVector2> DefaultDirections = new List<IntVector2>();
