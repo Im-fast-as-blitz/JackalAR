@@ -217,6 +217,9 @@ public class PersonManagerScr : MonoBehaviour
         // Shaman
         PossibilityToWalkByType.Add(Card.CardType.Shaman, OnEmptyCard);
         DirectionsToWalkByType.Add(Card.CardType.Shaman, DefaultDirections);
+        // Chest
+        PossibilityToWalkByType.Add(Card.CardType.Chest, OnEmptyCard);
+        DirectionsToWalkByType.Add(Card.CardType.Chest, DefaultDirections);
     }
 
     public static List<IntVector2> DefaultDirections = new List<IntVector2>();
