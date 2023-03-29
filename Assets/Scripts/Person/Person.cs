@@ -95,6 +95,18 @@ public class Person : MonoBehaviour
         {
             CreateMovement(direction, func);
         }
+
+        if (currentCard.Type == Card.CardType.Shaman)
+        {
+            foreach (var per in currGame.Persons[team])
+            {
+                if (!per._isAlive)
+                {
+                    currGame.ShamanBtn.gameObject.SetActive(true);
+                    break;
+                }
+            }
+        }
     }
 
     public void DestroyCircles()
@@ -105,6 +117,11 @@ public class Person : MonoBehaviour
         }
 
         _moveCircles.Clear();
+        
+        if (currGame.PlayingField[Position.x, Position.z].Type == Card.CardType.Shaman)
+        {
+            currGame.ShamanBtn.gameObject.SetActive(false);
+        }
     }
 
     public void Move(Vector3 newPos)
@@ -141,6 +158,7 @@ public class Person : MonoBehaviour
                 }
             }
         }
+        
 
         //Look at new card
         bool findPlace = false;
