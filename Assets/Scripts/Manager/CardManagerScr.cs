@@ -19,7 +19,9 @@ public class Card
         ArrowDiagonal2 = 9,
         Arrow3 = 10,
         ArrowStraight4 = 11,
-        ArrowDiagonal4 = 12
+        ArrowDiagonal4 = 12,
+        Fortress = 13,
+        Shaman = 14
     }
 
     public GameObject OwnGO;
@@ -219,6 +221,42 @@ public class OgreCard : Card
     }
 }
 
+public class FortressCard : Card 
+{
+    public FortressCard()
+    {
+        LogoPath = "Cards/fortress";
+        Type = CardType.Fortress;
+    }
+
+    public override void OpenAction()
+    {
+    }
+
+    public override void StepAction()
+    {
+        
+    }
+}
+    
+public class ShamanCard : Card 
+{
+    public ShamanCard()
+    {
+        LogoPath = "Cards/shaman";
+        Type = CardType.Shaman;
+    }
+
+    public override void OpenAction()
+    {
+    }
+
+    public override void StepAction()
+    {
+        
+    }
+}
+
 public static class Cards
 {
     public static List<PairCardInt> AllCards = new List<PairCardInt>();
@@ -263,7 +301,10 @@ public class CardManagerScr : MonoBehaviour
         Cards.AllCards.Add(new PairCardInt(new HorseCard(), 10));
         Cards.AllCards.Add(new PairCardInt(new CannonCard(), 17));
         Cards.AllCards.Add(new PairCardInt(new OgreCard(), 5));
-        Cards.AllCards.Add(new PairCardInt(new ArrowCard(), 55));
+        Cards.AllCards.Add(new PairCardInt(new ArrowCard(), 35));
+        Cards.AllCards.Add(new PairCardInt(new ShamanCard(), 10));
+        Cards.AllCards.Add(new PairCardInt(new FortressCard(), 10));
+        
         Ships.GenerateShips();
     }
 }

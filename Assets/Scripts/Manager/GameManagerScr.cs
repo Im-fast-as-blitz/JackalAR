@@ -15,6 +15,9 @@ public class Game
     public Dictionary<Teams, Person[]> Persons = new Dictionary<Teams, Person[]>();
     public int NumTeams = 2;
     public Vector3 sizeCardPrefab = new Vector3(0, 0, 0);
+    public Button ShamanBtn;
+
+    public Teams CurrTeam;
 
     public Game()
     {
@@ -106,6 +109,7 @@ public class GameManagerScr : MonoBehaviour
     [SerializeField] private GameObject placedObjectPrefab;
     [SerializeField] private Camera arCamera;
     [SerializeField] private GameObject startText;
+    [SerializeField] private Button shamanBtn;
     public bool isGameAR = false;
     public bool isDebug = false;
 
@@ -122,6 +126,8 @@ public class GameManagerScr : MonoBehaviour
         _layerMask = 1 << LayerMask.NameToLayer("Person");
 
         CurrentGame = new Game();
+        
+        CurrentGame.ShamanBtn = shamanBtn;
 
         PersonManagerScr.currGame = CurrentGame;
 
@@ -166,6 +172,18 @@ public class GameManagerScr : MonoBehaviour
             planeMarkerPrefab.SetActive(false);
             BuildPlayingField(gamePos);
             _placedMap = true;
+        }
+    }
+
+    void ChangeTeam()
+    {
+        if (_currTeam == Teams.White)
+        {
+            _currTeam = Teams.Red;
+        }
+        else
+        {
+            _currTeam = Teams.White;
         }
     }
 
@@ -216,17 +234,39 @@ public class GameManagerScr : MonoBehaviour
                     _personScr.gameObject.layer = LayerMask.NameToLayer("Person");
                     _layerMask = 1 << LayerMask.NameToLayer("Person");
                     _personScr = null;
-                    if (_currTeam == Teams.White)
-                    {
-                        _currTeam = Teams.Red;
-                    }
-                    else
-                    {
-                        _currTeam = Teams.White;
-                    }
+                    ChangeTeam();
                 }
             }
         }
+    }
+    
+    public void RevivePerson()
+    {
+        Person zombie = null;
+        foreach (var per in CurrentGame.Persons[_currTeam])
+        {
+            if (!per._isAlive)
+            {
+                zombie = per;
+                break;
+            }
+        }
+        foreach (var per in CurrentGame.Persons[_currTeam])
+        {
+            if (CurrentGame.PlayingField[per.Position.x, per.Position.z].Type == Card.CardType.Shaman)
+            {
+                zombie.Position = new IntVector2(per.Position);
+                zombie.gameObject.SetActive(true);
+                zombie._isAlive = true;
+                zombie.gameObject.transform.position = per.gameObject.transform.position;
+                break;
+            }
+        }
+        _personScr.DestroyCircles();
+        _personScr.gameObject.layer = LayerMask.NameToLayer("Person");
+        _layerMask = 1 << LayerMask.NameToLayer("Person");
+        _personScr = null;
+        ChangeTeam();
     }
 
     void BuildPlayingField(Vector3 middleCardPosition)

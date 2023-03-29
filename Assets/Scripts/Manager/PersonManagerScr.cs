@@ -211,6 +211,12 @@ public class PersonManagerScr : MonoBehaviour
         // Diagonal 4
         DirectionsToWalkByType.Add(Card.CardType.ArrowDiagonal4, DiagonalDirections);
         PossibilityToWalkByRotation[(int)Card.CardType.ArrowDiagonal4, (int)Rotation.None] = RotationDefault;
+        // Fortress
+        PossibilityToWalkByType.Add(Card.CardType.Fortress, OnEmptyCard);
+        DirectionsToWalkByType.Add(Card.CardType.Fortress, DefaultDirections);
+        // Shaman
+        PossibilityToWalkByType.Add(Card.CardType.Shaman, OnEmptyCard);
+        DirectionsToWalkByType.Add(Card.CardType.Shaman, DefaultDirections);
     }
 
     public static List<IntVector2> DefaultDirections = new List<IntVector2>();
