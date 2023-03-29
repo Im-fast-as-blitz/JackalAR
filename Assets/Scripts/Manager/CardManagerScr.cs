@@ -148,7 +148,7 @@ public class HorseCard : Card
 
 public enum Rotation
 {
-    None = -1,
+    None = 4,
     Up = 0,
     Right = 1,
     Down = 2,
@@ -262,8 +262,8 @@ public class CardManagerScr : MonoBehaviour
         Cards.AllCards.Add(new PairCardInt(new EmptyCard(), 30));
         Cards.AllCards.Add(new PairCardInt(new HorseCard(), 10));
         Cards.AllCards.Add(new PairCardInt(new CannonCard(), 17));
-        Cards.AllCards.Add(new PairCardInt(new OgreCard(), 10));
-        Cards.AllCards.Add(new PairCardInt(new ArrowCard(), 50));
+        Cards.AllCards.Add(new PairCardInt(new OgreCard(), 5));
+        Cards.AllCards.Add(new PairCardInt(new ArrowCard(), 55));
         Ships.GenerateShips();
     }
 }

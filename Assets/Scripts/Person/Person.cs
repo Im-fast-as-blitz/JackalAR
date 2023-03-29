@@ -50,16 +50,15 @@ public class Person : MonoBehaviour
     }
 
     //Create curr circle to move
-    private void CreateMovement(IntVector2 addPos, PersonManagerScr.PossibilityToWalk func1,
-        PersonManagerScr.PossibilityToWalk func2)
+    private void CreateMovement(IntVector2 addPos, PersonManagerScr.PossibilityToWalk possibilityByType,
+        PersonManagerScr.PossibilityToWalk possibilityByRotation)
     {
         IntVector2 newPos = Position + addPos;
 
-        if ((newPos.x is >= 0 and <= 12) && (newPos.z is >= 0 and <= 12) && func1(newPos) && func2(addPos))
+        if ((newPos.x is >= 0 and <= 12) && (newPos.z is >= 0 and <= 12) && possibilityByType(newPos) && possibilityByRotation(addPos))
         {
             Card currCard = currGame.PlayingField[newPos.x, newPos.z];
-            bool isEnemyShip =
-                ((currCard.Type == Card.CardType.Ship) && ((currCard as WaterCard).OwnShip.team != team));
+            bool isEnemyShip = currCard.Type == Card.CardType.Ship && (currCard as WaterCard).OwnShip.team != team;
             if (isEnemyShip)
             {
                 return;
@@ -89,13 +88,11 @@ public class Person : MonoBehaviour
         PersonManagerScr.PossibilityToWalk possByRotation = PersonManagerScr.RotationDefault;
         if (currentCard is CannonCard)
         {
-            possByRotation = PersonManagerScr.PossibilityToWalkByRotation[
-                new Tuple<int, Card.CardType>((int)(currentCard as CannonCard).Rotation, currentCard.Type)];
+            possByRotation = PersonManagerScr.PossibilityToWalkByRotation[(int)currentCard.Type, (int)(currentCard as CannonCard).Rotation];
         }
         else if (currentCard is ArrowCard)
         {
-            possByRotation = PersonManagerScr.PossibilityToWalkByRotation[
-                new Tuple<int, Card.CardType>((int)(currentCard as ArrowCard).Rotation, currentCard.Type)];
+            possByRotation = PersonManagerScr.PossibilityToWalkByRotation[(int)currentCard.Type, (int)(currentCard as ArrowCard).Rotation];
         }
 
 
