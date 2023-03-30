@@ -21,7 +21,8 @@ public class Card
         ArrowStraight4 = 11,
         ArrowDiagonal4 = 12,
         Fortress = 13,
-        Shaman = 14
+        Shaman = 14,
+        Chest = 15
     }
 
     public GameObject OwnGO;
@@ -29,6 +30,7 @@ public class Card
     public List<Person> Figures = new List<Person>() { null, null, null };
     public bool IsOpen = false;
     public CardType Type = CardType.Undefined;
+    public int Coins = 0;
 
     public void UpdateLogo()
     {
@@ -235,7 +237,6 @@ public class FortressCard : Card
 
     public override void StepAction()
     {
-        
     }
 }
     
@@ -253,7 +254,26 @@ public class ShamanCard : Card
 
     public override void StepAction()
     {
-        
+    }
+}
+
+public class ChestCard : Card 
+{
+    public static int CardsCount = 0;
+    
+    public ChestCard()
+    {
+        LogoPath = "Cards/chest";
+        Type = CardType.Chest;
+    }
+
+    public override void OpenAction()
+    {
+        // Generate coins
+    }
+
+    public override void StepAction()
+    {
     }
 }
 
@@ -297,13 +317,14 @@ public class CardManagerScr : MonoBehaviour
     {
         // Total 169 cards (52 water cards + 117 other). Water must stay first
         Cards.AllCards.Add(new PairCardInt(new WaterCard(), 52));
-        Cards.AllCards.Add(new PairCardInt(new EmptyCard(), 30));
+        Cards.AllCards.Add(new PairCardInt(new EmptyCard(), 20));
         Cards.AllCards.Add(new PairCardInt(new HorseCard(), 10));
-        Cards.AllCards.Add(new PairCardInt(new CannonCard(), 17));
+        Cards.AllCards.Add(new PairCardInt(new CannonCard(), 10));
         Cards.AllCards.Add(new PairCardInt(new OgreCard(), 5));
-        Cards.AllCards.Add(new PairCardInt(new ArrowCard(), 35));
+        Cards.AllCards.Add(new PairCardInt(new ArrowCard(), 25));
         Cards.AllCards.Add(new PairCardInt(new ShamanCard(), 10));
         Cards.AllCards.Add(new PairCardInt(new FortressCard(), 10));
+        Cards.AllCards.Add(new PairCardInt(new ChestCard(), 27));
         
         Ships.GenerateShips();
     }

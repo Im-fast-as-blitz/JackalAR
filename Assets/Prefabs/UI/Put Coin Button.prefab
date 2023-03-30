@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 8476125434305399284}
   - component: {fileID: 8476125434305399287}
   m_Layer: 5
-  m_Name: Shaman Button
+  m_Name: Put Coin Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -200,7 +200,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Revive
+  m_text: 'Put Coin
 
 '
   m_isRightToLeft: 0

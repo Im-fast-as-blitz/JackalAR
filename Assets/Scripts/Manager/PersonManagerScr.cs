@@ -112,6 +112,17 @@ public class PersonManagerScr : MonoBehaviour
         return (pos.x == -1 && pos.z == -1) || (pos.x == 1 && pos.z == 0) || (pos.x == 0 && pos.z == 1);
     }
     
+    public static bool WithoutCoin(IntVector2 pos)
+    {
+        return true;
+    }
+    
+    public static bool WithCoin(IntVector2 pos)
+    {
+        Card currCard = currGame.PlayingField[pos.x, pos.z];
+        return currCard.IsOpen && currCard.Type != Card.CardType.Fortress && currCard.Type != Card.CardType.Shaman;
+    }
+    
     private void Awake()
     {
         // Generate directions
@@ -217,6 +228,9 @@ public class PersonManagerScr : MonoBehaviour
         // Shaman
         PossibilityToWalkByType.Add(Card.CardType.Shaman, OnEmptyCard);
         DirectionsToWalkByType.Add(Card.CardType.Shaman, DefaultDirections);
+        // Chest
+        PossibilityToWalkByType.Add(Card.CardType.Chest, OnEmptyCard);
+        DirectionsToWalkByType.Add(Card.CardType.Chest, DefaultDirections);
     }
 
     public static List<IntVector2> DefaultDirections = new List<IntVector2>();
