@@ -16,6 +16,10 @@ public class Game
     public int NumTeams = 2;
     public Vector3 sizeCardPrefab = new Vector3(0, 0, 0);
     public Button ShamanBtn;
+    public Button TakeCoinBtn;
+    public Button PutCoinBtn;
+    public int TotalCoins = 0;
+    public int[] CoinsInTeam = new int[4];
 
     public Teams CurrTeam;
 
@@ -110,6 +114,8 @@ public class GameManagerScr : MonoBehaviour
     [SerializeField] private Camera arCamera;
     [SerializeField] private GameObject startText;
     [SerializeField] private Button shamanBtn;
+    [SerializeField] private Button takeCoinBtn;
+    [SerializeField] private Button putCoinBtn;
     public bool isGameAR = false;
     public bool isDebug = false;
 
@@ -119,6 +125,7 @@ public class GameManagerScr : MonoBehaviour
     private LayerMask _layerMask;
 
     private Teams _currTeam = Teams.White;
+    private Person _currPerson = null;
 
     void Start()
     {
@@ -126,8 +133,10 @@ public class GameManagerScr : MonoBehaviour
         _layerMask = 1 << LayerMask.NameToLayer("Person");
 
         CurrentGame = new Game();
-        
+
         CurrentGame.ShamanBtn = shamanBtn;
+        CurrentGame.TakeCoinBtn = takeCoinBtn;
+        CurrentGame.PutCoinBtn = putCoinBtn;
 
         PersonManagerScr.currGame = CurrentGame;
 
@@ -209,18 +218,25 @@ public class GameManagerScr : MonoBehaviour
             {
                 if (hitObject.collider.CompareTag("Person"))
                 {
-                    Person currPerson = hitObject.collider.gameObject.GetComponent<Person>();
-                    if (currPerson.team == _currTeam)
+                    Person currentPerson = hitObject.collider.gameObject.GetComponent<Person>();
+                    if (currentPerson.team == _currTeam)
                     {
                         if (!_personScr)
                         {
-                            _personScr = currPerson;
+                            _personScr = currentPerson;
                             _personScr.gameObject.layer = LayerMask.NameToLayer("Circles");
                             _layerMask = 1 << LayerMask.NameToLayer("Circles");
                             _personScr.GenerateMovements();
                         }
                         else
                         {
+                            // put coin back from prev person
+                            if (_personScr.isWithCoin)
+                            {
+                                _personScr.isWithCoin = false;
+                                CurrentGame.PlayingField[_personScr.Position.x, _personScr.Position.z].Coins++;
+                            }
+                            
                             _personScr.DestroyCircles();
                             _personScr.gameObject.layer = LayerMask.NameToLayer("Person");
                             _layerMask = 1 << LayerMask.NameToLayer("Person");
@@ -239,7 +255,7 @@ public class GameManagerScr : MonoBehaviour
             }
         }
     }
-    
+
     public void RevivePerson()
     {
         Person zombie = null;
@@ -251,6 +267,7 @@ public class GameManagerScr : MonoBehaviour
                 break;
             }
         }
+
         foreach (var per in CurrentGame.Persons[_currTeam])
         {
             if (CurrentGame.PlayingField[per.Position.x, per.Position.z].Type == Card.CardType.Shaman)
@@ -262,11 +279,32 @@ public class GameManagerScr : MonoBehaviour
                 break;
             }
         }
+
         _personScr.DestroyCircles();
         _personScr.gameObject.layer = LayerMask.NameToLayer("Person");
         _layerMask = 1 << LayerMask.NameToLayer("Person");
         _personScr = null;
         ChangeTeam();
+    }
+
+    public void TakeCoin()
+    {
+        _personScr.isWithCoin = true;
+        CurrentGame.PlayingField[_personScr.Position.x, _personScr.Position.z].Coins--;
+        CurrentGame.TakeCoinBtn.gameObject.SetActive(false);
+        CurrentGame.PutCoinBtn.gameObject.SetActive(true);
+        _personScr.DestroyCircles(false);
+        _personScr.GenerateMovements(false);
+    }
+
+    public void PutCoin()
+    {
+        _personScr.isWithCoin = false;
+        CurrentGame.PlayingField[_personScr.Position.x, _personScr.Position.z].Coins++;
+        CurrentGame.PutCoinBtn.gameObject.SetActive(false);
+        CurrentGame.TakeCoinBtn.gameObject.SetActive(true);
+        _personScr.DestroyCircles(false);
+        _personScr.GenerateMovements(false);
     }
 
     void BuildPlayingField(Vector3 middleCardPosition)
@@ -351,6 +389,42 @@ public class GameManagerScr : MonoBehaviour
                     {
                         (ownCard as ArrowCard).Rotation = (Rotation)Random.Range(0, 4);
                     }
+                }
+                else if (ownCard is ChestCard)
+                {
+                    if (ChestCard.CardsCount < 5)
+                    {
+                        (ownCard as ChestCard).Coins = 1;
+                        CurrentGame.TotalCoins += 1;
+                    }
+                    else if (ChestCard.CardsCount < 10)
+                    {
+                        (ownCard as ChestCard).Coins = 2;
+                        CurrentGame.TotalCoins += 2;
+                    }
+                    else if (ChestCard.CardsCount < 13)
+                    {
+                        (ownCard as ChestCard).Coins = 3;
+                        CurrentGame.TotalCoins += 3;
+                    }
+                    else if (ChestCard.CardsCount < 15)
+                    {
+                        (ownCard as ChestCard).Coins = 4;
+                        CurrentGame.TotalCoins += 4;
+                    }
+                    else if (ChestCard.CardsCount < 16)
+                    {
+                        (ownCard as ChestCard).Coins = 5;
+                        CurrentGame.TotalCoins += 5;
+                    }
+                    else
+                    {
+                        int randomedCoins = Random.Range(1, 6);
+                        (ownCard as ChestCard).Coins = randomedCoins;
+                        CurrentGame.TotalCoins += randomedCoins;
+                    }
+
+                    ChestCard.CardsCount++;
                 }
             }
         }

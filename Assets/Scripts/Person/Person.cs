@@ -15,9 +15,8 @@ public class Person : MonoBehaviour
     public Game currGame;
 
     public Teams team = Teams.White;
-
-
     public bool _isAlive = true;
+    public bool isWithCoin = false;
 
     //Return to the ship
     void ReturnToShip()
@@ -50,12 +49,18 @@ public class Person : MonoBehaviour
     }
 
     //Create curr circle to move
-    private void CreateMovement(IntVector2 addPos, PersonManagerScr.PossibilityToWalk possibilityByType,
-        PersonManagerScr.PossibilityToWalk possibilityByRotation)
+    private void CreateMovement(IntVector2 addPos, PersonManagerScr.PossibilityToWalk possByType,
+        PersonManagerScr.PossibilityToWalk possByRotation, PersonManagerScr.PossibilityToWalk possByCoin)
     {
         IntVector2 newPos = Position + addPos;
 
-        if ((newPos.x is >= 0 and <= 12) && (newPos.z is >= 0 and <= 12) && possibilityByType(newPos) && possibilityByRotation(addPos))
+        if (possByCoin == PersonManagerScr.WithCoin)
+        {
+            Debug.Log("with coin");
+        }
+
+        if ((newPos.x is >= 0 and <= 12) && (newPos.z is >= 0 and <= 12) && possByType(newPos) &&
+            possByRotation(addPos) && possByCoin(newPos))
         {
             Card currCard = currGame.PlayingField[newPos.x, newPos.z];
             bool isEnemyShip = currCard.Type == Card.CardType.Ship && (currCard as WaterCard).OwnShip.team != team;
@@ -63,11 +68,11 @@ public class Person : MonoBehaviour
             {
                 return;
             }
-            
+
             GameObject result = null;
             if (EnemyOnCard(newPos))
             {
-                if (currGame.PlayingField[newPos.x, newPos.z].Type != Card.CardType.Fortress && 
+                if (currGame.PlayingField[newPos.x, newPos.z].Type != Card.CardType.Fortress &&
                     currGame.PlayingField[newPos.x, newPos.z].Type != Card.CardType.Shaman)
                 {
                     result = Instantiate(attackCircle, transform.position, Quaternion.identity);
@@ -87,7 +92,7 @@ public class Person : MonoBehaviour
     }
 
     //Create all circles to move
-    public void GenerateMovements()
+    public void GenerateMovements(bool IsSetActiveTakeCoin = true)
     {
         Card currentCard = currGame.PlayingField[Position.x, Position.z];
         PersonManagerScr.PossibilityToWalk possByType = PersonManagerScr.PossibilityToWalkByType[currentCard.Type];
@@ -95,17 +100,28 @@ public class Person : MonoBehaviour
         PersonManagerScr.PossibilityToWalk possByRotation = PersonManagerScr.RotationDefault;
         if (currentCard is CannonCard)
         {
-            possByRotation = PersonManagerScr.PossibilityToWalkByRotation[(int)currentCard.Type, (int)(currentCard as CannonCard).Rotation];
+            possByRotation =
+                PersonManagerScr.PossibilityToWalkByRotation[(int)currentCard.Type,
+                    (int)(currentCard as CannonCard).Rotation];
         }
         else if (currentCard is ArrowCard)
         {
-            possByRotation = PersonManagerScr.PossibilityToWalkByRotation[(int)currentCard.Type, (int)(currentCard as ArrowCard).Rotation];
+            possByRotation =
+                PersonManagerScr.PossibilityToWalkByRotation[(int)currentCard.Type,
+                    (int)(currentCard as ArrowCard).Rotation];
+        }
+
+        PersonManagerScr.PossibilityToWalk possByCoin = PersonManagerScr.WithoutCoin;
+        if (isWithCoin)
+        {
+            Debug.Log("With coin");
+            possByCoin = PersonManagerScr.WithCoin;
         }
 
 
         foreach (var direction in directions)
         {
-            CreateMovement(direction, possByType, possByRotation);
+            CreateMovement(direction, possByType, possByRotation, possByCoin);
         }
 
         if (currentCard.Type == Card.CardType.Shaman)
@@ -119,9 +135,16 @@ public class Person : MonoBehaviour
                 }
             }
         }
+
+        if (currentCard.Coins > 0 && IsSetActiveTakeCoin)
+        {
+            currGame.TakeCoinBtn.gameObject.SetActive(true);
+        }
+
+        Debug.Log("Coins on this card: " + currentCard.Coins);
     }
 
-    public void DestroyCircles()
+    public void DestroyCircles(bool IsDeleteTakePut = true)
     {
         foreach (var circle in _moveCircles)
         {
@@ -129,10 +152,23 @@ public class Person : MonoBehaviour
         }
 
         _moveCircles.Clear();
-        
+
         if (currGame.PlayingField[Position.x, Position.z].Type == Card.CardType.Shaman)
         {
             currGame.ShamanBtn.gameObject.SetActive(false);
+        }
+
+        if (IsDeleteTakePut)
+        {
+            if (currGame.PlayingField[Position.x, Position.z].Coins > 0)
+            {
+                currGame.TakeCoinBtn.gameObject.SetActive(false);
+            }
+
+            if (isWithCoin || currGame.PlayingField[Position.x, Position.z].Coins > 0)
+            {
+                currGame.PutCoinBtn.gameObject.SetActive(false);
+            }
         }
     }
 
@@ -158,38 +194,57 @@ public class Person : MonoBehaviour
         Position.z += (int)Math.Round(posChanges.z / currGame.sizeCardPrefab.z);
         transform.position = newPos;
         Card curCard = currGame.PlayingField[Position.x, Position.z];
-        if (currGame.PlayingField[prevPos.x, prevPos.z].Type == Card.CardType.Ship && curCard.Type == Card.CardType.Water)
+        if (currGame.PlayingField[prevPos.x, prevPos.z].Type == Card.CardType.Ship &&
+            curCard.Type == Card.CardType.Water)
         {
             (currGame.PlayingField[prevPos.x, prevPos.z] as WaterCard).MoveShip(Position.x, Position.z, currGame);
             for (int i = 0; i < 3; ++i)
             {
-                if (currGame.PlayingField[prevPos.x, prevPos.z].Figures[i] && currGame.PlayingField[prevPos.x, prevPos.z].Figures[i] != this)
+                if (currGame.PlayingField[prevPos.x, prevPos.z].Figures[i] &&
+                    currGame.PlayingField[prevPos.x, prevPos.z].Figures[i] != this)
                 {
                     currGame.PlayingField[prevPos.x, prevPos.z].Figures[i].Move(newPos);
                 }
             }
         }
-        
+
+        if (isWithCoin)
+        {
+            isWithCoin = false;
+            if (curCard is WaterCard || curCard.Type == Card.CardType.Ogre)
+            {
+                currGame.TotalCoins--;
+            }
+            else if (curCard.Type == Card.CardType.Ship)
+            {
+                currGame.TotalCoins--;
+                if ((curCard as WaterCard).OwnShip.team == team)
+                {
+                    currGame.CoinsInTeam[(int)team]++;
+                }
+            }
+            else
+            {
+                curCard.Coins++;
+            }
+        }
 
         //Look at new card
         bool findPlace = false;
         for (int i = 0; i < 3; ++i)
         {
-            if (curCard.Figures[i])
+            if (curCard.Figures[i] && curCard.Figures[i].team != team)
             {
-                if (curCard.Figures[i].team != team)
+                if (currGame.PlayingField[Position.x, Position.z].Type == Card.CardType.Ship)
                 {
-                    if (currGame.PlayingField[Position.x, Position.z].Type == Card.CardType.Ship)
-                    {
-                        curCard.Figures[i].Death();
-                    }
-                    else
-                    {
-                        curCard.Figures[i].ReturnToShip();
-                    }
-
-                    curCard.Figures[i] = null;
+                    curCard.Figures[i].Death();
                 }
+                else
+                {
+                    curCard.Figures[i].ReturnToShip();
+                }
+
+                curCard.Figures[i] = null;
             }
 
             if (!curCard.Figures[i] && !findPlace)

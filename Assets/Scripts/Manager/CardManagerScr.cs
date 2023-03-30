@@ -259,6 +259,8 @@ public class ShamanCard : Card
 
 public class ChestCard : Card 
 {
+    public static int CardsCount = 0;
+    
     public ChestCard()
     {
         LogoPath = "Cards/chest";

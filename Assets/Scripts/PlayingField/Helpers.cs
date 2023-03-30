@@ -42,8 +42,8 @@ public class IntVector2
 
 public enum Teams
 {
-    White,
-    Red,
-    Black,
-    Yellow
+    White = 0,
+    Red = 1,
+    Black = 2,
+    Yellow = 3
 }
