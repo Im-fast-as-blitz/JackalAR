@@ -8,7 +8,6 @@ public class Person : MonoBehaviour
 {
     [SerializeField] private GameObject moveCircle;
     [SerializeField] private GameObject attackCircle;
-    public int mulCoef = 5;
     private List<GameObject> _moveCircles = new List<GameObject>();
 
     [NonSerialized] public IntVector2 Position;
@@ -16,16 +15,49 @@ public class Person : MonoBehaviour
 
     public Teams team = Teams.White;
 
-
     public bool _isAlive = true;
 
     //Return to the ship
     void ReturnToShip()
     {
         Position = new IntVector2(Ships.AllShips[team].Position);
-        //Vector3 newPos = currGame.PlayingField[Position.x, Position.z].OwnGO.transform.position;
-        //transform.position = new Vector3(newPos.x, newPos.y, newPos.z);
-        transform.position = currGame.PlayingField[Position.x, Position.z].OwnGO.transform.position;
+        Card curCard = currGame.PlayingField[Position.x, Position.z];
+        transform.position = curCard.OwnGO.transform.position;
+        bool findPlace = false;
+        for (short i = 0, teammates_count = 0, prev_pers = 0; i < 3; ++i)
+        {
+            if (curCard.Figures[i])
+            {
+                ++teammates_count;
+                if (teammates_count == 1)
+                {
+                    prev_pers = i;
+                    Vector3 beautiPos;
+                    if (team == Teams.White || team == Teams.Yellow)
+                    {
+                        beautiPos = new Vector3(0.025f, 0, 0);
+                    }
+                    else
+                    {
+                        beautiPos = new Vector3(0, 0, 0.025f);
+                    }
+                    curCard.Figures[i].gameObject.transform.position = 
+                        curCard.OwnGO.transform.position + new Vector3(currGame.TeemRotation[(int)team, 1].x * beautiPos.x, 0, beautiPos.z * currGame.TeemRotation[(int)team, 1].z);
+                    transform.position += new Vector3(currGame.TeemRotation[(int)team, 2].x * beautiPos.x, 0, beautiPos.z * currGame.TeemRotation[(int)team, 2].z);
+                }
+                else
+                {
+                    curCard.Figures[i].gameObject.transform.position = curCard.OwnGO.transform.position + new Vector3(currGame.TeemRotation[(int)team, 1].x * 0.025f, 0, 0.025f * currGame.TeemRotation[(int)team, 1].z);
+                    curCard.Figures[prev_pers].gameObject.transform.position = curCard.OwnGO.transform.position + new Vector3(currGame.TeemRotation[(int)team, 2].x * 0.025f, 0, 0.025f * currGame.TeemRotation[(int)team, 2].z);
+                    transform.position = curCard.OwnGO.transform.position + new Vector3(currGame.TeemRotation[(int)team, 0].x * 0.025f, 0, 0.025f * currGame.TeemRotation[(int)team, 0].z);
+                }
+            }
+            else if (!findPlace)
+            {
+                curCard.Figures[i] = this;
+                findPlace = true;
+            }
+        }
     }
 
     //Death
@@ -58,29 +90,23 @@ public class Person : MonoBehaviour
         if ((newPos.x is >= 0 and <= 12) && (newPos.z is >= 0 and <= 12) && possibilityByType(newPos) && possibilityByRotation(addPos))
         {
             Card currCard = currGame.PlayingField[newPos.x, newPos.z];
-            bool isEnemyShip = currCard.Type == Card.CardType.Ship && (currCard as WaterCard).OwnShip.team != team;
-            if (isEnemyShip)
-            {
-                return;
-            }
             
             GameObject result = null;
             if (EnemyOnCard(newPos))
             {
-                if (currGame.PlayingField[newPos.x, newPos.z].Type != Card.CardType.Fortress && 
-                    currGame.PlayingField[newPos.x, newPos.z].Type != Card.CardType.Shaman)
+                if (currCard.Type != Card.CardType.Fortress && currCard.Type != Card.CardType.Shaman)
                 {
-                    result = Instantiate(attackCircle, transform.position, Quaternion.identity);
+                    result = Instantiate(attackCircle, currCard.OwnGO.transform.position, Quaternion.identity);
                 }
             }
             else
             {
-                result = Instantiate(moveCircle, transform.position, new Quaternion(0, 0, 0, 0));
+                result = Instantiate(moveCircle, currCard.OwnGO.transform.position, new Quaternion(0, 0, 0, 0));
             }
 
             if (result)
             {
-                result.transform.position += addPos.ToVector3() * (transform.localScale.x * mulCoef);
+                //result.transform.position += addPos.ToVector3() * (transform.localScale.x * mulCoef);
                 _moveCircles.Add(result);
             }
         }
@@ -142,44 +168,76 @@ public class Person : MonoBehaviour
 
         //Remove person from prev card
 
-        for (int i = 0; i < 3; ++i)
+        Card prevCard = currGame.PlayingField[Position.x, Position.z];
+
+        for (short i = 0, teammates_count = 0, prev_pers = 0; i < 3; ++i)
         {
-            if (currGame.PlayingField[Position.x, Position.z].Figures[i] == this)
+            if (prevCard.Figures[i] == this)
             {
-                currGame.PlayingField[Position.x, Position.z].Figures[i] = null;
-                break;
+                prevCard.Figures[i] = null;
+            }
+            else if (prevCard.Figures[i])
+            {
+                ++teammates_count;
+                if (teammates_count == 1)
+                {
+                    prev_pers = i;
+                    prevCard.Figures[i].gameObject.transform.position = prevCard.OwnGO.transform.position;
+                }
+                else
+                {
+                    Vector3 beautiPos;
+                    if (team == Teams.White || team == Teams.Yellow)
+                    {
+                        beautiPos = new Vector3(0.025f, 0, 0);
+                    }
+                    else
+                    {
+                        beautiPos = new Vector3(0, 0, 0.025f);
+                    }
+                    prevCard.Figures[i].gameObject.transform.position = prevCard.OwnGO.transform.position + 
+                        new Vector3(currGame.TeemRotation[(int)team, 1].x * beautiPos.x, 0, beautiPos.z * currGame.TeemRotation[(int)team, 1].z);
+                    prevCard.Figures[prev_pers].gameObject.transform.position = prevCard.OwnGO.transform.position + 
+                        new Vector3(currGame.TeemRotation[(int)team, 2].x * beautiPos.x, 0, beautiPos.z * currGame.TeemRotation[(int)team, 2].z);
+                }
             }
         }
 
         //Change person's pos (in game and in scene)
-        IntVector2 prevPos = new IntVector2(Position);
         Vector3 posChanges = newPos - transform.position;
         Position.x += (int)Math.Round(posChanges.x / currGame.sizeCardPrefab.x);
         Position.z += (int)Math.Round(posChanges.z / currGame.sizeCardPrefab.z);
         transform.position = newPos;
         Card curCard = currGame.PlayingField[Position.x, Position.z];
-        if (currGame.PlayingField[prevPos.x, prevPos.z].Type == Card.CardType.Ship && curCard.Type == Card.CardType.Water)
+        if (prevCard.Type == Card.CardType.Ship && curCard.Type == Card.CardType.Water)
         {
-            (currGame.PlayingField[prevPos.x, prevPos.z] as WaterCard).MoveShip(Position.x, Position.z, currGame);
+            (prevCard as WaterCard).MoveShip(Position.x, Position.z, currGame);
             for (int i = 0; i < 3; ++i)
             {
-                if (currGame.PlayingField[prevPos.x, prevPos.z].Figures[i] && currGame.PlayingField[prevPos.x, prevPos.z].Figures[i] != this)
+                if (prevCard.Figures[i] && prevCard.Figures[i] != this)
                 {
-                    currGame.PlayingField[prevPos.x, prevPos.z].Figures[i].Move(newPos);
+                    prevCard.Figures[i].Move(newPos);
                 }
             }
         }
         
 
         //Look at new card
+        if (curCard.Type == Card.CardType.Ship && (curCard as WaterCard).OwnShip.team != team)
+        {
+            Death();
+            return;
+        }
+        
         bool findPlace = false;
-        for (int i = 0; i < 3; ++i)
+        for (short i = 0, teammates_count = 0, prev_pers = 0; i < 3; ++i)
         {
             if (curCard.Figures[i])
             {
                 if (curCard.Figures[i].team != team)
                 {
-                    if (currGame.PlayingField[Position.x, Position.z].Type == Card.CardType.Ship)
+                    if ((curCard.Type == Card.CardType.Ship && (curCard as WaterCard).OwnShip.team == team) || 
+                        curCard.Type == Card.CardType.Water)
                     {
                         curCard.Figures[i].Death();
                     }
@@ -189,6 +247,32 @@ public class Person : MonoBehaviour
                     }
 
                     curCard.Figures[i] = null;
+                }
+                else
+                {
+                    ++teammates_count;
+                    if (teammates_count == 1)
+                    {
+                        prev_pers = i;
+                        Vector3 beautiPos;
+                        if (team == Teams.White || team == Teams.Yellow)
+                        {
+                            beautiPos = new Vector3(0.025f, 0, 0);
+                        }
+                        else
+                        {
+                            beautiPos = new Vector3(0, 0, 0.025f);
+                        }
+                        curCard.Figures[i].gameObject.transform.position = 
+                            curCard.OwnGO.transform.position + new Vector3(currGame.TeemRotation[(int)team, 1].x * beautiPos.x, 0, beautiPos.z * currGame.TeemRotation[(int)team, 1].z);
+                        transform.position += new Vector3(currGame.TeemRotation[(int)team, 2].x * beautiPos.x, 0, beautiPos.z * currGame.TeemRotation[(int)team, 2].z);
+                    }
+                    else
+                    {
+                        curCard.Figures[i].gameObject.transform.position = curCard.OwnGO.transform.position + new Vector3(currGame.TeemRotation[(int)team, 1].x * 0.025f, 0, 0.025f * currGame.TeemRotation[(int)team, 1].z);
+                        curCard.Figures[prev_pers].gameObject.transform.position = curCard.OwnGO.transform.position + new Vector3(currGame.TeemRotation[(int)team, 2].x * 0.025f, 0, 0.025f * currGame.TeemRotation[(int)team, 2].z);
+                        transform.position = curCard.OwnGO.transform.position + new Vector3(currGame.TeemRotation[(int)team, 0].x * 0.025f, 0, 0.025f * currGame.TeemRotation[(int)team, 0].z);
+                    }
                 }
             }
 
@@ -208,6 +292,6 @@ public class Person : MonoBehaviour
             curCard.StepAction();
         }
 
-        currGame.PlayingField[Position.x, Position.z].StepAction();
+        curCard.StepAction();
     }
 }

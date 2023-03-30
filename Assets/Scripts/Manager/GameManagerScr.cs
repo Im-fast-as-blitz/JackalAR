@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 using Random = UnityEngine.Random;
+using Vector3 = UnityEngine.Vector3;
 
 
 public class Game
@@ -16,13 +17,34 @@ public class Game
     public int NumTeams = 2;
     public Vector3 sizeCardPrefab = new Vector3(0, 0, 0);
     public Button ShamanBtn;
+    public Vector3[,] TeemRotation = new Vector3[4, 3];
 
     public Teams CurrTeam;
 
     public Game()
     {
+        SelectTeemRotation();
         FillAndShufflePlayingField();
         PlaceShips();
+    }
+
+    private void SelectTeemRotation()
+    {
+        TeemRotation[(int)Teams.White, 0] = new Vector3(0, 0, 1);
+        TeemRotation[(int)Teams.White, 1] = new Vector3(-1, 0, -1);
+        TeemRotation[(int)Teams.White, 2] = new Vector3(1, 0, -1);
+        
+        TeemRotation[(int)Teams.Red, 0] = new Vector3(-1, 0, 0);
+        TeemRotation[(int)Teams.Red, 1] = new Vector3(1, 0, -1);
+        TeemRotation[(int)Teams.Red, 2] = new Vector3(1, 0, 1);
+        
+        TeemRotation[(int)Teams.Yellow, 0] = new Vector3(0, 0, -1);
+        TeemRotation[(int)Teams.Yellow, 1] = new Vector3(1, 0, 1);
+        TeemRotation[(int)Teams.Yellow, 2] = new Vector3(-1, 0, 1);
+        
+        TeemRotation[(int)Teams.Black, 0] = new Vector3(1, 0, 0);
+        TeemRotation[(int)Teams.Black, 1] = new Vector3(-1, 0, 1);
+        TeemRotation[(int)Teams.Black, 2] = new Vector3(-1, 0, -1);
     }
 
     private void FillAndShufflePlayingField()
@@ -135,7 +157,8 @@ public class GameManagerScr : MonoBehaviour
         {
             BuildPlayingField(new Vector3(0, 0, 0));
             _placedMap = true;
-            arCamera.transform.position = new Vector3(0, 2f, 0);
+            //arCamera.transform.position = new Vector3(0, 2f, 0);
+            arCamera.transform.position = new Vector3(0, 1.25f, 0);
         }
 
         planeMarkerPrefab.SetActive(false);
@@ -358,7 +381,7 @@ public class GameManagerScr : MonoBehaviour
         // Generate persons on ships
         for (int team = 0; team < CurrentGame.NumTeams; team++)
         {
-            const int numPersonsInTeam = 2;
+            const int numPersonsInTeam = 3;
             Person[] personsInTeam = new Person[numPersonsInTeam];
 
             for (int player = 0; player < numPersonsInTeam; player++)
@@ -367,8 +390,9 @@ public class GameManagerScr : MonoBehaviour
                 float persX = firstCardX + shipPosition.x * CurrentGame.sizeCardPrefab.x;
                 float persY = firstCardY;
                 float persZ = firstCardZ + shipPosition.z * CurrentGame.sizeCardPrefab.z;
-                Vector3 persPosition = new Vector3(persX, persY, persZ);
-
+                Vector3 beautiPos = CurrentGame.TeemRotation[team, player];
+                Vector3 persPosition = new Vector3(persX + beautiPos.x * 0.025f, persY, persZ + beautiPos.z * 0.025f);
+                
                 GameObject personGO = Instantiate(placedObjectPrefab, persPosition, Quaternion.identity);
                 personGO.SetActive(true);
                 Person pers = personGO.GetComponent<Person>();
