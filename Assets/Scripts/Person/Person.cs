@@ -88,11 +88,6 @@ public class Person : MonoBehaviour
     {
         IntVector2 newPos = Position + addPos;
 
-        if (possByCoin == PersonManagerScr.WithCoin)
-        {
-            Debug.Log("with coin");
-        }
-
         if ((newPos.x is >= 0 and <= 12) && (newPos.z is >= 0 and <= 12) && possByType(newPos) &&
             possByRotation(addPos) && possByCoin(newPos))
         {
@@ -142,7 +137,6 @@ public class Person : MonoBehaviour
         PersonManagerScr.PossibilityToWalk possByCoin = PersonManagerScr.WithoutCoin;
         if (isWithCoin)
         {
-            Debug.Log("With coin");
             possByCoin = PersonManagerScr.WithCoin;
         }
 
