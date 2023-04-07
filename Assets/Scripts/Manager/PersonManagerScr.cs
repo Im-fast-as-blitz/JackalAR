@@ -231,6 +231,9 @@ public class PersonManagerScr : MonoBehaviour
         // Chest
         PossibilityToWalkByType.Add(Card.CardType.Chest, OnEmptyCard);
         DirectionsToWalkByType.Add(Card.CardType.Chest, DefaultDirections);
+        // Turnyable
+        PossibilityToWalkByType.Add(Card.CardType.Turntable, OnEmptyCard);
+        DirectionsToWalkByType.Add(Card.CardType.Turntable, DefaultDirections);
     }
 
     public static List<IntVector2> DefaultDirections = new List<IntVector2>();

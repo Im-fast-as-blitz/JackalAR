@@ -170,6 +170,7 @@ public class GameManagerScr : MonoBehaviour
             BuildPlayingField(new Vector3(0, 0, 0));
             _placedMap = true;
             arCamera.transform.position = new Vector3(0, 2f, 0);
+            //arCamera.transform.position = new Vector3(0, 1.25f, 0);
         }
 
         planeMarkerPrefab.SetActive(false);
@@ -293,15 +294,39 @@ public class GameManagerScr : MonoBehaviour
             }
         }
 
+        Person prev_pers = null;
+        int teammates_count = 0;
         foreach (var per in CurrentGame.Persons[_currTeam])
         {
             if (CurrentGame.PlayingField[per.Position.x, per.Position.z].Type == Card.CardType.Shaman)
             {
-                zombie.Position = new IntVector2(per.Position);
-                zombie.gameObject.SetActive(true);
-                zombie._isAlive = true;
-                zombie.gameObject.transform.position = per.gameObject.transform.position;
-                break;
+                ++teammates_count;
+                if (teammates_count == 1)
+                {
+                    prev_pers = per;
+                    zombie.Position = new IntVector2(per.Position);
+                    zombie.gameObject.SetActive(true);
+                    zombie._isAlive = true;
+                    
+                    Vector3 beautiPos;
+                    if (_currTeam == Teams.White || _currTeam == Teams.Yellow)
+                    {
+                        beautiPos = new Vector3(0.025f, 0, 0);
+                    }
+                    else
+                    {
+                        beautiPos = new Vector3(0, 0, 0.025f);
+                    }
+                    zombie.transform.position = per.gameObject.transform.position + 
+                                                           new Vector3(CurrentGame.TeemRotation[(int)_currTeam, 1].x * beautiPos.x, 0, beautiPos.z * CurrentGame.TeemRotation[(int)_currTeam, 1].z);;
+                    per.transform.position += new Vector3(CurrentGame.TeemRotation[(int)_currTeam, 2].x * beautiPos.x, 0, beautiPos.z * CurrentGame.TeemRotation[(int)_currTeam, 2].z);
+                }
+                else
+                {
+                    prev_pers.transform.position = per.transform.position + new Vector3(CurrentGame.TeemRotation[(int)_currTeam, 2].x * 0.025f, 0, 0.025f * CurrentGame.TeemRotation[(int)_currTeam, 2].z);
+                    transform.position = per.transform.position + new Vector3(CurrentGame.TeemRotation[(int)_currTeam, 0].x * 0.025f, 0, 0.025f * CurrentGame.TeemRotation[(int)_currTeam, 0].z);
+                    per.transform.position += new Vector3(CurrentGame.TeemRotation[(int)_currTeam, 1].x * 0.025f, 0, 0.025f * CurrentGame.TeemRotation[(int)_currTeam, 1].z);
+                }
             }
         }
 
@@ -342,7 +367,7 @@ public class GameManagerScr : MonoBehaviour
         float firstCardZ = middleCardPosition.z - 6 * CurrentGame.sizeCardPrefab.z;
         Vector3 firstCardPosition = new Vector3(firstCardX, firstCardY, firstCardZ);
 
-        for (int j = 0; j < CurrentGame.PlayingField.GetLength(1); j++)
+        for (int j = 0, turntable_count = 0; j < CurrentGame.PlayingField.GetLength(1); j++)
         {
             for (int i = 0; i < CurrentGame.PlayingField.GetLength(0); i++)
             {
@@ -450,6 +475,43 @@ public class GameManagerScr : MonoBehaviour
                     }
 
                     ChestCard.CardsCount++;
+                }
+                else if (ownCard is TurntableCard)
+                {
+                    ++turntable_count;
+                    if (turntable_count <= 5)
+                    {
+                        (ownCard as TurntableCard).StepCount = 2;
+                        (ownCard as TurntableCard).StepPos.Add(new Vector3(0.03f, 0, 0.03f));
+                        (ownCard as TurntableCard).StepPos.Add(new Vector3(-0.03f, 0, -0.03f));
+                    }
+                    else if (turntable_count <= 9)
+                    {
+                        ownCard.LogoPath = "Cards/Turntables/3-steps";
+                        (ownCard as TurntableCard).StepCount = 3;
+                        (ownCard as TurntableCard).StepPos.Add(new Vector3(-0.03f, 0, 0.03f));
+                        (ownCard as TurntableCard).StepPos.Add(new Vector3(0.01f, 0, 0));
+                        (ownCard as TurntableCard).StepPos.Add(new Vector3(-0.03f, 0, -0.03f));
+                    }
+                    else if (turntable_count <= 11)
+                    {
+                        ownCard.LogoPath = "Cards/Turntables/4-steps";
+                        (ownCard as TurntableCard).StepCount = 4;
+                        (ownCard as TurntableCard).StepPos.Add(new Vector3(-0.03f, 0, 0.035f));
+                        (ownCard as TurntableCard).StepPos.Add(new Vector3(0.03f, 0, 0.015f));
+                        (ownCard as TurntableCard).StepPos.Add(new Vector3(-0.025f, 0, -0.02f));
+                        (ownCard as TurntableCard).StepPos.Add(new Vector3(+0.02f, 0, -0.035f));
+                    }
+                    else
+                    {
+                        ownCard.LogoPath = "Cards/Turntables/5-steps";
+                        (ownCard as TurntableCard).StepCount = 5;
+                        (ownCard as TurntableCard).StepPos.Add(new Vector3(-0.035f, 0, -0.03f));
+                        (ownCard as TurntableCard).StepPos.Add(new Vector3(0, 0, -0.03f));
+                        (ownCard as TurntableCard).StepPos.Add(new Vector3(0.03f, 0, -0.01f));
+                        (ownCard as TurntableCard).StepPos.Add(new Vector3(0.02f, 0, 0.03f));
+                        (ownCard as TurntableCard).StepPos.Add(new Vector3(-0.035f, 0, 0.03f));
+                    }
                 }
             }
         }
