@@ -357,6 +357,7 @@ public class Person : MonoBehaviour
                         {
                             curCard.Figures[i].transform.GetChild(0).gameObject.SetActive(false);
                         }
+                        curCard.Figures[i].CellDepth = 1;
                         curCard.Figures[i].ReturnToShip();
                         curCard.Figures[i] = null;
                     }
