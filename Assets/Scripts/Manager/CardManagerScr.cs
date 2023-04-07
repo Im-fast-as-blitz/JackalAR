@@ -21,7 +21,8 @@ public class Card
         ArrowStraight4 = 11,
         ArrowDiagonal4 = 12,
         Fortress = 13,
-        Shaman = 14
+        Shaman = 14,
+        Turntable = 16
     }
 
     public GameObject OwnGO;
@@ -257,6 +258,32 @@ public class ShamanCard : Card
     }
 }
 
+public class TurntableCard : Card
+{
+    public short StepCount;
+    public List<Vector3> StepPos = new List<Vector3>();
+
+    public TurntableCard()
+    {
+        LogoPath = "Cards/Turntables/2-steps";
+        Type = CardType.Turntable;
+
+        for (int i = 3; i < 12; ++i)
+        {
+            Figures.Add(null);
+        }
+    }
+
+    public override void OpenAction()
+    {
+    }
+
+    public override void StepAction()
+    {
+        
+    }
+}
+
 public static class Cards
 {
     public static List<PairCardInt> AllCards = new List<PairCardInt>();
@@ -299,11 +326,12 @@ public class CardManagerScr : MonoBehaviour
         Cards.AllCards.Add(new PairCardInt(new WaterCard(), 52));
         Cards.AllCards.Add(new PairCardInt(new EmptyCard(), 30));
         Cards.AllCards.Add(new PairCardInt(new HorseCard(), 10));
-        Cards.AllCards.Add(new PairCardInt(new CannonCard(), 17));
-        Cards.AllCards.Add(new PairCardInt(new OgreCard(), 5));
-        Cards.AllCards.Add(new PairCardInt(new ArrowCard(), 35));
+        Cards.AllCards.Add(new PairCardInt(new CannonCard(), 10));
+        Cards.AllCards.Add(new PairCardInt(new OgreCard(), 1));
+        Cards.AllCards.Add(new PairCardInt(new ArrowCard(), 15));
         Cards.AllCards.Add(new PairCardInt(new ShamanCard(), 10));
         Cards.AllCards.Add(new PairCardInt(new FortressCard(), 10));
+        Cards.AllCards.Add(new PairCardInt(new TurntableCard(), 31));
         
         Ships.GenerateShips();
     }

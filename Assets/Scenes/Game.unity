@@ -884,6 +884,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1681163416311180001, guid: 42c986d5013b54c4b869cbde8c95e663,
         type: 3}
+      propertyPath: isDebug
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1681163416311180001, guid: 42c986d5013b54c4b869cbde8c95e663,
+        type: 3}
       propertyPath: arCamera
       value: 
       objectReference: {fileID: 1668834003}

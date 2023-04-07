@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 
@@ -11,6 +12,7 @@ public class Person : MonoBehaviour
     private List<GameObject> _moveCircles = new List<GameObject>();
 
     [NonSerialized] public IntVector2 Position;
+    public short CellDepth = 1;
     public Game currGame;
 
     public Teams team = Teams.White;
@@ -63,16 +65,16 @@ public class Person : MonoBehaviour
     //Death
     public void Death()
     {
-        ReturnToShip();
+        //ReturnToShip();
         _isAlive = false;
         transform.gameObject.SetActive(false);
     }
 
-    private bool EnemyOnCard(IntVector2 pos)
+    private bool EnemyOnCard(IntVector2 pos, int depth)
     {
         foreach (var figure in currGame.PlayingField[pos.x, pos.z].Figures)
         {
-            if (figure && figure.team != team)
+            if (figure && figure.team != team && figure.CellDepth == depth)
             {
                 return true;
             }
@@ -90,9 +92,23 @@ public class Person : MonoBehaviour
         if ((newPos.x is >= 0 and <= 12) && (newPos.z is >= 0 and <= 12) && possibilityByType(newPos) && possibilityByRotation(addPos))
         {
             Card currCard = currGame.PlayingField[newPos.x, newPos.z];
+            Card prevCard = currGame.PlayingField[Position.x, Position.z];
             
             GameObject result = null;
-            if (EnemyOnCard(newPos))
+            int depth = CellDepth;
+            if (prevCard.Type == Card.CardType.Turntable)
+            {
+                if (CellDepth < (prevCard as TurntableCard).StepCount)
+                {
+                    ++depth;
+                    newPos = Position;
+                }
+                else
+                {
+                    depth = 1;
+                }
+            }
+            if (EnemyOnCard(newPos, depth))
             {
                 if (currCard.Type != Card.CardType.Fortress && currCard.Type != Card.CardType.Shaman)
                 {
@@ -106,7 +122,11 @@ public class Person : MonoBehaviour
 
             if (result)
             {
-                //result.transform.position += addPos.ToVector3() * (transform.localScale.x * mulCoef);
+                if (prevCard.Type == Card.CardType.Turntable && CellDepth < (prevCard as TurntableCard).StepCount)
+                {
+                    result.transform.GetChild(0).gameObject.SetActive(true);
+                    result.transform.GetChild(0).GetComponent<TextMeshPro>().text = (CellDepth + 1).ToString();
+                }
                 _moveCircles.Add(result);
             }
         }
@@ -170,7 +190,7 @@ public class Person : MonoBehaviour
 
         Card prevCard = currGame.PlayingField[Position.x, Position.z];
 
-        for (short i = 0, teammates_count = 0, prev_pers = 0; i < 3; ++i)
+        for (short i = 0, teammates_count = 0, prev_pers = 0; i < prevCard.Figures.Count; ++i)
         {
             if (prevCard.Figures[i] == this)
             {
@@ -178,6 +198,27 @@ public class Person : MonoBehaviour
             }
             else if (prevCard.Figures[i])
             {
+                if (prevCard.Type == Card.CardType.Turntable)
+                {
+                    if (CellDepth == prevCard.Figures[i].CellDepth)
+                    {
+                        ++teammates_count;
+                        if (teammates_count == 1)
+                        {
+                            prev_pers = i;
+                            prevCard.Figures[i].transform.GetChild(0).gameObject.SetActive(false);
+                            transform.GetChild(0).gameObject.SetActive(false);
+                        }
+                        else
+                        {
+                            prevCard.Figures[prev_pers].transform.GetChild(0).GetComponent<TextMeshPro>().text = (teammates_count).ToString();
+                            prevCard.Figures[i].transform.GetChild(0).GetComponent<TextMeshPro>().text = (teammates_count).ToString();
+                            prevCard.Figures[prev_pers].transform.GetChild(0).gameObject.SetActive(true);
+                        }
+                    }
+                    continue;
+                }
+                
                 ++teammates_count;
                 if (teammates_count == 1)
                 {
@@ -204,15 +245,27 @@ public class Person : MonoBehaviour
         }
 
         //Change person's pos (in game and in scene)
-        Vector3 posChanges = newPos - transform.position;
-        Position.x += (int)Math.Round(posChanges.x / currGame.sizeCardPrefab.x);
-        Position.z += (int)Math.Round(posChanges.z / currGame.sizeCardPrefab.z);
-        transform.position = newPos;
+        if (prevCard.Type == Card.CardType.Turntable && CellDepth < (prevCard as TurntableCard).StepCount)
+        {
+            ++CellDepth;
+            newPos = prevCard.OwnGO.transform.position;
+        }
+        else
+        {
+            if (prevCard.Type == Card.CardType.Turntable)
+            {
+                CellDepth = 1;
+            }
+            Vector3 posChanges = newPos - transform.position;
+            Position.x += (int)Math.Round(posChanges.x / currGame.sizeCardPrefab.x);
+            Position.z += (int)Math.Round(posChanges.z / currGame.sizeCardPrefab.z);
+            transform.position = newPos;
+        }
         Card curCard = currGame.PlayingField[Position.x, Position.z];
         if (prevCard.Type == Card.CardType.Ship && curCard.Type == Card.CardType.Water)
         {
             (prevCard as WaterCard).MoveShip(Position.x, Position.z, currGame);
-            for (int i = 0; i < 3; ++i)
+            for (int i = 0; i < curCard.Figures.Count; ++i)
             {
                 if (prevCard.Figures[i] && prevCard.Figures[i] != this)
                 {
@@ -228,9 +281,13 @@ public class Person : MonoBehaviour
             Death();
             return;
         }
-        
+        else if (curCard.Type == Card.CardType.Turntable)
+        {
+            transform.position = newPos + (curCard as TurntableCard).StepPos[CellDepth - 1];
+        }
+
         bool findPlace = false;
-        for (short i = 0, teammates_count = 0, prev_pers = 0; i < 3; ++i)
+        for (short i = 0, teammates_count = 0, prev_pers = 0; i < curCard.Figures.Count; ++i)
         {
             if (curCard.Figures[i])
             {
@@ -240,16 +297,43 @@ public class Person : MonoBehaviour
                         curCard.Type == Card.CardType.Water)
                     {
                         curCard.Figures[i].Death();
+                        curCard.Figures[i] = null;
                     }
-                    else
+                    else if (curCard.Type != Card.CardType.Turntable || (curCard.Type == Card.CardType.Turntable && CellDepth == curCard.Figures[i].CellDepth))
                     {
+                        if (curCard.Type == Card.CardType.Turntable)
+                        {
+                            curCard.Figures[i].transform.GetChild(0).gameObject.SetActive(false);
+                        }
                         curCard.Figures[i].ReturnToShip();
+                        curCard.Figures[i] = null;
                     }
-
-                    curCard.Figures[i] = null;
                 }
                 else
                 {
+                    if (curCard.Type == Card.CardType.Turntable)
+                    {
+                        if (CellDepth == curCard.Figures[i].CellDepth)
+                        {
+                            ++teammates_count;
+                            if (teammates_count == 1)
+                            {
+                                prev_pers = i;
+                                curCard.Figures[i].transform.GetChild(0).GetComponent<TextMeshPro>().text = (teammates_count + 1).ToString();
+                                curCard.Figures[i].transform.GetChild(0).gameObject.SetActive(true);
+                                transform.GetChild(0).gameObject.SetActive(true);
+                            }
+                            else
+                            {
+                                curCard.Figures[prev_pers].transform.GetChild(0).GetComponent<TextMeshPro>().text = (teammates_count + 1).ToString();
+                                curCard.Figures[i].transform.GetChild(0).GetComponent<TextMeshPro>().text = (teammates_count + 1).ToString();
+                                curCard.Figures[i].transform.GetChild(0).gameObject.SetActive(true);
+                            }
+                            transform.GetChild(0).GetComponent<TextMeshPro>().text = (teammates_count + 1).ToString();
+                        }
+                        continue;
+                    }
+
                     ++teammates_count;
                     if (teammates_count == 1)
                     {
