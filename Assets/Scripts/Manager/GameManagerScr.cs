@@ -157,8 +157,8 @@ public class GameManagerScr : MonoBehaviour
         {
             BuildPlayingField(new Vector3(0, 0, 0));
             _placedMap = true;
-            //arCamera.transform.position = new Vector3(0, 2f, 0);
-            arCamera.transform.position = new Vector3(0, 1.25f, 0);
+            arCamera.transform.position = new Vector3(0, 2f, 0);
+            //arCamera.transform.position = new Vector3(0, 1.25f, 0);
         }
 
         planeMarkerPrefab.SetActive(false);
