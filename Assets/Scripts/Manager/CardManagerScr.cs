@@ -352,7 +352,7 @@ public class CardManagerScr : MonoBehaviour
         Cards.AllCards.Add(new PairCardInt(new ShamanCard(), 10));
         Cards.AllCards.Add(new PairCardInt(new FortressCard(), 10));
         Cards.AllCards.Add(new PairCardInt(new TurntableCard(), 16));
-        Cards.AllCards.Add(new PairCardInt(new ChestCard(), 15));
+        Cards.AllCards.Add(new PairCardInt(new ChestCard(), 35));
         
         Ships.GenerateShips();
     }

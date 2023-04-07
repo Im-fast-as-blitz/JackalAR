@@ -341,9 +341,9 @@ public class Person : MonoBehaviour
         bool findPlace = false;
         for (short i = 0, teammates_count = 0, prev_pers = 0; i < curCard.Figures.Count; ++i)
         {
-            if (curCard.Figures[i] && curCard.Figures[i].team != team)
+            if (curCard.Figures[i])
             {
-                if (currGame.PlayingField[Position.x, Position.z].Type == Card.CardType.Ship)
+                if (curCard.Figures[i].team != team)
                 {
                     if ((curCard.Type == Card.CardType.Ship && (curCard as WaterCard).OwnShip.team == team) || 
                         curCard.Type == Card.CardType.Water)
