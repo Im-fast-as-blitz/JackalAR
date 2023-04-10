@@ -15,7 +15,7 @@ public class Game
     public Card[,] PlayingField = new Card[PlayingFieldFirstDim, PlayingFieldSecondDim];
     public GameObject[,] GOCards = new GameObject[PlayingFieldFirstDim, PlayingFieldSecondDim];
     public Dictionary<Teams, Person[]> Persons = new Dictionary<Teams, Person[]>();
-    public int currentNumTeam = 0;
+    public int currentTeam = 0;
     public int NumTeams = 2;
     public Vector3 sizeCardPrefab = new Vector3(0, 0, 0);
     public Button ShamanBtn;

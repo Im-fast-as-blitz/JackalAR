@@ -788,6 +788,7 @@ GameObject:
   m_Component:
   - component: {fileID: 911730209}
   - component: {fileID: 911730208}
+  - component: {fileID: 911730210}
   m_Layer: 0
   m_Name: RpcConnector
   m_TagString: Untagged
@@ -822,6 +823,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &911730210
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 911730207}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02de7dba9c05f4c37bd241515ad9a85c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gameManagerScr: {fileID: 1394450619}
 --- !u!114 &1394450619 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1681163416311180001, guid: 42c986d5013b54c4b869cbde8c95e663,
@@ -1320,6 +1334,11 @@ PrefabInstance:
       propertyPath: takeCoinBtn
       value: 
       objectReference: {fileID: 1492784456}
+    - target: {fileID: 1681163416311180001, guid: 42c986d5013b54c4b869cbde8c95e663,
+        type: 3}
+      propertyPath: rpcConnector
+      value: 
+      objectReference: {fileID: 911730210}
     - target: {fileID: 1681163416311180001, guid: 42c986d5013b54c4b869cbde8c95e663,
         type: 3}
       propertyPath: planeMarkerPrefab

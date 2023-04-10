@@ -7,6 +7,7 @@ using UnityEngine.XR.ARSubsystems;
 using Random = UnityEngine.Random;
 using Vector3 = UnityEngine.Vector3;
 using Photon.Pun;
+using UnityEditor;
 
 
 public class GameManagerScr : MonoBehaviour
@@ -33,6 +34,8 @@ public class GameManagerScr : MonoBehaviour
     private Teams _currTeam = Teams.White;
     private Person _currPerson = null;
 
+    private Vector3 midCardPosition;
+
     void Start()
     {
         _arRaycastManagerScript = FindObjectOfType<ARRaycastManager>();
@@ -43,9 +46,9 @@ public class GameManagerScr : MonoBehaviour
         CurrentGame.ShamanBtn = shamanBtn;
         CurrentGame.TakeCoinBtn = takeCoinBtn;
         CurrentGame.PutCoinBtn = putCoinBtn;
+        
+        rpcConnector.SetGameObj(CurrentGame);
 
-        rpcConnector.currGame = CurrentGame;
-        rpcConnector.gameManagerScr = this;
         PersonManagerScr.currGame = CurrentGame;
 
         if (!isGameAR)
@@ -53,6 +56,7 @@ public class GameManagerScr : MonoBehaviour
             if (PhotonNetwork.IsMasterClient)
             {
                 BuildPlayingField(new Vector3(0, 0, 0));
+                CreateTeam();
             }
 
             _placedMap = true;
@@ -93,6 +97,7 @@ public class GameManagerScr : MonoBehaviour
 
             planeMarkerPrefab.SetActive(false);
             BuildPlayingField(gamePos);
+            CreateTeam();
             _placedMap = true;
         }
     }
@@ -255,6 +260,7 @@ public class GameManagerScr : MonoBehaviour
 
     public void BuildPlayingField(Vector3 middleCardPosition)
     {
+        midCardPosition = middleCardPosition; 
         MeshRenderer rendererCardPrefab = cardPrefab.GetComponent<MeshRenderer>();
         CurrentGame.sizeCardPrefab = rendererCardPrefab.bounds.size;
 
@@ -412,35 +418,44 @@ public class GameManagerScr : MonoBehaviour
             }
         }
 
-        // Generate persons on ships
-        int currentTeam = PhotonNetwork.CountOfPlayersInRooms;
-        
-        Debug.LogError(currentTeam);
-        
-        const int numPersonsInTeam = 3;
-        Person[] personsInTeam = new Person[numPersonsInTeam];
+    }
+    
+    // Generate persons on ships
+    public void CreateTeam()
+    {
+        float firstCardX = midCardPosition.x - 6 * CurrentGame.sizeCardPrefab.x;
+        float firstCardY = midCardPosition.y;
+        float firstCardZ = midCardPosition.z - 6 * CurrentGame.sizeCardPrefab.z;
 
-        for (int player = 0; player < numPersonsInTeam; player++)
+        for (var currentTeam = CurrentGame.currentTeam; currentTeam < PhotonNetwork.PlayerList.Length; ++currentTeam)
         {
-            IntVector2 shipPosition = Ships.AllShips[(Teams)currentTeam].Position;
-            float persX = firstCardX + shipPosition.x * CurrentGame.sizeCardPrefab.x;
-            float persY = firstCardY;
-            float persZ = firstCardZ + shipPosition.z * CurrentGame.sizeCardPrefab.z;
-            Vector3 beautiPos = CurrentGame.TeemRotation[currentTeam, player];
-            Vector3 persPosition = new Vector3(persX + beautiPos.x * 0.025f, persY, persZ + beautiPos.z * 0.025f);
+            const int numPersonsInTeam = 3;
+            Person[] personsInTeam = new Person[numPersonsInTeam];
 
-            GameObject personGO = Instantiate(placedObjectPrefab, persPosition, Quaternion.identity);
-            personGO.SetActive(true);
-            Person pers = personGO.GetComponent<Person>();
-            pers.currGame = CurrentGame;
-            pers.team = (Teams)currentTeam;
-            pers.Position = new IntVector2(shipPosition);
-            // Add person to card's list of persons
-            CurrentGame.PlayingField[shipPosition.x, shipPosition.z].Figures[player] = pers;
+            for (int player = 0; player < numPersonsInTeam; player++)
+            {
+                IntVector2 shipPosition = Ships.AllShips[(Teams)currentTeam].Position;
+                float persX = firstCardX + shipPosition.x * CurrentGame.sizeCardPrefab.x;
+                float persY = firstCardY;
+                float persZ = firstCardZ + shipPosition.z * CurrentGame.sizeCardPrefab.z;
+                Vector3 beautiPos = CurrentGame.TeemRotation[currentTeam, player];
+                Vector3 persPosition = new Vector3(persX + beautiPos.x * 0.025f, persY, persZ + beautiPos.z * 0.025f);
 
-            personsInTeam[player] = pers;
+                GameObject personGO = Instantiate(placedObjectPrefab, persPosition, Quaternion.identity);
+                personGO.SetActive(true);
+                Person pers = personGO.GetComponent<Person>();
+                pers.currGame = CurrentGame;
+                pers.team = (Teams)currentTeam;
+                pers.Position = new IntVector2(shipPosition);
+                // Add person to card's list of persons
+                CurrentGame.PlayingField[shipPosition.x, shipPosition.z].Figures[player] = pers;
+
+                personsInTeam[player] = pers;
+            }
+
+            CurrentGame.Persons.Add((Teams)currentTeam, personsInTeam);
         }
-        
-        CurrentGame.Persons.Add((Teams)currentTeam, personsInTeam);
+
+        CurrentGame.currentTeam = PhotonNetwork.PlayerList.Length;
     }
 }

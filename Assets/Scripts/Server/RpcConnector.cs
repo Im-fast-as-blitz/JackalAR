@@ -9,11 +9,10 @@ public class RpcConnector : MonoBehaviourPun
     public Game currGame;
     public GameManagerScr gameManagerScr;
     
-    public void SetGameObj(Game game, GameManagerScr gameManagerScript)
+    public void SetGameObj(Game game)
     {
         Debug.Log(string.Format("SetGameObjCalled"));
         currGame = game;
-        gameManagerScr = gameManagerScript;
     }
     
     [PunRPC]
@@ -42,6 +41,7 @@ public class RpcConnector : MonoBehaviourPun
         }
         currGame.PlaceShips();
         gameManagerScr.BuildPlayingField(new Vector3(0, 0, 0));
+        CreateNewTeamRpc();
     }
     
     public void SyncCardsRpc()
@@ -57,7 +57,7 @@ public class RpcConnector : MonoBehaviourPun
             }
         }
 
-        this.photonView.RPC("SyncCards", RpcTarget.AllBuffered, cardTypes);
+        photonView.RPC("SyncCards", RpcTarget.AllBuffered, cardTypes);
     }
     
     [PunRPC]
@@ -73,17 +73,17 @@ public class RpcConnector : MonoBehaviourPun
         pos[0] = Position.x;
         pos[1] = Position.z;
         Debug.Log(string.Format("OpenCardFromRpcCalled {0} {1}", pos[0], pos[1]));
-        this.photonView.RPC("OpenCard", RpcTarget.AllBuffered, pos);
+        photonView.RPC("OpenCard", RpcTarget.AllBuffered, pos);
     }
 
     [PunRPC]
-    void ChangeCurTeam(int curTeam)
+    void CreateNewTeam()
     {
-        currGame.currentNumTeam = curTeam;
+        gameManagerScr.CreateTeam();
     }
 
-    public void ChangeCurTeamRpc(int currentTeam)
+    public void CreateNewTeamRpc()
     {
-        photonView.RPC("ChangeCurTeam", RpcTarget.OthersBuffered, currentTeam);
+        photonView.RPC("CreateNewTeam", RpcTarget.OthersBuffered);
     }
 }
