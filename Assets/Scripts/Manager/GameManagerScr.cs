@@ -6,128 +6,8 @@ using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 using Random = UnityEngine.Random;
 using Vector3 = UnityEngine.Vector3;
+using Photon.Pun;
 
-
-public class Game
-{
-    public const int PlayingFieldFirstDim = 13, PlayingFieldSecondDim = 13; // size of playing field
-    public Card[,] PlayingField = new Card[PlayingFieldFirstDim, PlayingFieldSecondDim];
-    public GameObject[,] GOCards = new GameObject[PlayingFieldFirstDim, PlayingFieldSecondDim];
-    public Dictionary<Teams, Person[]> Persons = new Dictionary<Teams, Person[]>();
-    public int NumTeams = 2;
-    public Vector3 sizeCardPrefab = new Vector3(0, 0, 0);
-    public Button ShamanBtn;
-
-    public Vector3[,] TeemRotation = new Vector3[4, 3];
-
-    public Button TakeCoinBtn;
-    public Button PutCoinBtn;
-    public int TotalCoins = 0;
-    public int[] CoinsInTeam = new int[4];
-
-
-    public Teams CurrTeam;
-
-    public Game()
-    {
-        SelectTeemRotation();
-        FillAndShufflePlayingField();
-        PlaceShips();
-    }
-
-    private void SelectTeemRotation()
-    {
-        TeemRotation[(int)Teams.White, 0] = new Vector3(0, 0, 1);
-        TeemRotation[(int)Teams.White, 1] = new Vector3(-1, 0, -1);
-        TeemRotation[(int)Teams.White, 2] = new Vector3(1, 0, -1);
-        
-        TeemRotation[(int)Teams.Red, 0] = new Vector3(-1, 0, 0);
-        TeemRotation[(int)Teams.Red, 1] = new Vector3(1, 0, -1);
-        TeemRotation[(int)Teams.Red, 2] = new Vector3(1, 0, 1);
-        
-        TeemRotation[(int)Teams.Yellow, 0] = new Vector3(0, 0, -1);
-        TeemRotation[(int)Teams.Yellow, 1] = new Vector3(1, 0, 1);
-        TeemRotation[(int)Teams.Yellow, 2] = new Vector3(-1, 0, 1);
-        
-        TeemRotation[(int)Teams.Black, 0] = new Vector3(1, 0, 0);
-        TeemRotation[(int)Teams.Black, 1] = new Vector3(-1, 0, 1);
-        TeemRotation[(int)Teams.Black, 2] = new Vector3(-1, 0, -1);
-    }
-
-    private void FillAndShufflePlayingField()
-    {
-        // Fill by water cards
-        int firstDim = PlayingFieldFirstDim;
-        int secondDim = PlayingFieldSecondDim;
-        for (int j = 0; j < secondDim; j += secondDim - 1)
-        {
-            for (int i = 0; i < firstDim; i++)
-            {
-                PlayingField[i, j] = new WaterCard();
-            }
-        }
-
-        for (int j = 1; j < secondDim - 1; j++)
-        {
-            for (int i = 0; i < firstDim; i += firstDim - 1)
-            {
-                PlayingField[i, j] = new WaterCard();
-            }
-        }
-
-        // Fill by other cards temporary array
-        List<Card> cardsWithoutWater = new List<Card>();
-        for (int i = 1; i < Cards.AllCards.Count; i++)
-        {
-            for (int remain = Cards.AllCards[i].Amount; remain > 0; --remain)
-            {
-                cardsWithoutWater.Add((Card)Cards.AllCards[i].CardPair.NewObj());
-            }
-        }
-
-        // Shuffle temporary array
-        for (int i = 0; i < cardsWithoutWater.Count; i++)
-        {
-            Card temp = cardsWithoutWater[i];
-            int randomIndex = Random.Range(i, cardsWithoutWater.Count);
-            cardsWithoutWater[i] = cardsWithoutWater[randomIndex];
-            cardsWithoutWater[randomIndex] = temp;
-        }
-
-        // Fill Playing Field by temporary array
-        int tempArrayInd = 0;
-        for (int j = 1; j < secondDim - 1; j++)
-        {
-            for (int i = 1; i < firstDim - 1; i++)
-            {
-                if ((i == 1 && j == 1) || (i == firstDim - 2 && j == 1) || (i == 1 && j == secondDim - 2) ||
-                    (i == firstDim - 2 && j == secondDim - 2))
-                {
-                    PlayingField[i, j] = new WaterCard();
-                    continue;
-                }
-
-                PlayingField[i, j] = cardsWithoutWater[tempArrayInd];
-                tempArrayInd++;
-            }
-        }
-    }
-
-    private void PlaceShips()
-    {
-        foreach (var pair in Ships.AllShips)
-        {
-            WaterCard waterCard = PlayingField[pair.Value.Position.x, pair.Value.Position.z] as WaterCard;
-            if (waterCard == null)
-            {
-                throw new Exception("Wrong ship or water card position");
-            }
-
-            waterCard.OwnShip = pair.Value;
-            waterCard.Type = Card.CardType.Ship;
-        }
-    }
-}
 
 public class GameManagerScr : MonoBehaviour
 {
@@ -141,6 +21,7 @@ public class GameManagerScr : MonoBehaviour
     [SerializeField] private Button shamanBtn;
     [SerializeField] private Button takeCoinBtn;
     [SerializeField] private Button putCoinBtn;
+    [SerializeField] public RpcConnector rpcConnector;
     public bool isGameAR = false;
     public bool isDebug = false;
 
@@ -157,17 +38,23 @@ public class GameManagerScr : MonoBehaviour
         _arRaycastManagerScript = FindObjectOfType<ARRaycastManager>();
         _layerMask = 1 << LayerMask.NameToLayer("Person");
 
-        CurrentGame = new Game();
+        CurrentGame = new Game(PhotonNetwork.IsMasterClient);
 
         CurrentGame.ShamanBtn = shamanBtn;
         CurrentGame.TakeCoinBtn = takeCoinBtn;
         CurrentGame.PutCoinBtn = putCoinBtn;
 
+        rpcConnector.currGame = CurrentGame;
+        rpcConnector.gameManagerScr = this;
         PersonManagerScr.currGame = CurrentGame;
 
         if (!isGameAR)
         {
-            BuildPlayingField(new Vector3(0, 0, 0));
+            if (PhotonNetwork.IsMasterClient)
+            {
+                BuildPlayingField(new Vector3(0, 0, 0));
+            }
+
             _placedMap = true;
             arCamera.transform.position = new Vector3(0, 2f, 0);
             //arCamera.transform.position = new Vector3(0, 1.25f, 0);
@@ -262,7 +149,7 @@ public class GameManagerScr : MonoBehaviour
                                 _personScr.isWithCoin = false;
                                 CurrentGame.PlayingField[_personScr.Position.x, _personScr.Position.z].Coins++;
                             }
-                            
+
                             _personScr.DestroyCircles();
                             _personScr.gameObject.layer = LayerMask.NameToLayer("Person");
                             _layerMask = 1 << LayerMask.NameToLayer("Person");
@@ -307,7 +194,7 @@ public class GameManagerScr : MonoBehaviour
                     zombie.Position = new IntVector2(per.Position);
                     zombie.gameObject.SetActive(true);
                     zombie._isAlive = true;
-                    
+
                     Vector3 beautiPos;
                     if (_currTeam == Teams.White || _currTeam == Teams.Yellow)
                     {
@@ -317,15 +204,24 @@ public class GameManagerScr : MonoBehaviour
                     {
                         beautiPos = new Vector3(0, 0, 0.025f);
                     }
-                    zombie.transform.position = per.gameObject.transform.position + 
-                                                           new Vector3(CurrentGame.TeemRotation[(int)_currTeam, 1].x * beautiPos.x, 0, beautiPos.z * CurrentGame.TeemRotation[(int)_currTeam, 1].z);;
-                    per.transform.position += new Vector3(CurrentGame.TeemRotation[(int)_currTeam, 2].x * beautiPos.x, 0, beautiPos.z * CurrentGame.TeemRotation[(int)_currTeam, 2].z);
+
+                    zombie.transform.position = per.gameObject.transform.position +
+                                                new Vector3(CurrentGame.TeemRotation[(int)_currTeam, 1].x * beautiPos.x,
+                                                    0, beautiPos.z * CurrentGame.TeemRotation[(int)_currTeam, 1].z);
+                    ;
+                    per.transform.position += new Vector3(CurrentGame.TeemRotation[(int)_currTeam, 2].x * beautiPos.x,
+                        0, beautiPos.z * CurrentGame.TeemRotation[(int)_currTeam, 2].z);
                 }
                 else
                 {
-                    prev_pers.transform.position = per.transform.position + new Vector3(CurrentGame.TeemRotation[(int)_currTeam, 2].x * 0.025f, 0, 0.025f * CurrentGame.TeemRotation[(int)_currTeam, 2].z);
-                    transform.position = per.transform.position + new Vector3(CurrentGame.TeemRotation[(int)_currTeam, 0].x * 0.025f, 0, 0.025f * CurrentGame.TeemRotation[(int)_currTeam, 0].z);
-                    per.transform.position += new Vector3(CurrentGame.TeemRotation[(int)_currTeam, 1].x * 0.025f, 0, 0.025f * CurrentGame.TeemRotation[(int)_currTeam, 1].z);
+                    prev_pers.transform.position = per.transform.position +
+                                                   new Vector3(CurrentGame.TeemRotation[(int)_currTeam, 2].x * 0.025f,
+                                                       0, 0.025f * CurrentGame.TeemRotation[(int)_currTeam, 2].z);
+                    transform.position = per.transform.position +
+                                         new Vector3(CurrentGame.TeemRotation[(int)_currTeam, 0].x * 0.025f, 0,
+                                             0.025f * CurrentGame.TeemRotation[(int)_currTeam, 0].z);
+                    per.transform.position += new Vector3(CurrentGame.TeemRotation[(int)_currTeam, 1].x * 0.025f, 0,
+                        0.025f * CurrentGame.TeemRotation[(int)_currTeam, 1].z);
                 }
             }
         }
@@ -357,7 +253,7 @@ public class GameManagerScr : MonoBehaviour
         _personScr.GenerateMovements(false);
     }
 
-    void BuildPlayingField(Vector3 middleCardPosition)
+    public void BuildPlayingField(Vector3 middleCardPosition)
     {
         MeshRenderer rendererCardPrefab = cardPrefab.GetComponent<MeshRenderer>();
         CurrentGame.sizeCardPrefab = rendererCardPrefab.bounds.size;
@@ -517,33 +413,34 @@ public class GameManagerScr : MonoBehaviour
         }
 
         // Generate persons on ships
-        for (int team = 0; team < CurrentGame.NumTeams; team++)
+        int currentTeam = PhotonNetwork.CountOfPlayersInRooms;
+        
+        Debug.LogError(currentTeam);
+        
+        const int numPersonsInTeam = 3;
+        Person[] personsInTeam = new Person[numPersonsInTeam];
+
+        for (int player = 0; player < numPersonsInTeam; player++)
         {
-            const int numPersonsInTeam = 3;
-            Person[] personsInTeam = new Person[numPersonsInTeam];
+            IntVector2 shipPosition = Ships.AllShips[(Teams)currentTeam].Position;
+            float persX = firstCardX + shipPosition.x * CurrentGame.sizeCardPrefab.x;
+            float persY = firstCardY;
+            float persZ = firstCardZ + shipPosition.z * CurrentGame.sizeCardPrefab.z;
+            Vector3 beautiPos = CurrentGame.TeemRotation[currentTeam, player];
+            Vector3 persPosition = new Vector3(persX + beautiPos.x * 0.025f, persY, persZ + beautiPos.z * 0.025f);
 
-            for (int player = 0; player < numPersonsInTeam; player++)
-            {
-                IntVector2 shipPosition = Ships.AllShips[(Teams)team].Position;
-                float persX = firstCardX + shipPosition.x * CurrentGame.sizeCardPrefab.x;
-                float persY = firstCardY;
-                float persZ = firstCardZ + shipPosition.z * CurrentGame.sizeCardPrefab.z;
-                Vector3 beautiPos = CurrentGame.TeemRotation[team, player];
-                Vector3 persPosition = new Vector3(persX + beautiPos.x * 0.025f, persY, persZ + beautiPos.z * 0.025f);
-                
-                GameObject personGO = Instantiate(placedObjectPrefab, persPosition, Quaternion.identity);
-                personGO.SetActive(true);
-                Person pers = personGO.GetComponent<Person>();
-                pers.currGame = CurrentGame;
-                pers.team = (Teams)team;
-                pers.Position = new IntVector2(shipPosition);
-                // Add person to card's list of persons
-                CurrentGame.PlayingField[shipPosition.x, shipPosition.z].Figures[player] = pers;
+            GameObject personGO = Instantiate(placedObjectPrefab, persPosition, Quaternion.identity);
+            personGO.SetActive(true);
+            Person pers = personGO.GetComponent<Person>();
+            pers.currGame = CurrentGame;
+            pers.team = (Teams)currentTeam;
+            pers.Position = new IntVector2(shipPosition);
+            // Add person to card's list of persons
+            CurrentGame.PlayingField[shipPosition.x, shipPosition.z].Figures[player] = pers;
 
-                personsInTeam[player] = pers;
-            }
-
-            CurrentGame.Persons.Add((Teams)team, personsInTeam);
+            personsInTeam[player] = pers;
         }
+        
+        CurrentGame.Persons.Add((Teams)currentTeam, personsInTeam);
     }
 }

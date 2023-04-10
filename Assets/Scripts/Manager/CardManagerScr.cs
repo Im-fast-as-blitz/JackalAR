@@ -307,6 +307,8 @@ public class TurntableCard : Card
 public static class Cards
 {
     public static List<PairCardInt> AllCards = new List<PairCardInt>();
+    public static Dictionary<Card.CardType, Card> createCardByType = new Dictionary<Card.CardType, Card>();
+
 }
 
 public class Ship
@@ -342,6 +344,7 @@ public class CardManagerScr : MonoBehaviour
 {
     public void Awake()
     {
+         
         // Total 169 cards (52 water cards + 117 other). Water must stay first
         Cards.AllCards.Add(new PairCardInt(new WaterCard(), 52));
         Cards.AllCards.Add(new PairCardInt(new EmptyCard(), 20));
@@ -353,6 +356,11 @@ public class CardManagerScr : MonoBehaviour
         Cards.AllCards.Add(new PairCardInt(new FortressCard(), 10));
         Cards.AllCards.Add(new PairCardInt(new TurntableCard(), 16));
         Cards.AllCards.Add(new PairCardInt(new ChestCard(), 35));
+
+        foreach (var pairCardInt in Cards.AllCards)
+        {
+            Cards.createCardByType.Add(pairCardInt.CardPair.Type, pairCardInt.CardPair); 
+        }
         
         Ships.GenerateShips();
     }
