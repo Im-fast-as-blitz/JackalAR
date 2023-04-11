@@ -19,8 +19,10 @@ public class Person : MonoBehaviour
 
     public bool _isAlive = true;
     public bool isWithCoin = false;
+    public Card previousCard = null;
+    public IntVector2 previousPosition;
 
-    //Return to the ship
+    // Return to the ship
     void ReturnToShip()
     {
         Position = new IntVector2(Ships.AllShips[team].Position);
@@ -84,7 +86,7 @@ public class Person : MonoBehaviour
         return false;
     }
 
-    //Create curr circle to move
+    // Create curr circle to move
     private void CreateMovement(IntVector2 addPos, PersonManagerScr.PossibilityToWalk possByType,
         PersonManagerScr.PossibilityToWalk possByRotation, PersonManagerScr.PossibilityToWalk possByCoin)
     {
@@ -141,7 +143,7 @@ public class Person : MonoBehaviour
         PersonManagerScr.PossibilityToWalk possByType = PersonManagerScr.PossibilityToWalkByType[currentCard.Type];
         List<IntVector2> directions = PersonManagerScr.DirectionsToWalkByType[currentCard.Type];
         PersonManagerScr.PossibilityToWalk possByRotation = PersonManagerScr.RotationDefault;
-        if (currentCard is CannonCard)
+        if (currentCard.Type == Card.CardType.Cannon)
         {
             possByRotation =
                 PersonManagerScr.PossibilityToWalkByRotation[(int)currentCard.Type,
@@ -152,6 +154,19 @@ public class Person : MonoBehaviour
             possByRotation =
                 PersonManagerScr.PossibilityToWalkByRotation[(int)currentCard.Type,
                     (int)(currentCard as ArrowCard).Rotation];
+        } else if (currentCard.Type == Card.CardType.Ice)
+        {
+            Debug.Log("Ice");
+            if (previousCard.Type == Card.CardType.Horse || previousCard.Type == Card.CardType.Helicopter)
+            {
+                possByType = PersonManagerScr.PossibilityToWalkByType[previousCard.Type];
+                directions = PersonManagerScr.DirectionsToWalkByType[previousCard.Type];
+            }
+            else
+            {
+                directions = new List<IntVector2>();
+                directions.Add(new IntVector2(Position.x - previousPosition.x, Position.z - previousPosition.z));
+            }
         }
 
         PersonManagerScr.PossibilityToWalk possByCoin = PersonManagerScr.WithoutCoin;
@@ -221,6 +236,9 @@ public class Person : MonoBehaviour
         //Remove person from prev card
 
         Card prevCard = currGame.PlayingField[Position.x, Position.z];
+
+        previousCard = prevCard;
+        previousPosition = new IntVector2(Position.x, Position.z);
 
         for (short i = 0, teammates_count = 0, prev_pers = 0; i < prevCard.Figures.Count; ++i)
         {
