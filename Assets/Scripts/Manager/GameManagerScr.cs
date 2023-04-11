@@ -40,15 +40,15 @@ public class Game
         TeemRotation[(int)Teams.White, 0] = new Vector3(0, 0, 1);
         TeemRotation[(int)Teams.White, 1] = new Vector3(-1, 0, -1);
         TeemRotation[(int)Teams.White, 2] = new Vector3(1, 0, -1);
-        
+
         TeemRotation[(int)Teams.Red, 0] = new Vector3(-1, 0, 0);
         TeemRotation[(int)Teams.Red, 1] = new Vector3(1, 0, -1);
         TeemRotation[(int)Teams.Red, 2] = new Vector3(1, 0, 1);
-        
+
         TeemRotation[(int)Teams.Yellow, 0] = new Vector3(0, 0, -1);
         TeemRotation[(int)Teams.Yellow, 1] = new Vector3(1, 0, 1);
         TeemRotation[(int)Teams.Yellow, 2] = new Vector3(-1, 0, 1);
-        
+
         TeemRotation[(int)Teams.Black, 0] = new Vector3(1, 0, 0);
         TeemRotation[(int)Teams.Black, 1] = new Vector3(-1, 0, 1);
         TeemRotation[(int)Teams.Black, 2] = new Vector3(-1, 0, -1);
@@ -262,7 +262,7 @@ public class GameManagerScr : MonoBehaviour
                                 _personScr.isWithCoin = false;
                                 CurrentGame.PlayingField[_personScr.Position.x, _personScr.Position.z].Coins++;
                             }
-                            
+
                             _personScr.DestroyCircles();
                             _personScr.gameObject.layer = LayerMask.NameToLayer("Person");
                             _layerMask = 1 << LayerMask.NameToLayer("Person");
@@ -307,7 +307,7 @@ public class GameManagerScr : MonoBehaviour
                     zombie.Position = new IntVector2(per.Position);
                     zombie.gameObject.SetActive(true);
                     zombie._isAlive = true;
-                    
+
                     Vector3 beautiPos;
                     if (_currTeam == Teams.White || _currTeam == Teams.Yellow)
                     {
@@ -317,15 +317,24 @@ public class GameManagerScr : MonoBehaviour
                     {
                         beautiPos = new Vector3(0, 0, 0.025f);
                     }
-                    zombie.transform.position = per.gameObject.transform.position + 
-                                                           new Vector3(CurrentGame.TeemRotation[(int)_currTeam, 1].x * beautiPos.x, 0, beautiPos.z * CurrentGame.TeemRotation[(int)_currTeam, 1].z);;
-                    per.transform.position += new Vector3(CurrentGame.TeemRotation[(int)_currTeam, 2].x * beautiPos.x, 0, beautiPos.z * CurrentGame.TeemRotation[(int)_currTeam, 2].z);
+
+                    zombie.transform.position = per.gameObject.transform.position +
+                                                new Vector3(CurrentGame.TeemRotation[(int)_currTeam, 1].x * beautiPos.x,
+                                                    0, beautiPos.z * CurrentGame.TeemRotation[(int)_currTeam, 1].z);
+                    ;
+                    per.transform.position += new Vector3(CurrentGame.TeemRotation[(int)_currTeam, 2].x * beautiPos.x,
+                        0, beautiPos.z * CurrentGame.TeemRotation[(int)_currTeam, 2].z);
                 }
                 else
                 {
-                    prev_pers.transform.position = per.transform.position + new Vector3(CurrentGame.TeemRotation[(int)_currTeam, 2].x * 0.025f, 0, 0.025f * CurrentGame.TeemRotation[(int)_currTeam, 2].z);
-                    transform.position = per.transform.position + new Vector3(CurrentGame.TeemRotation[(int)_currTeam, 0].x * 0.025f, 0, 0.025f * CurrentGame.TeemRotation[(int)_currTeam, 0].z);
-                    per.transform.position += new Vector3(CurrentGame.TeemRotation[(int)_currTeam, 1].x * 0.025f, 0, 0.025f * CurrentGame.TeemRotation[(int)_currTeam, 1].z);
+                    prev_pers.transform.position = per.transform.position +
+                                                   new Vector3(CurrentGame.TeemRotation[(int)_currTeam, 2].x * 0.025f,
+                                                       0, 0.025f * CurrentGame.TeemRotation[(int)_currTeam, 2].z);
+                    transform.position = per.transform.position +
+                                         new Vector3(CurrentGame.TeemRotation[(int)_currTeam, 0].x * 0.025f, 0,
+                                             0.025f * CurrentGame.TeemRotation[(int)_currTeam, 0].z);
+                    per.transform.position += new Vector3(CurrentGame.TeemRotation[(int)_currTeam, 1].x * 0.025f, 0,
+                        0.025f * CurrentGame.TeemRotation[(int)_currTeam, 1].z);
                 }
             }
         }
@@ -530,7 +539,7 @@ public class GameManagerScr : MonoBehaviour
                 float persZ = firstCardZ + shipPosition.z * CurrentGame.sizeCardPrefab.z;
                 Vector3 beautiPos = CurrentGame.TeemRotation[team, player];
                 Vector3 persPosition = new Vector3(persX + beautiPos.x * 0.025f, persY, persZ + beautiPos.z * 0.025f);
-                
+
                 GameObject personGO = Instantiate(placedObjectPrefab, persPosition, Quaternion.identity);
                 personGO.SetActive(true);
                 Person pers = personGO.GetComponent<Person>();
