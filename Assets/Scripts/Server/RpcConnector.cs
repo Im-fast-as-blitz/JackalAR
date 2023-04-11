@@ -36,13 +36,12 @@ public class RpcConnector : MonoBehaviourPun
         {
             for (int j = 0; j < currGame.PlayingField.GetLength(1); ++j)
             {
-                Debug.Log((Card.CardType)cardTypes[i][j]);
                 currGame.PlayingField[i, j] = (Card)(Cards.createCardByType[(Card.CardType)cardTypes[i][j]].NewObj());
             }
         }
 
-        currGame.PlaceShips();
         gameManagerScr.BuildPlayingField(new Vector3(0, 0, 0));
+        currGame.PlaceShips();
         CreateNewTeamRpc();
     }
 
@@ -59,7 +58,7 @@ public class RpcConnector : MonoBehaviourPun
             }
         }
 
-        photonView.RPC("SyncCards", RpcTarget.AllBuffered, cardTypes);
+        photonView.RPC("SyncCards", RpcTarget.OthersBuffered, cardTypes);
     }
 
     [PunRPC]
@@ -86,6 +85,6 @@ public class RpcConnector : MonoBehaviourPun
 
     public void CreateNewTeamRpc()
     {
-        photonView.RPC("CreateNewTeam", RpcTarget.OthersBuffered);
+        photonView.RPC("CreateNewTeam", RpcTarget.AllBuffered);
     }
 }

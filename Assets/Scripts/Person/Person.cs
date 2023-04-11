@@ -9,6 +9,7 @@ public class Person : MonoBehaviour
 {
     [SerializeField] private GameObject moveCircle;
     [SerializeField] private GameObject attackCircle;
+    [SerializeField] private RpcConnector rpcConnector;
     private List<GameObject> _moveCircles = new List<GameObject>();
 
     [NonSerialized] public IntVector2 Position;
@@ -368,7 +369,7 @@ public class Person : MonoBehaviour
             Death();
             return;
         }
-        else if (turnTables.Contains(prevCard.Type))
+        else if (turnTables.Contains(curCard.Type))
         {
             transform.position = newPos + (curCard as TurntableCard).StepPos[CellDepth - 1];
         }
@@ -386,10 +387,10 @@ public class Person : MonoBehaviour
                         curCard.Figures[i].Death();
                         curCard.Figures[i] = null;
                     }
-                    else if (!turnTables.Contains(prevCard.Type) || (turnTables.Contains(prevCard.Type) &&
+                    else if (!turnTables.Contains(curCard.Type) || (turnTables.Contains(curCard.Type) &&
                                                                      CellDepth == curCard.Figures[i].CellDepth))
                     {
-                        if (turnTables.Contains(prevCard.Type))
+                        if (turnTables.Contains(curCard.Type))
                         {
                             curCard.Figures[i].transform.GetChild(0).gameObject.SetActive(false);
                         }
@@ -401,7 +402,7 @@ public class Person : MonoBehaviour
                 }
                 else
                 {
-                    if (turnTables.Contains(prevCard.Type))
+                    if (turnTables.Contains(curCard.Type))
                     {
                         if (CellDepth == curCard.Figures[i].CellDepth)
                         {
@@ -477,7 +478,8 @@ public class Person : MonoBehaviour
 
         if (!curCard.IsOpen)
         {
-            curCard.Open();
+            rpcConnector.OpenCardRpc(Position);
+            // curCard.Open();
         }
         else
         {

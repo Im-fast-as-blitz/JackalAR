@@ -430,6 +430,11 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 584274825645328005, guid: 8d0b99343e2e04562b056d0da627aa3f,
         type: 3}
+    - target: {fileID: 2076928821482232395, guid: 71704de763bd841949f3ae45c287d8db,
+        type: 3}
+      propertyPath: rpcConnector
+      value: 
+      objectReference: {fileID: 911730210}
     - target: {fileID: 3222703447991866609, guid: 71704de763bd841949f3ae45c287d8db,
         type: 3}
       propertyPath: m_RootOrder

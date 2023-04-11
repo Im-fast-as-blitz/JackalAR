@@ -57,7 +57,7 @@ public class GameManagerScr : MonoBehaviour
             {
                 BuildPlayingField(new Vector3(0, 0, 0));
                 CreateTeam();
-                // rpcConnector.SyncCardsRpc();
+                rpcConnector.SyncCardsRpc();
             }
 
             _placedMap = true;
@@ -306,7 +306,8 @@ public class GameManagerScr : MonoBehaviour
         float firstCardY = midCardPosition.y;
         float firstCardZ = midCardPosition.z - 6 * CurrentGame.sizeCardPrefab.z;
 
-        for (var currentTeam = CurrentGame.currentTeam; currentTeam < PhotonNetwork.PlayerList.Length + 1; ++currentTeam)
+        Debug.Log(PhotonNetwork.PlayerList.Length);
+        for (var currentTeam = CurrentGame.currentTeam; currentTeam < PhotonNetwork.PlayerList.Length; ++currentTeam)
         {
             const int numPersonsInTeam = 3;
             Person[] personsInTeam = new Person[numPersonsInTeam];
