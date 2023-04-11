@@ -9,10 +9,11 @@ public class Person : MonoBehaviour
 {
     [SerializeField] private GameObject moveCircle;
     [SerializeField] private GameObject attackCircle;
-    [SerializeField] private RpcConnector rpcConnector;
     private List<GameObject> _moveCircles = new List<GameObject>();
 
     [NonSerialized] public IntVector2 Position;
+    [NonSerialized] public RpcConnector rpcConnector;
+    
     public short CellDepth = 1;
     public Game currGame;
 

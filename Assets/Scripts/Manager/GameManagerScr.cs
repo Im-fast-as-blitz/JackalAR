@@ -325,6 +325,7 @@ public class GameManagerScr : MonoBehaviour
                 personGO.SetActive(true);
                 Person pers = personGO.GetComponent<Person>();
                 pers.currGame = CurrentGame;
+                pers.rpcConnector = rpcConnector;
                 pers.team = (Teams)currentTeam;
                 pers.Position = new IntVector2(shipPosition);
                 // Add person to card's list of persons
