@@ -2,33 +2,33 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum CardType
+{
+    Undefined = -1,
+    Empty = 0,
+    Water = 1,
+    Ship = 2,
+    Horse = 3,
+    Cannon = 4,
+    Ogre = 5,
+    ArrowStraight = 6,
+    ArrowStraight2 = 7,
+    ArrowDiagonal = 8,
+    ArrowDiagonal2 = 9,
+    Arrow3 = 10,
+    ArrowStraight4 = 11,
+    ArrowDiagonal4 = 12,
+    Fortress = 13,
+    Shaman = 14,
+    Chest = 15,
+    Turntable = 16,
+    Ice,
+    Crocodile,
+    Helicopter
+}
+
 public class Card
 {
-    public enum CardType
-    {
-        Undefined = -1,
-        Empty = 0,
-        Water = 1,
-        Ship = 2,
-        Horse = 3,
-        Cannon = 4,
-        Ogre = 5,
-        ArrowStraight = 6,
-        ArrowStraight2 = 7,
-        ArrowDiagonal = 8,
-        ArrowDiagonal2 = 9,
-        Arrow3 = 10,
-        ArrowStraight4 = 11,
-        ArrowDiagonal4 = 12,
-        Fortress = 13,
-        Shaman = 14,
-        Chest = 15,
-        Turntable = 16,
-        Ice,
-        Crocodile,
-        Helicopter
-    }
-
     public GameObject OwnGO;
     public string LogoPath;
     public List<Person> Figures = new List<Person>() { null, null, null };
@@ -77,14 +77,6 @@ public class EmptyCard : Card
         LogoPath = "Cards/empty";
         Type = CardType.Empty;
     }
-
-    public override void OpenAction()
-    {
-    }
-
-    public override void StepAction()
-    {
-    }
 }
 
 public class WaterCard : Card
@@ -127,14 +119,6 @@ public class WaterCard : Card
         UpdateLogo();
         waterCardToMove.LoadShipLogo();
     }
-
-    public override void OpenAction()
-    {
-    }
-
-    public override void StepAction()
-    {
-    }
 }
 
 public class HorseCard : Card
@@ -143,14 +127,6 @@ public class HorseCard : Card
     {
         LogoPath = "Cards/horse";
         Type = CardType.Horse;
-    }
-
-    public override void OpenAction()
-    {
-    }
-
-    public override void StepAction()
-    {
     }
 }
 
@@ -177,10 +153,6 @@ public class CannonCard : Card
     {
         OwnGO.transform.eulerAngles = new Vector3(0, 90 * (int)Rotation, 0);
     }
-
-    public override void StepAction()
-    {
-    }
 }
 
 public class ArrowCard : Card
@@ -197,10 +169,6 @@ public class ArrowCard : Card
     {
         OwnGO.transform.eulerAngles = new Vector3(0, 90 * (int)Rotation, 0);
     }
-
-    public override void StepAction()
-    {
-    }
 }
 
 public class OgreCard : Card
@@ -209,10 +177,6 @@ public class OgreCard : Card
     {
         LogoPath = "Cards/ogre";
         Type = CardType.Ogre;
-    }
-
-    public override void OpenAction()
-    {
     }
 
     public override void StepAction()
@@ -227,44 +191,28 @@ public class OgreCard : Card
     }
 }
 
-public class FortressCard : Card 
+public class FortressCard : Card
 {
     public FortressCard()
     {
         LogoPath = "Cards/fortress";
         Type = CardType.Fortress;
     }
-
-    public override void OpenAction()
-    {
-    }
-
-    public override void StepAction()
-    {
-    }
 }
-    
-public class ShamanCard : Card 
+
+public class ShamanCard : Card
 {
     public ShamanCard()
     {
         LogoPath = "Cards/shaman";
         Type = CardType.Shaman;
     }
-
-    public override void OpenAction()
-    {
-    }
-
-    public override void StepAction()
-    {
-    }
 }
 
-public class ChestCard : Card 
+public class ChestCard : Card
 {
     public static int CardsCount = 0;
-    
+
     public ChestCard()
     {
         LogoPath = "Cards/chest";
@@ -274,10 +222,6 @@ public class ChestCard : Card
     public override void OpenAction()
     {
         // Generate coins
-    }
-
-    public override void StepAction()
-    {
     }
 }
 
@@ -296,47 +240,23 @@ public class TurntableCard : Card
             Figures.Add(null);
         }
     }
-
-    public override void OpenAction()
-    {
-    }
-
-    public override void StepAction()
-    {
-    }
 }
 
-public class IceCard : Card 
+public class IceCard : Card
 {
     public IceCard()
     {
         LogoPath = "Cards/ice";
         Type = CardType.Ice;
     }
-
-    public override void OpenAction()
-    {
-    }
-
-    public override void StepAction()
-    {
-    }
 }
 
-public class CrocodileCard : Card 
+public class CrocodileCard : Card
 {
     public CrocodileCard()
     {
         LogoPath = "Cards/crocodile";
         Type = CardType.Crocodile;
-    }
-
-    public override void OpenAction()
-    {
-    }
-
-    public override void StepAction()
-    {
     }
 }
 
@@ -391,7 +311,7 @@ public class CardManagerScr : MonoBehaviour
         Cards.AllCards.Add(new PairCardInt(new ChestCard(), 11));
         Cards.AllCards.Add(new PairCardInt(new IceCard(), 10));
         Cards.AllCards.Add(new PairCardInt(new CrocodileCard(), 40));
-        
+
         Ships.GenerateShips();
     }
 }

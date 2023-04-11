@@ -124,7 +124,7 @@ public class Game
             }
 
             waterCard.OwnShip = pair.Value;
-            waterCard.Type = Card.CardType.Ship;
+            waterCard.Type = CardType.Ship;
         }
     }
 }
@@ -150,7 +150,7 @@ public class GameManagerScr : MonoBehaviour
     private LayerMask _layerMask;
 
     private Teams _currTeam = Teams.White;
-    private Person _currPerson = null;
+    // private Person _currPerson = null;
 
     void Start()
     {
@@ -298,7 +298,7 @@ public class GameManagerScr : MonoBehaviour
         int teammates_count = 0;
         foreach (var per in CurrentGame.Persons[_currTeam])
         {
-            if (CurrentGame.PlayingField[per.Position.x, per.Position.z].Type == Card.CardType.Shaman)
+            if (CurrentGame.PlayingField[per.Position.x, per.Position.z].Type == CardType.Shaman)
             {
                 ++teammates_count;
                 if (teammates_count == 1)
@@ -401,41 +401,41 @@ public class GameManagerScr : MonoBehaviour
                     int arrowType = Random.Range(0, 7);
                     if (arrowType == 0)
                     {
-                        ownCard.Type = Card.CardType.ArrowStraight;
+                        ownCard.Type = CardType.ArrowStraight;
                         ownCard.LogoPath = "Cards/Arrows/straight";
                     }
                     else if (arrowType == 1)
                     {
-                        ownCard.Type = Card.CardType.ArrowDiagonal;
+                        ownCard.Type = CardType.ArrowDiagonal;
                         ownCard.LogoPath = "Cards/Arrows/diagonal";
                     }
                     else if (arrowType == 2)
                     {
-                        ownCard.Type = Card.CardType.ArrowStraight2;
+                        ownCard.Type = CardType.ArrowStraight2;
                         ownCard.LogoPath = "Cards/Arrows/straight2";
                     }
                     else if (arrowType == 3)
                     {
-                        ownCard.Type = Card.CardType.ArrowDiagonal2;
+                        ownCard.Type = CardType.ArrowDiagonal2;
                         ownCard.LogoPath = "Cards/Arrows/diagonal2";
                     }
                     else if (arrowType == 4)
                     {
-                        ownCard.Type = Card.CardType.Arrow3;
+                        ownCard.Type = CardType.Arrow3;
                         ownCard.LogoPath = "Cards/Arrows/3";
                     }
                     else if (arrowType == 5)
                     {
-                        ownCard.Type = Card.CardType.ArrowStraight4;
+                        ownCard.Type = CardType.ArrowStraight4;
                         ownCard.LogoPath = "Cards/Arrows/straight4";
                     }
                     else if (arrowType == 6)
                     {
-                        ownCard.Type = Card.CardType.ArrowDiagonal4;
+                        ownCard.Type = CardType.ArrowDiagonal4;
                         ownCard.LogoPath = "Cards/Arrows/diagonal4";
                     }
 
-                    if (ownCard.Type != Card.CardType.ArrowStraight4 && ownCard.Type != Card.CardType.ArrowDiagonal4)
+                    if (ownCard.Type != CardType.ArrowStraight4 && ownCard.Type != CardType.ArrowDiagonal4)
                     {
                         (ownCard as ArrowCard).Rotation = (Rotation)Random.Range(0, 4);
                     }
