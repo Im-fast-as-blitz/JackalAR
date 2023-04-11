@@ -25,6 +25,7 @@ public class Card
         Chest = 15,
         Turntable = 16,
         Ice,
+        Crocodile,
         Helicopter
     }
 
@@ -322,6 +323,23 @@ public class IceCard : Card
     }
 }
 
+public class CrocodileCard : Card 
+{
+    public CrocodileCard()
+    {
+        LogoPath = "Cards/crocodile";
+        Type = CardType.Crocodile;
+    }
+
+    public override void OpenAction()
+    {
+    }
+
+    public override void StepAction()
+    {
+    }
+}
+
 public static class Cards
 {
     public static List<PairCardInt> AllCards = new List<PairCardInt>();
@@ -369,9 +387,10 @@ public class CardManagerScr : MonoBehaviour
         Cards.AllCards.Add(new PairCardInt(new ArrowCard(), 5));
         Cards.AllCards.Add(new PairCardInt(new ShamanCard(), 5));
         Cards.AllCards.Add(new PairCardInt(new FortressCard(), 5));
-        Cards.AllCards.Add(new PairCardInt(new TurntableCard(), 25));
+        Cards.AllCards.Add(new PairCardInt(new TurntableCard(), 15));
         Cards.AllCards.Add(new PairCardInt(new ChestCard(), 11));
-        Cards.AllCards.Add(new PairCardInt(new IceCard(), 40));
+        Cards.AllCards.Add(new PairCardInt(new IceCard(), 10));
+        Cards.AllCards.Add(new PairCardInt(new CrocodileCard(), 40));
         
         Ships.GenerateShips();
     }

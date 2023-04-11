@@ -156,7 +156,6 @@ public class Person : MonoBehaviour
                     (int)(currentCard as ArrowCard).Rotation];
         } else if (currentCard.Type == Card.CardType.Ice)
         {
-            Debug.Log("Ice");
             if (previousCard.Type == Card.CardType.Horse || previousCard.Type == Card.CardType.Helicopter)
             {
                 possByType = PersonManagerScr.PossibilityToWalkByType[previousCard.Type];
@@ -167,6 +166,10 @@ public class Person : MonoBehaviour
                 directions = new List<IntVector2>();
                 directions.Add(new IntVector2(Position.x - previousPosition.x, Position.z - previousPosition.z));
             }
+        } else if (currentCard.Type == Card.CardType.Crocodile)
+        {
+            directions = new List<IntVector2>();
+            directions.Add(new IntVector2(previousPosition.x - Position.x, previousPosition.z - Position.z));
         }
 
         PersonManagerScr.PossibilityToWalk possByCoin = PersonManagerScr.WithoutCoin;
