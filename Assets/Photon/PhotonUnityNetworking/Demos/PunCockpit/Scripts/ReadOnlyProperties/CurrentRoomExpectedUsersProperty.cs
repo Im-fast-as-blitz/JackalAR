@@ -21,7 +21,6 @@ namespace Photon.Pun.Demo.Cockpit
 
         void Update()
         {
-
             if (PhotonNetwork.CurrentRoom == null || PhotonNetwork.CurrentRoom.ExpectedUsers == null)
             {
                 if (_cache != null)
@@ -31,12 +30,11 @@ namespace Photon.Pun.Demo.Cockpit
                 }
 
                 return;
-
             }
 
-            if (_cache == null || (PhotonNetwork.CurrentRoom.ExpectedUsers != null && !PhotonNetwork.CurrentRoom.ExpectedUsers.SequenceEqual(_cache)))
+            if (_cache == null || (PhotonNetwork.CurrentRoom.ExpectedUsers != null &&
+                                   !PhotonNetwork.CurrentRoom.ExpectedUsers.SequenceEqual(_cache)))
             {
-
                 Text.text = string.Join("\n", PhotonNetwork.CurrentRoom.ExpectedUsers);
 
                 this.OnValueChanged();
@@ -46,7 +44,6 @@ namespace Photon.Pun.Demo.Cockpit
 
             if (PhotonNetwork.CurrentRoom.ExpectedUsers == null && _cache != null)
             {
-
                 Text.text = string.Join("\n", PhotonNetwork.CurrentRoom.ExpectedUsers);
 
                 this.OnValueChanged();

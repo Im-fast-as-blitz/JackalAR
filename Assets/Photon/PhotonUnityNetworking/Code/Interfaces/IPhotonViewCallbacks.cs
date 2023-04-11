@@ -7,7 +7,6 @@
     /// </summary>
     public interface IPhotonViewCallback
     {
-
     }
 
     /// <summary>

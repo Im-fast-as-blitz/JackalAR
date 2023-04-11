@@ -50,8 +50,11 @@ namespace Photon.Pun
             "the GameObject behaves very predictable (for example for vehicles). Other times it can be very hard because the user input is translated directly to the game "
             + "and you cannot really predict what the user is going to do (for example in fighting games)";
 
-        private const string INTERPOLATE_HELP_URL = "https://doc.photonengine.com/en-us/pun/current/demos-and-tutorials/package-demos/rpg-movement#interpolate_options";
-        private const string EXTRAPOLATE_HELP_URL = "https://doc.photonengine.com/en-us/pun/current/demos-and-tutorials/package-demos/rpg-movement#extrapolate_options";
+        private const string INTERPOLATE_HELP_URL =
+            "https://doc.photonengine.com/en-us/pun/current/demos-and-tutorials/package-demos/rpg-movement#interpolate_options";
+
+        private const string EXTRAPOLATE_HELP_URL =
+            "https://doc.photonengine.com/en-us/pun/current/demos-and-tutorials/package-demos/rpg-movement#extrapolate_options";
 
         public void OnEnable()
         {
@@ -118,11 +121,15 @@ namespace Photon.Pun
                 return;
             }
 
-            SerializedProperty interpolatePositionProperty = serializedObject.FindProperty("m_PositionModel.InterpolateOption");
-            PhotonTransformViewPositionModel.InterpolateOptions interpolateOption = (PhotonTransformViewPositionModel.InterpolateOptions)interpolatePositionProperty.enumValueIndex;
+            SerializedProperty interpolatePositionProperty =
+                serializedObject.FindProperty("m_PositionModel.InterpolateOption");
+            PhotonTransformViewPositionModel.InterpolateOptions interpolateOption =
+                (PhotonTransformViewPositionModel.InterpolateOptions)interpolatePositionProperty.enumValueIndex;
 
-            SerializedProperty extrapolatePositionProperty = serializedObject.FindProperty("m_PositionModel.ExtrapolateOption");
-            PhotonTransformViewPositionModel.ExtrapolateOptions extrapolateOption = (PhotonTransformViewPositionModel.ExtrapolateOptions)extrapolatePositionProperty.enumValueIndex;
+            SerializedProperty extrapolatePositionProperty =
+                serializedObject.FindProperty("m_PositionModel.ExtrapolateOption");
+            PhotonTransformViewPositionModel.ExtrapolateOptions extrapolateOption =
+                (PhotonTransformViewPositionModel.ExtrapolateOptions)extrapolatePositionProperty.enumValueIndex;
 
             float containerHeight = 155;
 
@@ -164,7 +171,8 @@ namespace Photon.Pun
 
             Rect rect = PhotonGUI.ContainerBody(containerHeight);
 
-            Rect propertyRect = new Rect(rect.xMin + 5, rect.yMin + 2, rect.width - 10, EditorGUIUtility.singleLineHeight);
+            Rect propertyRect = new Rect(rect.xMin + 5, rect.yMin + 2, rect.width - 10,
+                EditorGUIUtility.singleLineHeight);
 
             DrawTeleport(ref propertyRect);
             DrawSplitter(ref propertyRect);
@@ -211,34 +219,42 @@ namespace Photon.Pun
             }
         }
 
-        private void DrawPropertyWithHelpIcon(ref Rect propertyRect, ref bool isHelpOpen, SerializedProperty property, string tooltip)
+        private void DrawPropertyWithHelpIcon(ref Rect propertyRect, ref bool isHelpOpen, SerializedProperty property,
+            string tooltip)
         {
-            Rect propertyFieldRect = new Rect(propertyRect.xMin, propertyRect.yMin, propertyRect.width - 20, propertyRect.height);
+            Rect propertyFieldRect = new Rect(propertyRect.xMin, propertyRect.yMin, propertyRect.width - 20,
+                propertyRect.height);
             string propertyName = ObjectNames.NicifyVariableName(property.name);
             EditorGUI.PropertyField(propertyFieldRect, property, new GUIContent(propertyName, tooltip));
 
-            Rect helpIconRect = new Rect(propertyFieldRect.xMax + 5, propertyFieldRect.yMin, 20, propertyFieldRect.height);
+            Rect helpIconRect = new Rect(propertyFieldRect.xMax + 5, propertyFieldRect.yMin, 20,
+                propertyFieldRect.height);
             isHelpOpen = GUI.Toggle(helpIconRect, isHelpOpen, PhotonGUI.HelpIcon, GUIStyle.none);
 
             propertyRect.y += EDITOR_LINE_HEIGHT;
         }
 
-        private void DrawSynchronizePositionDataExtrapolation(ref Rect propertyRect, SerializedProperty extrapolatePositionProperty,
-                                                              PhotonTransformViewPositionModel.ExtrapolateOptions extrapolateOption)
+        private void DrawSynchronizePositionDataExtrapolation(ref Rect propertyRect,
+            SerializedProperty extrapolatePositionProperty,
+            PhotonTransformViewPositionModel.ExtrapolateOptions extrapolateOption)
         {
-            DrawPropertyWithHelpIcon(ref propertyRect, ref this.m_ExtrapolateHelpOpen, extrapolatePositionProperty, EXTRAPOLATE_TOOLTIP);
-            DrawHelpBox(ref propertyRect, this.m_ExtrapolateHelpOpen, GetExtrapolateHelpBoxHeight(), EXTRAPOLATE_HELP, EXTRAPOLATE_HELP_URL);
+            DrawPropertyWithHelpIcon(ref propertyRect, ref this.m_ExtrapolateHelpOpen, extrapolatePositionProperty,
+                EXTRAPOLATE_TOOLTIP);
+            DrawHelpBox(ref propertyRect, this.m_ExtrapolateHelpOpen, GetExtrapolateHelpBoxHeight(), EXTRAPOLATE_HELP,
+                EXTRAPOLATE_HELP_URL);
 
             if (extrapolateOption != PhotonTransformViewPositionModel.ExtrapolateOptions.Disabled)
             {
-                EditorGUI.PropertyField(propertyRect, serializedObject.FindProperty("m_PositionModel.ExtrapolateIncludingRoundTripTime"));
+                EditorGUI.PropertyField(propertyRect,
+                    serializedObject.FindProperty("m_PositionModel.ExtrapolateIncludingRoundTripTime"));
                 propertyRect.y += EDITOR_LINE_HEIGHT;
             }
 
             switch (extrapolateOption)
             {
                 case PhotonTransformViewPositionModel.ExtrapolateOptions.FixedSpeed:
-                    EditorGUI.PropertyField(propertyRect, serializedObject.FindProperty("m_PositionModel.ExtrapolateSpeed"));
+                    EditorGUI.PropertyField(propertyRect,
+                        serializedObject.FindProperty("m_PositionModel.ExtrapolateSpeed"));
                     propertyRect.y += EDITOR_LINE_HEIGHT;
                     break;
             }
@@ -247,30 +263,37 @@ namespace Photon.Pun
         private void DrawTeleport(ref Rect propertyRect)
         {
             EditorGUI.PropertyField(propertyRect, serializedObject.FindProperty("m_PositionModel.TeleportEnabled"),
-                                    new GUIContent("Enable teleport for great distances"));
+                new GUIContent("Enable teleport for great distances"));
             propertyRect.y += EDITOR_LINE_HEIGHT;
 
-            EditorGUI.PropertyField(propertyRect, serializedObject.FindProperty("m_PositionModel.TeleportIfDistanceGreaterThan"),
-                                    new GUIContent("Teleport if distance greater than"));
+            EditorGUI.PropertyField(propertyRect,
+                serializedObject.FindProperty("m_PositionModel.TeleportIfDistanceGreaterThan"),
+                new GUIContent("Teleport if distance greater than"));
             propertyRect.y += EDITOR_LINE_HEIGHT;
         }
 
-        private void DrawSynchronizePositionDataInterpolation(ref Rect propertyRect, SerializedProperty interpolatePositionProperty,
-                                                              PhotonTransformViewPositionModel.InterpolateOptions interpolateOption)
+        private void DrawSynchronizePositionDataInterpolation(ref Rect propertyRect,
+            SerializedProperty interpolatePositionProperty,
+            PhotonTransformViewPositionModel.InterpolateOptions interpolateOption)
         {
-            DrawPropertyWithHelpIcon(ref propertyRect, ref this.m_InterpolateHelpOpen, interpolatePositionProperty, INTERPOLATE_TOOLTIP);
-            DrawHelpBox(ref propertyRect, this.m_InterpolateHelpOpen, GetInterpolateHelpBoxHeight(), INTERPOLATE_HELP, INTERPOLATE_HELP_URL);
+            DrawPropertyWithHelpIcon(ref propertyRect, ref this.m_InterpolateHelpOpen, interpolatePositionProperty,
+                INTERPOLATE_TOOLTIP);
+            DrawHelpBox(ref propertyRect, this.m_InterpolateHelpOpen, GetInterpolateHelpBoxHeight(), INTERPOLATE_HELP,
+                INTERPOLATE_HELP_URL);
 
             switch (interpolateOption)
             {
                 case PhotonTransformViewPositionModel.InterpolateOptions.FixedSpeed:
-                    EditorGUI.PropertyField(propertyRect, serializedObject.FindProperty("m_PositionModel.InterpolateMoveTowardsSpeed"),
-                                            new GUIContent("MoveTowards Speed"));
+                    EditorGUI.PropertyField(propertyRect,
+                        serializedObject.FindProperty("m_PositionModel.InterpolateMoveTowardsSpeed"),
+                        new GUIContent("MoveTowards Speed"));
                     propertyRect.y += EDITOR_LINE_HEIGHT;
                     break;
 
                 case PhotonTransformViewPositionModel.InterpolateOptions.Lerp:
-                    EditorGUI.PropertyField(propertyRect, serializedObject.FindProperty("m_PositionModel.InterpolateLerpSpeed"), new GUIContent("Lerp Speed"));
+                    EditorGUI.PropertyField(propertyRect,
+                        serializedObject.FindProperty("m_PositionModel.InterpolateLerpSpeed"),
+                        new GUIContent("Lerp Speed"));
                     propertyRect.y += EDITOR_LINE_HEIGHT;
                     break;
 
@@ -308,7 +331,8 @@ namespace Photon.Pun
                 return;
             }
 
-            SerializedProperty interpolateRotationProperty = serializedObject.FindProperty("m_RotationModel.InterpolateOption");
+            SerializedProperty interpolateRotationProperty =
+                serializedObject.FindProperty("m_RotationModel.InterpolateOption");
             PhotonTransformViewRotationModel.InterpolateOptions interpolateOption =
                 (PhotonTransformViewRotationModel.InterpolateOptions)interpolateRotationProperty.enumValueIndex;
 
@@ -328,19 +352,25 @@ namespace Photon.Pun
             }
 
             Rect rect = PhotonGUI.ContainerBody(containerHeight);
-            Rect propertyRect = new Rect(rect.xMin + 5, rect.yMin + 2, rect.width - 10, EditorGUIUtility.singleLineHeight);
+            Rect propertyRect = new Rect(rect.xMin + 5, rect.yMin + 2, rect.width - 10,
+                EditorGUIUtility.singleLineHeight);
 
-            DrawPropertyWithHelpIcon(ref propertyRect, ref this.m_InterpolateRotationHelpOpen, interpolateRotationProperty, INTERPOLATE_TOOLTIP);
-            DrawHelpBox(ref propertyRect, this.m_InterpolateRotationHelpOpen, GetInterpolateHelpBoxHeight(), INTERPOLATE_HELP, INTERPOLATE_HELP_URL);
+            DrawPropertyWithHelpIcon(ref propertyRect, ref this.m_InterpolateRotationHelpOpen,
+                interpolateRotationProperty, INTERPOLATE_TOOLTIP);
+            DrawHelpBox(ref propertyRect, this.m_InterpolateRotationHelpOpen, GetInterpolateHelpBoxHeight(),
+                INTERPOLATE_HELP, INTERPOLATE_HELP_URL);
 
             switch (interpolateOption)
             {
                 case PhotonTransformViewRotationModel.InterpolateOptions.RotateTowards:
-                    EditorGUI.PropertyField(propertyRect, serializedObject.FindProperty("m_RotationModel.InterpolateRotateTowardsSpeed"),
-                                            new GUIContent("RotateTowards Speed"));
+                    EditorGUI.PropertyField(propertyRect,
+                        serializedObject.FindProperty("m_RotationModel.InterpolateRotateTowardsSpeed"),
+                        new GUIContent("RotateTowards Speed"));
                     break;
                 case PhotonTransformViewRotationModel.InterpolateOptions.Lerp:
-                    EditorGUI.PropertyField(propertyRect, serializedObject.FindProperty("m_RotationModel.InterpolateLerpSpeed"), new GUIContent("Lerp Speed"));
+                    EditorGUI.PropertyField(propertyRect,
+                        serializedObject.FindProperty("m_RotationModel.InterpolateLerpSpeed"),
+                        new GUIContent("Lerp Speed"));
                     break;
             }
         }
@@ -357,8 +387,10 @@ namespace Photon.Pun
                 return;
             }
 
-            SerializedProperty interpolateScaleProperty = serializedObject.FindProperty("m_ScaleModel.InterpolateOption");
-            PhotonTransformViewScaleModel.InterpolateOptions interpolateOption = (PhotonTransformViewScaleModel.InterpolateOptions)interpolateScaleProperty.enumValueIndex;
+            SerializedProperty interpolateScaleProperty =
+                serializedObject.FindProperty("m_ScaleModel.InterpolateOption");
+            PhotonTransformViewScaleModel.InterpolateOptions interpolateOption =
+                (PhotonTransformViewScaleModel.InterpolateOptions)interpolateScaleProperty.enumValueIndex;
 
             float containerHeight = EDITOR_LINE_HEIGHT;
 
@@ -376,19 +408,25 @@ namespace Photon.Pun
             }
 
             Rect rect = PhotonGUI.ContainerBody(containerHeight);
-            Rect propertyRect = new Rect(rect.xMin + 5, rect.yMin + 2, rect.width - 10, EditorGUIUtility.singleLineHeight);
+            Rect propertyRect = new Rect(rect.xMin + 5, rect.yMin + 2, rect.width - 10,
+                EditorGUIUtility.singleLineHeight);
 
-            DrawPropertyWithHelpIcon(ref propertyRect, ref this.m_InterpolateScaleHelpOpen, interpolateScaleProperty, INTERPOLATE_TOOLTIP);
-            DrawHelpBox(ref propertyRect, this.m_InterpolateScaleHelpOpen, GetInterpolateHelpBoxHeight(), INTERPOLATE_HELP, INTERPOLATE_HELP_URL);
+            DrawPropertyWithHelpIcon(ref propertyRect, ref this.m_InterpolateScaleHelpOpen, interpolateScaleProperty,
+                INTERPOLATE_TOOLTIP);
+            DrawHelpBox(ref propertyRect, this.m_InterpolateScaleHelpOpen, GetInterpolateHelpBoxHeight(),
+                INTERPOLATE_HELP, INTERPOLATE_HELP_URL);
 
             switch (interpolateOption)
             {
                 case PhotonTransformViewScaleModel.InterpolateOptions.MoveTowards:
-                    EditorGUI.PropertyField(propertyRect, serializedObject.FindProperty("m_ScaleModel.InterpolateMoveTowardsSpeed"),
-                                            new GUIContent("MoveTowards Speed"));
+                    EditorGUI.PropertyField(propertyRect,
+                        serializedObject.FindProperty("m_ScaleModel.InterpolateMoveTowardsSpeed"),
+                        new GUIContent("MoveTowards Speed"));
                     break;
                 case PhotonTransformViewScaleModel.InterpolateOptions.Lerp:
-                    EditorGUI.PropertyField(propertyRect, serializedObject.FindProperty("m_ScaleModel.InterpolateLerpSpeed"), new GUIContent("Lerp Speed"));
+                    EditorGUI.PropertyField(propertyRect,
+                        serializedObject.FindProperty("m_ScaleModel.InterpolateLerpSpeed"),
+                        new GUIContent("Lerp Speed"));
                     break;
             }
         }

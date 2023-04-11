@@ -9,7 +9,6 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 using UnityEngine;
-
 using Photon.Pun;
 using Photon.Realtime;
 
@@ -22,6 +21,7 @@ namespace Photon.Pun.UtilityScripts
     public class SmoothSyncMovement : Photon.Pun.MonoBehaviourPun, IPunObservable
     {
         public float SmoothingDelay = 5;
+
         public void Awake()
         {
             bool observed = false;
@@ -33,9 +33,11 @@ namespace Photon.Pun.UtilityScripts
                     break;
                 }
             }
+
             if (!observed)
             {
-                Debug.LogWarning(this + " is not observed by this object's photonView! OnPhotonSerializeView() in this class won't be used.");
+                Debug.LogWarning(this +
+                                 " is not observed by this object's photonView! OnPhotonSerializeView() in this class won't be used.");
             }
         }
 
@@ -63,10 +65,11 @@ namespace Photon.Pun.UtilityScripts
             if (!photonView.IsMine)
             {
                 //Update remote player (smooth this, this looks good, at the cost of some accuracy)
-                transform.position = Vector3.Lerp(transform.position, correctPlayerPos, Time.deltaTime * this.SmoothingDelay);
-                transform.rotation = Quaternion.Lerp(transform.rotation, correctPlayerRot, Time.deltaTime * this.SmoothingDelay);
+                transform.position = Vector3.Lerp(transform.position, correctPlayerPos,
+                    Time.deltaTime * this.SmoothingDelay);
+                transform.rotation = Quaternion.Lerp(transform.rotation, correctPlayerRot,
+                    Time.deltaTime * this.SmoothingDelay);
             }
         }
-
     }
 }

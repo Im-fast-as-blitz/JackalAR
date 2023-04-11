@@ -41,8 +41,7 @@ namespace Photon.Pun.UtilityScripts
 
         public const string CountdownStartTime = "StartTime";
 
-        [Header("Countdown time in seconds")] 
-        public float Countdown = 5.0f;
+        [Header("Countdown time in seconds")] public float Countdown = 5.0f;
 
         private bool isTimerRunning;
 
@@ -60,7 +59,8 @@ namespace Photon.Pun.UtilityScripts
 
         public void Start()
         {
-            if (this.Text == null) Debug.LogError("Reference to 'Text' is not set. Please set a valid reference.", this);
+            if (this.Text == null)
+                Debug.LogError("Reference to 'Text' is not set. Please set a valid reference.", this);
         }
 
         public override void OnEnable()
@@ -123,7 +123,8 @@ namespace Photon.Pun.UtilityScripts
             if (TryGetStartTime(out propStartTime))
             {
                 this.startTime = propStartTime;
-                Debug.Log("Initialize sets StartTime " + this.startTime + " server time now: " + PhotonNetwork.ServerTimestamp + " remain: " + TimeRemaining());
+                Debug.Log("Initialize sets StartTime " + this.startTime + " server time now: " +
+                          PhotonNetwork.ServerTimestamp + " remain: " + TimeRemaining());
 
 
                 this.isTimerRunning = TimeRemaining() > 0;
@@ -165,12 +166,12 @@ namespace Photon.Pun.UtilityScripts
 
             Hashtable props = new Hashtable
             {
-                {CountdownTimer.CountdownStartTime, (int)PhotonNetwork.ServerTimestamp}
+                { CountdownTimer.CountdownStartTime, (int)PhotonNetwork.ServerTimestamp }
             };
             PhotonNetwork.CurrentRoom.SetCustomProperties(props);
 
 
-            Debug.Log("Set Custom Props for Time: "+ props.ToStringFull() + " wasSet: "+wasSet);
+            Debug.Log("Set Custom Props for Time: " + props.ToStringFull() + " wasSet: " + wasSet);
         }
     }
 }

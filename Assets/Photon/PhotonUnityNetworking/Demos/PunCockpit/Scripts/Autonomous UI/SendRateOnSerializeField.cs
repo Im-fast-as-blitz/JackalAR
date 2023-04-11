@@ -15,7 +15,6 @@ namespace Photon.Pun.Demo.Cockpit
     /// </summary>
     public class SendRateOnSerializeField : MonoBehaviour
     {
-
         public InputField PropertyValueInput;
 
         int _cache;

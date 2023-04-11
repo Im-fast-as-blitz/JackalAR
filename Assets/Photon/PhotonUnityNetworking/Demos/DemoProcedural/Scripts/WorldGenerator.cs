@@ -140,10 +140,10 @@ namespace Photon.Pun.Demo.Procedural
 
             Hashtable properties = new Hashtable
             {
-                {SeedPropertiesKey, Seed},
-                {WorldSizePropertiesKey, (int) WorldSize},
-                {ClusterSizePropertiesKey, (int) ClusterSize},
-                {WorldTypePropertiesKey, (int) WorldType}
+                { SeedPropertiesKey, Seed },
+                { WorldSizePropertiesKey, (int)WorldSize },
+                { ClusterSizePropertiesKey, (int)ClusterSize },
+                { WorldTypePropertiesKey, (int)WorldType }
             };
 
             PhotonNetwork.CurrentRoom.SetCustomProperties(properties);
@@ -185,16 +185,18 @@ namespace Photon.Pun.Demo.Procedural
         /// </summary>
         private IEnumerator GenerateWorld()
         {
-            Debug.Log(string.Format("<b>Procedural Demo</b>: Creating world using Seed: {0}, World Size: {1}, Cluster Size: {2} and World Type: {3}", Seed, WorldSize, ClusterSize, WorldType));
+            Debug.Log(string.Format(
+                "<b>Procedural Demo</b>: Creating world using Seed: {0}, World Size: {1}, Cluster Size: {2} and World Type: {3}",
+                Seed, WorldSize, ClusterSize, WorldType));
 
             Simplex.Noise.Seed = Seed;
 
             int clusterId = 0;
 
             // Instantiating all necessary clusters at their target position
-            for (int x = 0; x < (int) WorldSize; x += (int) Mathf.Sqrt((int) ClusterSize))
+            for (int x = 0; x < (int)WorldSize; x += (int)Mathf.Sqrt((int)ClusterSize))
             {
-                for (int z = 0; z < (int) WorldSize; z += (int) Mathf.Sqrt((int) ClusterSize))
+                for (int z = 0; z < (int)WorldSize; z += (int)Mathf.Sqrt((int)ClusterSize))
                 {
                     GameObject cluster = new GameObject();
                     cluster.name = "Cluster " + clusterId;
@@ -218,21 +220,23 @@ namespace Photon.Pun.Demo.Procedural
 
                 int blockId = 0;
 
-                for (int x = 0; x < (int) Mathf.Sqrt((int) ClusterSize); ++x)
+                for (int x = 0; x < (int)Mathf.Sqrt((int)ClusterSize); ++x)
                 {
-                    for (int z = 0; z < (int) Mathf.Sqrt((int) ClusterSize); ++z)
+                    for (int z = 0; z < (int)Mathf.Sqrt((int)ClusterSize); ++z)
                     {
-                        float noiseValue = Simplex.Noise.CalcPixel2D((int) clusterPosition.x + x, (int) clusterPosition.z + z, 0.02f);
+                        float noiseValue = Simplex.Noise.CalcPixel2D((int)clusterPosition.x + x,
+                            (int)clusterPosition.z + z, 0.02f);
 
-                        int height = (int) noiseValue / (int) (256.0f / (float) WorldType);
-                        int materialIndex = (int) noiseValue / (int) (256.0f / WorldMaterials.Length);
+                        int height = (int)noiseValue / (int)(256.0f / (float)WorldType);
+                        int materialIndex = (int)noiseValue / (int)(256.0f / WorldMaterials.Length);
 
                         GameObject block = GameObject.CreatePrimitive(PrimitiveType.Cube);
                         block.name = "Block " + blockId;
 
                         block.transform.SetParent(cluster.transform);
                         block.transform.localScale = new Vector3(1.0f, height, 1.0f);
-                        block.transform.position = new Vector3(clusterPosition.x + x, height / 2.0f, clusterPosition.z + z);
+                        block.transform.position =
+                            new Vector3(clusterPosition.x + x, height / 2.0f, clusterPosition.z + z);
                         block.GetComponent<MeshRenderer>().material = WorldMaterials[materialIndex];
 
                         Block blockComponent = block.AddComponent<Block>();
@@ -256,7 +260,8 @@ namespace Photon.Pun.Demo.Procedural
 
                 string key = entry.Key.ToString();
 
-                if ((key == SeedPropertiesKey) || (key == WorldSizePropertiesKey) || (key == ClusterSizePropertiesKey) || (key == WorldTypePropertiesKey))
+                if ((key == SeedPropertiesKey) || (key == WorldSizePropertiesKey) ||
+                    (key == ClusterSizePropertiesKey) || (key == WorldTypePropertiesKey))
                 {
                     continue;
                 }
@@ -273,7 +278,7 @@ namespace Photon.Pun.Demo.Procedural
 
                     if (c != null)
                     {
-                        Dictionary<int, float> clusterModifications = (Dictionary<int, float>) entry.Value;
+                        Dictionary<int, float> clusterModifications = (Dictionary<int, float>)entry.Value;
 
                         foreach (KeyValuePair<int, float> pair in clusterModifications)
                         {

@@ -29,11 +29,12 @@ namespace Photon.Pun.UtilityScripts
 
         void IPointerClickHandler.OnPointerClick(PointerEventData eventData)
         {
-            if (!PhotonNetwork.InRoom || (this.ModifierKey != KeyCode.None && !Input.GetKey(this.ModifierKey)) || eventData.button != this.Button)
+            if (!PhotonNetwork.InRoom || (this.ModifierKey != KeyCode.None && !Input.GetKey(this.ModifierKey)) ||
+                eventData.button != this.Button)
             {
                 return;
             }
-            
+
             this.photonView.RPC("ClickRpc", this.Target);
         }
 
@@ -50,13 +51,14 @@ namespace Photon.Pun.UtilityScripts
             //Debug.Log("ClickRpc Called");
             this.StartCoroutine(this.ClickFlash());
         }
-        
+
         public IEnumerator ClickFlash()
         {
             if (isFlashing)
             {
                 yield break;
             }
+
             isFlashing = true;
 
             this.originalMaterial = GetComponent<Renderer>().material;

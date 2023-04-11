@@ -17,10 +17,10 @@ namespace Photon.Realtime
 {
     using ExitGames.Client.Photon;
 
-    #if SUPPORTED_UNITY || NETFX_CORE
+#if SUPPORTED_UNITY || NETFX_CORE
     using Hashtable = ExitGames.Client.Photon.Hashtable;
     using SupportClass = ExitGames.Client.Photon.SupportClass;
-    #endif
+#endif
 
 
     /// <summary>
@@ -29,7 +29,11 @@ namespace Photon.Realtime
     public class FriendInfo
     {
         [System.Obsolete("Use UserId.")]
-        public string Name { get { return this.UserId; } }
+        public string Name
+        {
+            get { return this.UserId; }
+        }
+
         public string UserId { get; internal protected set; }
 
         public bool IsOnline { get; internal protected set; }
@@ -42,7 +46,8 @@ namespace Photon.Realtime
 
         public override string ToString()
         {
-        return string.Format("{0}\t is: {1}", this.UserId, (!this.IsOnline) ? "offline" : this.IsInRoom ? "playing" : "on master");
+            return string.Format("{0}\t is: {1}", this.UserId,
+                (!this.IsOnline) ? "offline" : this.IsInRoom ? "playing" : "on master");
         }
     }
 }

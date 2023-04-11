@@ -18,24 +18,24 @@ namespace Photon.Realtime
     using System.Collections;
     using System.Threading;
 
-    #if NETFX_CORE
+#if NETFX_CORE
     using System.Diagnostics;
     using Windows.Foundation;
     using Windows.Networking;
     using Windows.Networking.Sockets;
     using Windows.Storage.Streams;
-    #endif
+#endif
 
-    #if !NO_SOCKET && !NETFX_CORE
+#if !NO_SOCKET && !NETFX_CORE
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Net.Sockets;
-    #endif
+#endif
 
-    #if UNITY_WEBGL
+#if UNITY_WEBGL
     // import UnityWebRequest
     using UnityEngine.Networking;
-    #endif
+#endif
 
     /// <summary>
     /// Abstract implementation of PhotonPing, ase for pinging servers to find the "Best Region".
@@ -43,14 +43,15 @@ namespace Photon.Realtime
     public abstract class PhotonPing : IDisposable
     {
         public string DebugString = "";
-        
+
         public bool Successful;
 
         protected internal bool GotResult;
 
         protected internal int PingLength = 13;
 
-        protected internal byte[] PingBytes = new byte[] { 0x7d, 0x7d, 0x7d, 0x7d, 0x7d, 0x7d, 0x7d, 0x7d, 0x7d, 0x7d, 0x7d, 0x7d, 0x00 };
+        protected internal byte[] PingBytes = new byte[]
+            { 0x7d, 0x7d, 0x7d, 0x7d, 0x7d, 0x7d, 0x7d, 0x7d, 0x7d, 0x7d, 0x7d, 0x7d, 0x00 };
 
         protected internal byte PingId;
 
@@ -80,7 +81,7 @@ namespace Photon.Realtime
     }
 
 
-    #if !NETFX_CORE && !NO_SOCKET
+#if !NETFX_CORE && !NO_SOCKET
     /// <summary>Uses C# Socket class from System.Net.Sockets (as Unity usually does).</summary>
     /// <remarks>Incompatible with Windows 8 Store/Phone API.</remarks>
     public class PingMono : PhotonPing
@@ -117,7 +118,9 @@ namespace Photon.Realtime
 
                 this.PingBytes[this.PingBytes.Length - 1] = this.PingId;
                 this.sock.Send(this.PingBytes);
-                this.PingBytes[this.PingBytes.Length - 1] = (byte)(this.PingId+1);  // this buffer is re-used for the result/receive. invalidate the result now.
+                this.PingBytes[this.PingBytes.Length - 1] =
+                    (byte)(this.PingId +
+                           1); // this buffer is re-used for the result/receive. invalidate the result now.
             }
             catch (Exception e)
             {
@@ -132,7 +135,8 @@ namespace Photon.Realtime
         {
             if (this.GotResult || this.sock == null)
             {
-                return true;    // this just indicates the ping is no longer waiting. this.Successful value defines if the roundtrip completed
+                return
+                    true; // this just indicates the ping is no longer waiting. this.Successful value defines if the roundtrip completed
             }
 
             int read = 0;
@@ -152,8 +156,10 @@ namespace Photon.Realtime
                     this.sock.Close();
                     this.sock = null;
                 }
+
                 this.DebugString += " Exception of socket! " + ex.GetType() + " ";
-                return true;    // this just indicates the ping is no longer waiting. this.Successful value defines if the roundtrip completed
+                return
+                    true; // this just indicates the ping is no longer waiting. this.Successful value defines if the roundtrip completed
             }
 
             bool replyMatch = this.PingBytes[this.PingBytes.Length - 1] == this.PingId && read == this.PingLength;
@@ -180,12 +186,11 @@ namespace Photon.Realtime
 
             this.sock = null;
         }
-
     }
-    #endif
+#endif
 
 
-    #if NETFX_CORE
+#if NETFX_CORE
     /// <summary>Windows store API implementation of PhotonPing, based on DatagramSocket for UDP.</summary>
     public class PingWindowsStore : PhotonPing
     {
@@ -240,14 +245,16 @@ namespace Photon.Realtime
                     DataWriterStoreOperation res = writer.StoreAsync();
                     res.AsTask().Wait(100);
 
-                    this.PingBytes[this.PingBytes.Length - 1] = (byte)(this.PingId + 1); // this buffer is re-used for the result/receive. invalidate the result now.
+                    this.PingBytes[this.PingBytes.Length - 1] =
+ (byte)(this.PingId + 1); // this buffer is re-used for the result/receive. invalidate the result now.
 
                     writer.DetachStream();
                     writer.Dispose();
                 }
                 else
                 {
-                    this.sock = null; // will cause Done() to return true but this.Successful defines if the roundtrip completed
+                    this.sock =
+ null; // will cause Done() to return true but this.Successful defines if the roundtrip completed
                 }
             }
         }
@@ -269,7 +276,8 @@ namespace Photon.Realtime
                         //TODO: check result bytes!
 
 
-                        this.Successful = receivedByteCount == this.PingLength && resultBytes[resultBytes.Length - 1] == this.PingId;
+                        this.Successful =
+ receivedByteCount == this.PingLength && resultBytes[resultBytes.Length - 1] == this.PingId;
                         this.GotResult = true;
                     }
                 }
@@ -280,10 +288,10 @@ namespace Photon.Realtime
             }
         }
     }
-    #endif
+#endif
 
 
-    #if NATIVE_SOCKETS
+#if NATIVE_SOCKETS
 	/// <summary>Abstract base class to provide proper resource management for the below native ping implementations</summary>
 	public abstract class PingNative : PhotonPing
 	{
@@ -353,7 +361,8 @@ namespace Photon.Realtime
                 }
 
                 int pingBytesLength = PingBytes.Length;
-                int bytesInRemainginDatagrams = SocketUdpNativeDynamic.egread(pConnectionHandler, PingBytes, ref pingBytesLength);
+                int bytesInRemainginDatagrams =
+ SocketUdpNativeDynamic.egread(pConnectionHandler, PingBytes, ref pingBytesLength);
                 this.Successful = (PingBytes != null && PingBytes[PingBytes.Length - 1] == PingId);
                 //Debug.Log("Successful: " + this.Successful + " bytesInRemainginDatagrams: " + bytesInRemainginDatagrams + " PingId: " + PingId);
 
@@ -422,7 +431,8 @@ namespace Photon.Realtime
                 }
 
                 int pingBytesLength = PingBytes.Length;
-                int bytesInRemainginDatagrams = SocketUdpNativeStatic.egread(pConnectionHandler, PingBytes, ref pingBytesLength);
+                int bytesInRemainginDatagrams =
+ SocketUdpNativeStatic.egread(pConnectionHandler, PingBytes, ref pingBytesLength);
                 this.Successful = (PingBytes != null && PingBytes[PingBytes.Length - 1] == PingId);
                 //Debug.Log("Successful: " + this.Successful + " bytesInRemainginDatagrams: " + bytesInRemainginDatagrams + " PingId: " + PingId);
 
@@ -443,10 +453,10 @@ namespace Photon.Realtime
         }
     }
     #endif
-    #endif
+#endif
 
 
-    #if UNITY_WEBGL
+#if UNITY_WEBGL
     public class PingHttp : PhotonPing
     {
         private UnityWebRequest webRequest;
@@ -477,5 +487,5 @@ namespace Photon.Realtime
             this.webRequest.Dispose();
         }
     }
-    #endif
+#endif
 }

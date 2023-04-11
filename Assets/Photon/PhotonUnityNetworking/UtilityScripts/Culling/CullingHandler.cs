@@ -9,9 +9,7 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 using System.Collections.Generic;
-
 using UnityEngine;
-
 using Photon.Pun;
 
 namespace Photon.Pun.UtilityScripts
@@ -36,13 +34,13 @@ namespace Photon.Pun.UtilityScripts
         private PhotonView pView;
 
         private Vector3 lastPosition, currentPosition;
-        
-        
+
+
         // used to limit the number of UpdateInterestGroups calls per second (there is no use to change groups more than a few times per second, even if the Culling algorithm makes it look like that)
         private float timeSinceUpdate;
+
         // see timeSinceUpdate
         private float timeBetweenUpdatesMin = 0.33f;
-
 
         #endregion
 
@@ -101,7 +99,6 @@ namespace Photon.Pun.UtilityScripts
         }
 
 
-
         /// <summary>
         ///     Checks if the player has moved previously and updates the interest groups if necessary.
         /// </summary>
@@ -157,9 +154,16 @@ namespace Photon.Pun.UtilityScripts
 
                 subscribedCells += this.activeCells[index] + " | ";
             }
-            GUI.Label(new Rect(20.0f, Screen.height - 120.0f, 200.0f, 40.0f), "<color=white>PhotonView Group: " + this.pView.Group + "</color>", new GUIStyle() { alignment = TextAnchor.UpperLeft, fontSize = 16 });
-            GUI.Label(new Rect(20.0f, Screen.height - 100.0f, 200.0f, 40.0f), "<color=white>" + subscribedAndActiveCells + "</color>", new GUIStyle() { alignment = TextAnchor.UpperLeft, fontSize = 16 });
-            GUI.Label(new Rect(20.0f, Screen.height - 60.0f, 200.0f, 40.0f), "<color=white>" + subscribedCells + "</color>", new GUIStyle() { alignment = TextAnchor.UpperLeft, fontSize = 16 });
+
+            GUI.Label(new Rect(20.0f, Screen.height - 120.0f, 200.0f, 40.0f),
+                "<color=white>PhotonView Group: " + this.pView.Group + "</color>",
+                new GUIStyle() { alignment = TextAnchor.UpperLeft, fontSize = 16 });
+            GUI.Label(new Rect(20.0f, Screen.height - 100.0f, 200.0f, 40.0f),
+                "<color=white>" + subscribedAndActiveCells + "</color>",
+                new GUIStyle() { alignment = TextAnchor.UpperLeft, fontSize = 16 });
+            GUI.Label(new Rect(20.0f, Screen.height - 60.0f, 200.0f, 40.0f),
+                "<color=white>" + subscribedCells + "</color>",
+                new GUIStyle() { alignment = TextAnchor.UpperLeft, fontSize = 16 });
         }
 
         #endregion
@@ -190,7 +194,8 @@ namespace Photon.Pun.UtilityScripts
                 return true;
             }
 
-            if (this.activeCells[this.cullArea.NumberOfSubdivisions] != this.previousActiveCells[this.cullArea.NumberOfSubdivisions])
+            if (this.activeCells[this.cullArea.NumberOfSubdivisions] !=
+                this.previousActiveCells[this.cullArea.NumberOfSubdivisions])
             {
                 return true;
             }

@@ -8,11 +8,9 @@
 using System;
 using System.Collections;
 using System.Linq;
-
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
-
 using Photon.Realtime;
 
 namespace Photon.Pun.Demo.Cockpit.Forms
@@ -28,13 +26,14 @@ namespace Photon.Pun.Demo.Cockpit.Forms
         public Dropdown LobbyTypeInput;
 
         [System.Serializable]
-        public class OnSubmitEvent : UnityEvent<string, string, LobbyType, string[]> { }
+        public class OnSubmitEvent : UnityEvent<string, string, LobbyType, string[]>
+        {
+        }
 
         public OnSubmitEvent OnSubmit;
 
         public void Start()
         {
-
         }
 
         // new UI will fire "EndEdit" event also when loosing focus. So check "enter" key and only then StartChat.
@@ -59,7 +58,9 @@ namespace Photon.Pun.Demo.Cockpit.Forms
                 _t = LobbyType.AsyncRandomLobby;
             }
 
-            string[] _expectedUsers = string.IsNullOrEmpty(ExpectedUsersInput.text) ? null : ExpectedUsersInput.text.Split(',').Select(t => t.Trim()).ToArray();
+            string[] _expectedUsers = string.IsNullOrEmpty(ExpectedUsersInput.text)
+                ? null
+                : ExpectedUsersInput.text.Split(',').Select(t => t.Trim()).ToArray();
 
             OnSubmit.Invoke(
                 string.IsNullOrEmpty(RoomNameInput.text) ? null : RoomNameInput.text,

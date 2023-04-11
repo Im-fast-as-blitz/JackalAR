@@ -58,7 +58,10 @@ namespace Photon.Pun.UtilityScripts
 
         public void OnValueChanged(bool isOn)
         {
-            this._graphic.color = isOn ? (this.isHover ? this.HoverOnColor : this.HoverOnColor) : (this.isHover ? this.NormalOffColor : this.NormalOffColor);
+            this._graphic.color =
+                isOn
+                    ? (this.isHover ? this.HoverOnColor : this.HoverOnColor)
+                    : (this.isHover ? this.NormalOffColor : this.NormalOffColor);
         }
     }
 }

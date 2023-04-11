@@ -8,11 +8,9 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 using System;
-
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-
 using Photon.Pun;
 using Photon.Realtime;
 
@@ -42,18 +40,17 @@ namespace Photon.Pun.UtilityScripts
 
         public void SetFocus(PhotonView pv)
         {
-
             focus = pv != null ? pv.transform : null;
 
             if (pv != null)
             {
-                text.text = string.Format("id {0} own: {1} {2}{3}", pv.ViewID, pv.OwnerActorNr, (pv.IsRoomView) ? "scn" : "", (pv.IsMine) ? " mine" : "");
+                text.text = string.Format("id {0} own: {1} {2}{3}", pv.ViewID, pv.OwnerActorNr,
+                    (pv.IsRoomView) ? "scn" : "", (pv.IsMine) ? " mine" : "");
                 //GUI.Label (new Rect (Input.mousePosition.x + 5, Screen.height - Input.mousePosition.y - 15, 300, 30), );
             }
             else
             {
                 text.text = string.Empty;
-
             }
         }
 
@@ -70,7 +67,6 @@ namespace Photon.Pun.UtilityScripts
                 text.text = string.Empty;
                 return;
             }
-
         }
 
         void LateUpdate()

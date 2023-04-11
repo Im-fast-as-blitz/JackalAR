@@ -15,7 +15,6 @@ namespace Photon.Pun.Demo.Cockpit
     /// </summary>
     public class AppVersionProperty : MonoBehaviour
     {
-
         public Text Text;
 
         string _cache;

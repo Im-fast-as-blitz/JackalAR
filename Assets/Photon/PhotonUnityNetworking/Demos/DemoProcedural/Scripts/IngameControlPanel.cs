@@ -185,14 +185,17 @@ namespace Photon.Pun.Demo.Procedural
         /// </summary>
         public override void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
         {
-            if (propertiesThatChanged.ContainsKey(WorldGenerator.Instance.SeedPropertiesKey) && propertiesThatChanged.ContainsKey(WorldGenerator.Instance.WorldSizePropertiesKey) && propertiesThatChanged.ContainsKey(WorldGenerator.Instance.ClusterSizePropertiesKey) && propertiesThatChanged.ContainsKey(WorldGenerator.Instance.WorldTypePropertiesKey))
+            if (propertiesThatChanged.ContainsKey(WorldGenerator.Instance.SeedPropertiesKey) &&
+                propertiesThatChanged.ContainsKey(WorldGenerator.Instance.WorldSizePropertiesKey) &&
+                propertiesThatChanged.ContainsKey(WorldGenerator.Instance.ClusterSizePropertiesKey) &&
+                propertiesThatChanged.ContainsKey(WorldGenerator.Instance.WorldTypePropertiesKey))
             {
                 // Updating Seed
-                int seed = (int) propertiesThatChanged[WorldGenerator.Instance.SeedPropertiesKey];
+                int seed = (int)propertiesThatChanged[WorldGenerator.Instance.SeedPropertiesKey];
                 seedInputField.text = seed.ToString();
 
                 // Updating World Size
-                WorldSize worldSize = (WorldSize) propertiesThatChanged[WorldGenerator.Instance.WorldSizePropertiesKey];
+                WorldSize worldSize = (WorldSize)propertiesThatChanged[WorldGenerator.Instance.WorldSizePropertiesKey];
                 switch (worldSize)
                 {
                     case WorldSize.Tiny:
@@ -218,7 +221,8 @@ namespace Photon.Pun.Demo.Procedural
                 }
 
                 // Updating Cluster Size
-                ClusterSize clusterSize = (ClusterSize) propertiesThatChanged[WorldGenerator.Instance.ClusterSizePropertiesKey];
+                ClusterSize clusterSize =
+                    (ClusterSize)propertiesThatChanged[WorldGenerator.Instance.ClusterSizePropertiesKey];
                 switch (clusterSize)
                 {
                     case ClusterSize.Small:
@@ -239,7 +243,7 @@ namespace Photon.Pun.Demo.Procedural
                 }
 
                 // Updating World Type
-                WorldType worldType = (WorldType) propertiesThatChanged[WorldGenerator.Instance.WorldTypePropertiesKey];
+                WorldType worldType = (WorldType)propertiesThatChanged[WorldGenerator.Instance.WorldTypePropertiesKey];
                 switch (worldType)
                 {
                     case WorldType.Flat:

@@ -10,9 +10,9 @@ using UnityEngine.UI;
 namespace Photon.Pun.Demo.Cockpit
 {
     /// <summary>
-	/// PhotonNetwork.BestRegionSummaryInPreferences UI property.
+    /// PhotonNetwork.BestRegionSummaryInPreferences UI property.
     /// </summary>
-	public class BestRegionInPrefsProperty : PropertyListenerBase
+    public class BestRegionInPrefsProperty : PropertyListenerBase
     {
         public Text Text;
 
@@ -20,11 +20,11 @@ namespace Photon.Pun.Demo.Cockpit
 
         void Update()
         {
-			if (PhotonNetwork.BestRegionSummaryInPreferences != _cache)
+            if (PhotonNetwork.BestRegionSummaryInPreferences != _cache)
             {
-				_cache = PhotonNetwork.BestRegionSummaryInPreferences;
+                _cache = PhotonNetwork.BestRegionSummaryInPreferences;
 
-				this.OnValueChanged();
+                this.OnValueChanged();
 
                 if (string.IsNullOrEmpty(_cache))
                 {

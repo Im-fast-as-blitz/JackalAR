@@ -22,6 +22,5 @@ namespace Photon.Pun.Demo.Cockpit
         {
             Application.OpenURL(Url);
         }
-
     }
 }

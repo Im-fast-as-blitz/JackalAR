@@ -6,10 +6,8 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 using System.Collections;
-
 using UnityEngine;
 using UnityEngine.UI;
-
 using Photon.Realtime;
 
 namespace Photon.Pun.Demo.Cockpit
@@ -48,7 +46,6 @@ namespace Photon.Pun.Demo.Cockpit
                 JoinButtonCanvasGroup.blocksRaycasts = false;
                 JoinButtonCanvasGroup.alpha = 0f;
             }
-
         }
 
         public void OnJoinRoomButtonClick()
@@ -82,7 +79,6 @@ namespace Photon.Pun.Demo.Cockpit
 
             while (LayoutElement.minHeight != 30f)
             {
-
                 LayoutElement.minHeight = Mathf.MoveTowards(LayoutElement.minHeight, 30f, 2f);
                 yield return new WaitForEndOfFrame();
             }
@@ -95,8 +91,8 @@ namespace Photon.Pun.Demo.Cockpit
                 LayoutElement.minHeight = Mathf.MoveTowards(LayoutElement.minHeight, 0f, 2f);
                 yield return new WaitForEndOfFrame();
             }
+
             Destroy(this.gameObject);
         }
-
     }
 }

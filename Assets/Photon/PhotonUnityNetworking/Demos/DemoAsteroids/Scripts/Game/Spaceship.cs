@@ -9,9 +9,7 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 using System.Collections;
-
 using UnityEngine;
-
 using Photon.Pun.UtilityScripts;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 
@@ -101,7 +99,8 @@ namespace Photon.Pun.Demo.Asteroids
                 return;
             }
 
-            Quaternion rot = rigidbody.rotation * Quaternion.Euler(0, rotation * RotationSpeed * Time.fixedDeltaTime, 0);
+            Quaternion rot = rigidbody.rotation *
+                             Quaternion.Euler(0, rotation * RotationSpeed * Time.fixedDeltaTime, 0);
             rigidbody.MoveRotation(rot);
 
             Vector3 force = (rot * Vector3.forward) * acceleration * 1000.0f * MovementSpeed * Time.fixedDeltaTime;
@@ -149,9 +148,10 @@ namespace Photon.Pun.Demo.Asteroids
                 object lives;
                 if (PhotonNetwork.LocalPlayer.CustomProperties.TryGetValue(AsteroidsGame.PLAYER_LIVES, out lives))
                 {
-                    PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable {{AsteroidsGame.PLAYER_LIVES, ((int) lives <= 1) ? 0 : ((int) lives - 1)}});
+                    PhotonNetwork.LocalPlayer.SetCustomProperties(new Hashtable
+                        { { AsteroidsGame.PLAYER_LIVES, ((int)lives <= 1) ? 0 : ((int)lives - 1) } });
 
-                    if (((int) lives) > 1)
+                    if (((int)lives) > 1)
                     {
                         StartCoroutine("WaitForRespawn");
                     }
@@ -162,12 +162,13 @@ namespace Photon.Pun.Demo.Asteroids
         [PunRPC]
         public void Fire(Vector3 position, Quaternion rotation, PhotonMessageInfo info)
         {
-            float lag = (float) (PhotonNetwork.Time - info.SentServerTime);
+            float lag = (float)(PhotonNetwork.Time - info.SentServerTime);
             GameObject bullet;
 
             /** Use this if you want to fire one bullet at a time **/
             bullet = Instantiate(BulletPrefab, position, Quaternion.identity) as GameObject;
-            bullet.GetComponent<Bullet>().InitializeBullet(photonView.Owner, (rotation * Vector3.forward), Mathf.Abs(lag));
+            bullet.GetComponent<Bullet>()
+                .InitializeBullet(photonView.Owner, (rotation * Vector3.forward), Mathf.Abs(lag));
 
 
             /** Use this if you want to fire two bullets at once **/
@@ -194,7 +195,7 @@ namespace Photon.Pun.Demo.Asteroids
             EngineTrail.SetActive(true);
             Destruction.Stop();
         }
-        
+
         #endregion
 
         private void CheckExitScreen()
@@ -203,17 +204,24 @@ namespace Photon.Pun.Demo.Asteroids
             {
                 return;
             }
-            
+
             if (Mathf.Abs(rigidbody.position.x) > (Camera.main.orthographicSize * Camera.main.aspect))
             {
-                rigidbody.position = new Vector3(-Mathf.Sign(rigidbody.position.x) * Camera.main.orthographicSize * Camera.main.aspect, 0, rigidbody.position.z);
-                rigidbody.position -= rigidbody.position.normalized * 0.1f; // offset a little bit to avoid looping back & forth between the 2 edges 
+                rigidbody.position =
+                    new Vector3(-Mathf.Sign(rigidbody.position.x) * Camera.main.orthographicSize * Camera.main.aspect,
+                        0, rigidbody.position.z);
+                rigidbody.position -=
+                    rigidbody.position.normalized *
+                    0.1f; // offset a little bit to avoid looping back & forth between the 2 edges 
             }
 
             if (Mathf.Abs(rigidbody.position.z) > Camera.main.orthographicSize)
             {
-                rigidbody.position = new Vector3(rigidbody.position.x, rigidbody.position.y, -Mathf.Sign(rigidbody.position.z) * Camera.main.orthographicSize);
-                rigidbody.position -= rigidbody.position.normalized * 0.1f; // offset a little bit to avoid looping back & forth between the 2 edges 
+                rigidbody.position = new Vector3(rigidbody.position.x, rigidbody.position.y,
+                    -Mathf.Sign(rigidbody.position.z) * Camera.main.orthographicSize);
+                rigidbody.position -=
+                    rigidbody.position.normalized *
+                    0.1f; // offset a little bit to avoid looping back & forth between the 2 edges 
             }
         }
     }

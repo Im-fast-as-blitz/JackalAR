@@ -15,10 +15,10 @@ namespace Photon.Chat
     using System.Diagnostics;
     using ExitGames.Client.Photon;
 
-    #if SUPPORTED_UNITY || NETFX_CORE
+#if SUPPORTED_UNITY || NETFX_CORE
     using Hashtable = ExitGames.Client.Photon.Hashtable;
     using SupportClass = ExitGames.Client.Photon.SupportClass;
-    #endif
+#endif
 
 
     /// <summary>Central class of the Photon Chat API to connect, handle channels and messages.</summary>
@@ -95,6 +95,7 @@ namespace Photon.Chat
 
         /// <summary> Disconnection cause. Check this inside <see cref="IChatClientListener.OnDisconnected"/>. </summary>
         public ChatDisconnectCause DisconnectedCause { get; private set; }
+
         /// <summary>
         /// Checks if this client is ready to send messages.
         /// </summary>
@@ -102,6 +103,7 @@ namespace Photon.Chat
         {
             get { return this.State == ChatState.ConnectedToFrontEnd && this.HasPeer; }
         }
+
         /// <summary>
         /// Checks if this client is ready to publish messages inside a public channel.
         /// </summary>
@@ -109,7 +111,8 @@ namespace Photon.Chat
         /// <returns>Whether or not this client is ready to publish messages inside the public channel with the specified channelName.</returns>
         public bool CanChatInChannel(string channelName)
         {
-            return this.CanChat && this.PublicChannels.ContainsKey(channelName) && !this.PublicChannelsUnsubscribing.Contains(channelName);
+            return this.CanChat && this.PublicChannels.ContainsKey(channelName) &&
+                   !this.PublicChannelsUnsubscribing.Contains(channelName);
         }
 
         private bool HasPeer
@@ -133,16 +136,14 @@ namespace Photon.Chat
         /// It's not a nickname and we assume users with the same userID are the same person.</remarks>
         public string UserId
         {
-            get
-            {
-                return (this.AuthValues != null) ? this.AuthValues.UserId : null;
-            }
+            get { return (this.AuthValues != null) ? this.AuthValues.UserId : null; }
             private set
             {
                 if (this.AuthValues == null)
                 {
                     this.AuthValues = new AuthenticationValues();
                 }
+
                 this.AuthValues.UserId = value;
             }
         }
@@ -168,6 +169,7 @@ namespace Photon.Chat
 
         /// <summary> Public channels this client is subscribed to. </summary>
         public readonly Dictionary<string, ChatChannel> PublicChannels;
+
         /// <summary> Private channels in which this client has exchanged messages. </summary>
         public readonly Dictionary<string, ChatChannel> PrivateChannels;
 
@@ -176,8 +178,10 @@ namespace Photon.Chat
         private readonly HashSet<string> PublicChannelsUnsubscribing;
 
         private readonly IChatClientListener listener = null;
+
         /// <summary> The Chat Peer used by this client. </summary>
         public ChatPeer chatPeer = null;
+
         private const string ChatAppName = "chat";
         private bool didAuthenticate;
 
@@ -207,9 +211,13 @@ namespace Photon.Chat
             {
                 if (this.chatPeer == null || this.chatPeer.PeerState != PeerStateValue.Disconnected)
                 {
-                    this.listener.DebugReturn(DebugLevel.WARNING, "Can't set TransportProtocol. Disconnect first! " + ((this.chatPeer != null) ? "PeerState: " + this.chatPeer.PeerState : "The chatPeer is null."));
+                    this.listener.DebugReturn(DebugLevel.WARNING,
+                        "Can't set TransportProtocol. Disconnect first! " + ((this.chatPeer != null)
+                            ? "PeerState: " + this.chatPeer.PeerState
+                            : "The chatPeer is null."));
                     return;
                 }
+
                 this.chatPeer.TransportProtocol = value;
             }
         }
@@ -252,7 +260,8 @@ namespace Photon.Chat
         {
             if (appSettings == null)
             {
-                this.listener.DebugReturn(DebugLevel.ERROR, "ConnectUsingSettings failed. The appSettings can't be null.'");
+                this.listener.DebugReturn(DebugLevel.ERROR,
+                    "ConnectUsingSettings failed. The appSettings can't be null.'");
                 return false;
             }
 
@@ -271,7 +280,7 @@ namespace Photon.Chat
                 this.chatPeer.NameServerHost = appSettings.Server;
                 this.chatPeer.NameServerPortOverride = appSettings.Port;
             }
-            
+
             this.ProxyServerAddress = appSettings.ProxyServer;
 
             return this.Connect(appSettings.AppIdChat, appSettings.AppVersion, this.AuthValues);
@@ -308,17 +317,18 @@ namespace Photon.Chat
             this.PrivateChannels.Clear();
             this.PublicChannelsUnsubscribing.Clear();
 
-            #if UNITY_WEBGL
+#if UNITY_WEBGL
             if (this.TransportProtocol == ConnectionProtocol.Tcp || this.TransportProtocol == ConnectionProtocol.Udp)
             {
                 this.listener.DebugReturn(DebugLevel.WARNING, "WebGL requires WebSockets. Switching TransportProtocol to WebSocketSecure.");
                 this.TransportProtocol = ConnectionProtocol.WebSocketSecure;
             }
-            #endif
+#endif
 
             this.NameServerAddress = this.chatPeer.NameServerAddress;
 
-            bool isConnecting = this.chatPeer.Connect(this.NameServerAddress, this.ProxyServerAddress, "NameServer", null);
+            bool isConnecting =
+                this.chatPeer.Connect(this.NameServerAddress, this.ProxyServerAddress, "NameServer", null);
             if (isConnecting)
             {
                 this.State = ChatState.ConnectingToNameServer;
@@ -326,11 +336,12 @@ namespace Photon.Chat
 
             if (this.UseBackgroundWorkerForSending)
             {
-                #if UNITY_SWITCH
+#if UNITY_SWITCH
                 SupportClass.StartBackgroundCalls(this.SendOutgoingInBackground, this.msDeltaForServiceCalls);  // as workaround, we don't name the Thread.
-                #else
-                SupportClass.StartBackgroundCalls(this.SendOutgoingInBackground, this.msDeltaForServiceCalls, "ChatClient Service Thread");
-                #endif
+#else
+                SupportClass.StartBackgroundCalls(this.SendOutgoingInBackground, this.msDeltaForServiceCalls,
+                    "ChatClient Service Thread");
+#endif
             }
 
             return isConnecting;
@@ -372,7 +383,8 @@ namespace Photon.Chat
             // if there is no background thread for sending, Service() will do that as well, in intervals
             if (!this.UseBackgroundWorkerForSending)
             {
-                if (Environment.TickCount - this.msTimestampOfLastServiceCall > this.msDeltaForServiceCalls || this.msTimestampOfLastServiceCall == 0)
+                if (Environment.TickCount - this.msTimestampOfLastServiceCall > this.msDeltaForServiceCalls ||
+                    this.msTimestampOfLastServiceCall == 0)
                 {
                     this.msTimestampOfLastServiceCall = Environment.TickCount;
 
@@ -448,8 +460,10 @@ namespace Photon.Chat
             {
                 if (this.DebugOut >= DebugLevel.ERROR)
                 {
-                    this.listener.DebugReturn(DebugLevel.ERROR, "Subscribe called while not connected to front end server.");
+                    this.listener.DebugReturn(DebugLevel.ERROR,
+                        "Subscribe called while not connected to front end server.");
                 }
+
                 return false;
             }
 
@@ -457,8 +471,10 @@ namespace Photon.Chat
             {
                 if (this.DebugOut >= DebugLevel.WARNING)
                 {
-                    this.listener.DebugReturn(DebugLevel.WARNING, "Subscribe can't be called for empty or null channels-list.");
+                    this.listener.DebugReturn(DebugLevel.WARNING,
+                        "Subscribe can't be called for empty or null channels-list.");
                 }
+
                 return false;
             }
 
@@ -468,8 +484,11 @@ namespace Photon.Chat
                 {
                     if (this.DebugOut >= DebugLevel.ERROR)
                     {
-                        this.listener.DebugReturn(DebugLevel.ERROR, string.Format("Subscribe can't be called with a null or empty channel name at index {0}.", i));
+                        this.listener.DebugReturn(DebugLevel.ERROR,
+                            string.Format("Subscribe can't be called with a null or empty channel name at index {0}.",
+                                i));
                     }
+
                     return false;
                 }
             }
@@ -478,15 +497,17 @@ namespace Photon.Chat
             {
                 if (this.DebugOut >= DebugLevel.ERROR)
                 {
-                    this.listener.DebugReturn(DebugLevel.ERROR, "Subscribe can't be called when \"lastMsgIds\" array is null or does not have the same length as \"channels\" array.");
+                    this.listener.DebugReturn(DebugLevel.ERROR,
+                        "Subscribe can't be called when \"lastMsgIds\" array is null or does not have the same length as \"channels\" array.");
                 }
+
                 return false;
             }
 
             Dictionary<byte, object> opParameters = new Dictionary<byte, object>
             {
                 { ChatParameterCode.Channels, channels },
-                { ChatParameterCode.MsgIds,  lastMsgIds},
+                { ChatParameterCode.MsgIds, lastMsgIds },
                 { ChatParameterCode.HistoryLength, -1 } // server will decide how many messages to send to client
             };
 
@@ -509,8 +530,10 @@ namespace Photon.Chat
             {
                 if (this.DebugOut >= DebugLevel.ERROR)
                 {
-                    this.listener.DebugReturn(DebugLevel.ERROR, "Subscribe called while not connected to front end server.");
+                    this.listener.DebugReturn(DebugLevel.ERROR,
+                        "Subscribe called while not connected to front end server.");
                 }
+
                 return false;
             }
 
@@ -518,8 +541,10 @@ namespace Photon.Chat
             {
                 if (this.DebugOut >= DebugLevel.WARNING)
                 {
-                    this.listener.DebugReturn(DebugLevel.WARNING, "Subscribe can't be called for empty or null channels-list.");
+                    this.listener.DebugReturn(DebugLevel.WARNING,
+                        "Subscribe can't be called for empty or null channels-list.");
                 }
+
                 return false;
             }
 
@@ -543,8 +568,10 @@ namespace Photon.Chat
             {
                 if (this.DebugOut >= DebugLevel.ERROR)
                 {
-                    this.listener.DebugReturn(DebugLevel.ERROR, "Unsubscribe called while not connected to front end server.");
+                    this.listener.DebugReturn(DebugLevel.ERROR,
+                        "Unsubscribe called while not connected to front end server.");
                 }
+
                 return false;
             }
 
@@ -552,8 +579,10 @@ namespace Photon.Chat
             {
                 if (this.DebugOut >= DebugLevel.WARNING)
                 {
-                    this.listener.DebugReturn(DebugLevel.WARNING, "Unsubscribe can't be called for empty or null channels-list.");
+                    this.listener.DebugReturn(DebugLevel.WARNING,
+                        "Unsubscribe can't be called for empty or null channels-list.");
                 }
+
                 return false;
             }
 
@@ -561,6 +590,7 @@ namespace Photon.Chat
             {
                 this.PublicChannelsUnsubscribing.Add(ch);
             }
+
             return this.SendChannelOperation(channels, ChatOperationCode.Unsubscribe, 0);
         }
 
@@ -589,8 +619,10 @@ namespace Photon.Chat
             {
                 if (this.DebugOut >= DebugLevel.ERROR)
                 {
-                    this.listener.DebugReturn(DebugLevel.ERROR, "PublishMessage called while not connected to front end server.");
+                    this.listener.DebugReturn(DebugLevel.ERROR,
+                        "PublishMessage called while not connected to front end server.");
                 }
+
                 return false;
             }
 
@@ -598,22 +630,25 @@ namespace Photon.Chat
             {
                 if (this.DebugOut >= DebugLevel.WARNING)
                 {
-                    this.listener.DebugReturn(DebugLevel.WARNING, "PublishMessage parameters must be non-null and not empty.");
+                    this.listener.DebugReturn(DebugLevel.WARNING,
+                        "PublishMessage parameters must be non-null and not empty.");
                 }
+
                 return false;
             }
 
             Dictionary<byte, object> parameters = new Dictionary<byte, object>
-                {
-                    { (byte)ChatParameterCode.Channel, channelName },
-                    { (byte)ChatParameterCode.Message, message }
-                };
+            {
+                { (byte)ChatParameterCode.Channel, channelName },
+                { (byte)ChatParameterCode.Message, message }
+            };
             if (forwardAsWebhook)
             {
                 parameters.Add(ChatParameterCode.WebFlags, (byte)0x1);
             }
 
-            return this.chatPeer.SendOperation(ChatOperationCode.Publish, parameters, new SendOptions() { Reliability = reliable });
+            return this.chatPeer.SendOperation(ChatOperationCode.Publish, parameters,
+                new SendOptions() { Reliability = reliable });
         }
 
         /// <summary>
@@ -641,19 +676,23 @@ namespace Photon.Chat
             return this.sendPrivateMessage(target, message, encrypt, true, forwardAsWebhook);
         }
 
-        internal bool SendPrivateMessageUnreliable(string target, object message, bool encrypt, bool forwardAsWebhook = false)
+        internal bool SendPrivateMessageUnreliable(string target, object message, bool encrypt,
+            bool forwardAsWebhook = false)
         {
             return this.sendPrivateMessage(target, message, encrypt, false, forwardAsWebhook);
         }
 
-        private bool sendPrivateMessage(string target, object message, bool encrypt, bool reliable, bool forwardAsWebhook = false)
+        private bool sendPrivateMessage(string target, object message, bool encrypt, bool reliable,
+            bool forwardAsWebhook = false)
         {
             if (!this.CanChat)
             {
                 if (this.DebugOut >= DebugLevel.ERROR)
                 {
-                    this.listener.DebugReturn(DebugLevel.ERROR, "SendPrivateMessage called while not connected to front end server.");
+                    this.listener.DebugReturn(DebugLevel.ERROR,
+                        "SendPrivateMessage called while not connected to front end server.");
                 }
+
                 return false;
             }
 
@@ -661,22 +700,25 @@ namespace Photon.Chat
             {
                 if (this.DebugOut >= DebugLevel.WARNING)
                 {
-                    this.listener.DebugReturn(DebugLevel.WARNING, "SendPrivateMessage parameters must be non-null and not empty.");
+                    this.listener.DebugReturn(DebugLevel.WARNING,
+                        "SendPrivateMessage parameters must be non-null and not empty.");
                 }
+
                 return false;
             }
 
             Dictionary<byte, object> parameters = new Dictionary<byte, object>
-                {
-                    { ChatParameterCode.UserId, target },
-                    { ChatParameterCode.Message, message }
-                };
+            {
+                { ChatParameterCode.UserId, target },
+                { ChatParameterCode.Message, message }
+            };
             if (forwardAsWebhook)
             {
                 parameters.Add(ChatParameterCode.WebFlags, (byte)0x1);
             }
 
-            return this.chatPeer.SendOperation(ChatOperationCode.SendPrivate, parameters, new SendOptions() { Reliability = reliable, Encrypt = encrypt });
+            return this.chatPeer.SendOperation(ChatOperationCode.SendPrivate, parameters,
+                new SendOptions() { Reliability = reliable, Encrypt = encrypt });
         }
 
         /// <summary>Sets the user's status (pre-defined or custom) and an optional message.</summary>
@@ -700,15 +742,17 @@ namespace Photon.Chat
             {
                 if (this.DebugOut >= DebugLevel.ERROR)
                 {
-                    this.listener.DebugReturn(DebugLevel.ERROR, "SetOnlineStatus called while not connected to front end server.");
+                    this.listener.DebugReturn(DebugLevel.ERROR,
+                        "SetOnlineStatus called while not connected to front end server.");
                 }
+
                 return false;
             }
 
             Dictionary<byte, object> parameters = new Dictionary<byte, object>
-                {
-                    { ChatParameterCode.Status, status },
-                };
+            {
+                { ChatParameterCode.Status, status },
+            };
 
             if (skipMessage)
             {
@@ -788,8 +832,10 @@ namespace Photon.Chat
             {
                 if (this.DebugOut >= DebugLevel.ERROR)
                 {
-                    this.listener.DebugReturn(DebugLevel.ERROR, "AddFriends called while not connected to front end server.");
+                    this.listener.DebugReturn(DebugLevel.ERROR,
+                        "AddFriends called while not connected to front end server.");
                 }
+
                 return false;
             }
 
@@ -799,21 +845,25 @@ namespace Photon.Chat
                 {
                     this.listener.DebugReturn(DebugLevel.WARNING, "AddFriends can't be called for empty or null list.");
                 }
+
                 return false;
             }
+
             if (friends.Length > FriendRequestListMax)
             {
                 if (this.DebugOut >= DebugLevel.WARNING)
                 {
-                    this.listener.DebugReturn(DebugLevel.WARNING, "AddFriends max list size exceeded: " + friends.Length + " > " + FriendRequestListMax);
+                    this.listener.DebugReturn(DebugLevel.WARNING,
+                        "AddFriends max list size exceeded: " + friends.Length + " > " + FriendRequestListMax);
                 }
+
                 return false;
             }
 
             Dictionary<byte, object> parameters = new Dictionary<byte, object>
-                {
-                    { ChatParameterCode.Friends, friends },
-                };
+            {
+                { ChatParameterCode.Friends, friends },
+            };
 
             return this.chatPeer.SendOperation(ChatOperationCode.AddFriends, parameters, SendOptions.SendReliable);
         }
@@ -866,8 +916,10 @@ namespace Photon.Chat
             {
                 if (this.DebugOut >= DebugLevel.ERROR)
                 {
-                    this.listener.DebugReturn(DebugLevel.ERROR, "RemoveFriends called while not connected to front end server.");
+                    this.listener.DebugReturn(DebugLevel.ERROR,
+                        "RemoveFriends called while not connected to front end server.");
                 }
+
                 return false;
             }
 
@@ -875,23 +927,28 @@ namespace Photon.Chat
             {
                 if (this.DebugOut >= DebugLevel.WARNING)
                 {
-                    this.listener.DebugReturn(DebugLevel.WARNING, "RemoveFriends can't be called for empty or null list.");
+                    this.listener.DebugReturn(DebugLevel.WARNING,
+                        "RemoveFriends can't be called for empty or null list.");
                 }
+
                 return false;
             }
+
             if (friends.Length > FriendRequestListMax)
             {
                 if (this.DebugOut >= DebugLevel.WARNING)
                 {
-                    this.listener.DebugReturn(DebugLevel.WARNING, "RemoveFriends max list size exceeded: " + friends.Length + " > " + FriendRequestListMax);
+                    this.listener.DebugReturn(DebugLevel.WARNING,
+                        "RemoveFriends max list size exceeded: " + friends.Length + " > " + FriendRequestListMax);
                 }
+
                 return false;
             }
 
             Dictionary<byte, object> parameters = new Dictionary<byte, object>
-                {
-                    { ChatParameterCode.Friends, friends },
-                };
+            {
+                { ChatParameterCode.Friends, friends },
+            };
 
             return this.chatPeer.SendOperation(ChatOperationCode.RemoveFriends, parameters, SendOptions.SendReliable);
         }
@@ -961,6 +1018,7 @@ namespace Photon.Chat
             {
                 return false;
             }
+
             string channelName = this.GetPrivateChannelNameByUser(userId);
             return this.TryGetChannel(channelName, true, out channel);
         }
@@ -1012,14 +1070,14 @@ namespace Photon.Chat
                 case ChatEventCode.UserUnsubscribed:
                     this.HandleUserUnsubscribedEvent(eventData);
                     break;
-                #if CHAT_EXTENDED
+#if CHAT_EXTENDED
                 case ChatEventCode.PropertiesChanged:
                     this.HandlePropertiesChanged(eventData);
                     break;
                 case ChatEventCode.ErrorInfo:
                     this.HandleErrorInfoEvent(eventData);
                     break;
-                #endif
+#endif
             }
         }
 
@@ -1041,13 +1099,20 @@ namespace Photon.Chat
                     {
                         if (operationResponse.ReturnCode == -2)
                         {
-                            this.listener.DebugReturn(DebugLevel.ERROR, string.Format("Chat Operation {0} unknown on server. Check your AppId and make sure it's for a Chat application.", operationResponse.OperationCode));
+                            this.listener.DebugReturn(DebugLevel.ERROR,
+                                string.Format(
+                                    "Chat Operation {0} unknown on server. Check your AppId and make sure it's for a Chat application.",
+                                    operationResponse.OperationCode));
                         }
                         else
                         {
-                            this.listener.DebugReturn(DebugLevel.ERROR, string.Format("Chat Operation {0} failed (Code: {1}). Debug Message: {2}", operationResponse.OperationCode, operationResponse.ReturnCode, operationResponse.DebugMessage));
+                            this.listener.DebugReturn(DebugLevel.ERROR,
+                                string.Format("Chat Operation {0} failed (Code: {1}). Debug Message: {2}",
+                                    operationResponse.OperationCode, operationResponse.ReturnCode,
+                                    operationResponse.DebugMessage));
                         }
                     }
+
                     break;
             }
         }
@@ -1083,10 +1148,14 @@ namespace Photon.Chat
                         {
                             if (this.DebugOut >= DebugLevel.ERROR)
                             {
-                                this.listener.DebugReturn(DebugLevel.ERROR, string.Format("Error authenticating on frontend! Check log output, AuthValues and if you're connected. State: {0}", this.State));
+                                this.listener.DebugReturn(DebugLevel.ERROR,
+                                    string.Format(
+                                        "Error authenticating on frontend! Check log output, AuthValues and if you're connected. State: {0}",
+                                        this.State));
                             }
                         }
                     }
+
                     break;
                 case StatusCode.EncryptionEstablished:
                     // once encryption is available, the client should send one (secure) authenticate. it includes the AppId (which identifies your app on the Photon Cloud)
@@ -1096,9 +1165,13 @@ namespace Photon.Chat
                     switch (this.State)
                     {
                         case ChatState.ConnectWithFallbackProtocol:
-                            this.EnableProtocolFallback = false;        // the client does a fallback only one time
-                            this.chatPeer.NameServerPortOverride = 0;   // resets a value in the peer only (as we change the protocol, the port has to change, too)
-                            this.chatPeer.TransportProtocol = (this.chatPeer.TransportProtocol == ConnectionProtocol.Tcp) ? ConnectionProtocol.Udp : ConnectionProtocol.Tcp;
+                            this.EnableProtocolFallback = false; // the client does a fallback only one time
+                            this.chatPeer.NameServerPortOverride =
+                                0; // resets a value in the peer only (as we change the protocol, the port has to change, too)
+                            this.chatPeer.TransportProtocol =
+                                (this.chatPeer.TransportProtocol == ConnectionProtocol.Tcp)
+                                    ? ConnectionProtocol.Udp
+                                    : ConnectionProtocol.Tcp;
                             this.Connect(this.AppId, this.AppVersion, null);
 
                             // the client now has to return, instead of break, to avoid further processing of the disconnect call
@@ -1115,22 +1188,28 @@ namespace Photon.Chat
                         default:
                             // unexpected disconnect, we log warning and stacktrace
                             string stacktrace = string.Empty;
-                            #if DEBUG && !NETFX_CORE
+#if DEBUG && !NETFX_CORE
                             stacktrace = new System.Diagnostics.StackTrace(true).ToString();
-                            #endif
-                            this.listener.DebugReturn(DebugLevel.WARNING, string.Format("Got a unexpected Disconnect in ChatState: {0}. Server: {1} Trace: {2}", this.State, this.chatPeer.ServerAddress, stacktrace));
+#endif
+                            this.listener.DebugReturn(DebugLevel.WARNING,
+                                string.Format("Got a unexpected Disconnect in ChatState: {0}. Server: {1} Trace: {2}",
+                                    this.State, this.chatPeer.ServerAddress, stacktrace));
                             break;
                     }
+
                     if (this.AuthValues != null)
                     {
-                        this.AuthValues.Token = null; // when leaving the server, invalidate the secret (but not the auth values)
+                        this.AuthValues.Token =
+                            null; // when leaving the server, invalidate the secret (but not the auth values)
                     }
+
                     this.State = ChatState.Disconnected;
                     this.listener.OnChatStateChange(ChatState.Disconnected);
                     this.listener.OnDisconnected();
                     break;
                 case StatusCode.DisconnectByServerUserLimit:
-                    this.listener.DebugReturn(DebugLevel.ERROR, "This connection was rejected due to the apps CCU limit.");
+                    this.listener.DebugReturn(DebugLevel.ERROR,
+                        "This connection was rejected due to the apps CCU limit.");
                     this.Disconnect(ChatDisconnectCause.MaxCcuReached);
                     break;
                 case StatusCode.ExceptionOnConnect:
@@ -1174,11 +1253,12 @@ namespace Photon.Chat
                     {
                         this.Disconnect(ChatDisconnectCause.ClientTimeout);
                     }
+
                     break;
             }
         }
 
-        #if SDK_V4
+#if SDK_V4
         void IPhotonPeerListener.OnMessage(object msg)
         {
             string channelName = null;
@@ -1207,7 +1287,7 @@ namespace Photon.Chat
 
             this.listener.OnReceiveBroadcastMessage(channelName, messageBytes);
         }
-        #endif
+#endif
 
         #endregion
 
@@ -1215,12 +1295,17 @@ namespace Photon.Chat
         {
             if (!this.didAuthenticate)
             {
-                this.didAuthenticate = this.chatPeer.AuthenticateOnNameServer(this.AppId, this.AppVersion, this.ChatRegion, this.AuthValues);
+                this.didAuthenticate =
+                    this.chatPeer.AuthenticateOnNameServer(this.AppId, this.AppVersion, this.ChatRegion,
+                        this.AuthValues);
                 if (!this.didAuthenticate)
                 {
                     if (this.DebugOut >= DebugLevel.ERROR)
                     {
-                        this.listener.DebugReturn(DebugLevel.ERROR, string.Format("Error calling OpAuthenticate! Did not work on NameServer. Check log output, AuthValues and if you're connected. State: {0}", this.State));
+                        this.listener.DebugReturn(DebugLevel.ERROR,
+                            string.Format(
+                                "Error calling OpAuthenticate! Did not work on NameServer. Check log output, AuthValues and if you're connected. State: {0}",
+                                this.State));
                     }
                 }
             }
@@ -1228,7 +1313,8 @@ namespace Photon.Chat
 
         private bool SendChannelOperation(string[] channels, byte operation, int historyLength)
         {
-            Dictionary<byte, object> opParameters = new Dictionary<byte, object> { { (byte)ChatParameterCode.Channels, channels } };
+            Dictionary<byte, object> opParameters = new Dictionary<byte, object>
+                { { (byte)ChatParameterCode.Channels, channels } };
 
             if (historyLength != 0)
             {
@@ -1282,8 +1368,10 @@ namespace Photon.Chat
             {
                 if (this.DebugOut >= DebugLevel.WARNING)
                 {
-                    this.listener.DebugReturn(DebugLevel.WARNING, "Channel " + channelName + " for incoming message event not found.");
+                    this.listener.DebugReturn(DebugLevel.WARNING,
+                        "Channel " + channelName + " for incoming message event not found.");
                 }
+
                 return;
             }
 
@@ -1307,22 +1395,25 @@ namespace Photon.Chat
                         channel.MessageLimit = this.MessageLimit;
                         this.PublicChannels.Add(channel.Name, channel);
                     }
+
                     object temp;
                     if (eventData.Parameters.TryGetValue(ChatParameterCode.Properties, out temp))
                     {
                         Dictionary<object, object> channelProperties = temp as Dictionary<object, object>;
                         channel.ReadChannelProperties(channelProperties);
                     }
+
                     if (channel.PublishSubscribers) // or maybe remove check & always add anyway?
                     {
                         channel.AddSubscriber(this.UserId);
                     }
+
                     if (eventData.Parameters.TryGetValue(ChatParameterCode.ChannelSubscribers, out temp))
                     {
                         string[] subscribers = temp as string[];
                         channel.AddSubscribers(subscribers);
                     }
-                    #if CHAT_EXTENDED
+#if CHAT_EXTENDED
                     if (eventData.Parameters.TryGetValue(ChatParameterCode.UserProperties, out temp))
                     {
                         //UnityEngine.Debug.LogFormat("temp = {0}", temp);
@@ -1332,7 +1423,7 @@ namespace Photon.Chat
                             channel.ReadUserProperties(pair.Key, pair.Value as Dictionary<object, object>);
                         }
                     }
-                    #endif
+#endif
                 }
             }
 
@@ -1357,7 +1448,8 @@ namespace Photon.Chat
         {
             if (this.DebugOut >= DebugLevel.INFO)
             {
-                this.listener.DebugReturn(DebugLevel.INFO, operationResponse.ToStringFull() + " on: " + this.chatPeer.NameServerAddress);
+                this.listener.DebugReturn(DebugLevel.INFO,
+                    operationResponse.ToStringFull() + " on: " + this.chatPeer.NameServerAddress);
             }
 
             if (operationResponse.ReturnCode == 0)
@@ -1373,6 +1465,7 @@ namespace Photon.Chat
                         {
                             this.AuthValues = new AuthenticationValues();
                         }
+
                         this.AuthValues.Token = operationResponse[ParameterCode.Secret] as string;
 
                         this.FrontendAddress = (string)operationResponse[ParameterCode.Address];
@@ -1387,13 +1480,16 @@ namespace Photon.Chat
                             this.listener.DebugReturn(DebugLevel.ERROR, "No secret in authentication response.");
                         }
                     }
+
                     if (operationResponse.Parameters.ContainsKey(ParameterCode.UserId))
                     {
                         string incomingId = operationResponse.Parameters[ParameterCode.UserId] as string;
                         if (!string.IsNullOrEmpty(incomingId))
                         {
                             this.UserId = incomingId;
-                            this.listener.DebugReturn(DebugLevel.INFO, string.Format("Received your UserID from server. Updating local value to: {0}", this.UserId));
+                            this.listener.DebugReturn(DebugLevel.INFO,
+                                string.Format("Received your UserID from server. Updating local value to: {0}",
+                                    this.UserId));
                         }
                     }
                 }
@@ -1437,7 +1533,9 @@ namespace Photon.Chat
 
                 if (this.DebugOut >= DebugLevel.ERROR)
                 {
-                    this.listener.DebugReturn(DebugLevel.ERROR, string.Format("{0} ClientState: {1} ServerAddress: {2}", operationResponse.ToStringFull(), this.State, this.chatPeer.ServerAddress));
+                    this.listener.DebugReturn(DebugLevel.ERROR,
+                        string.Format("{0} ClientState: {1} ServerAddress: {2}", operationResponse.ToStringFull(),
+                            this.State, this.chatPeer.ServerAddress));
                 }
 
 
@@ -1469,20 +1567,22 @@ namespace Photon.Chat
                 this.listener.DebugReturn(DebugLevel.INFO, "Connecting to frontend " + this.FrontendAddress);
             }
 
-            #if UNITY_WEBGL
+#if UNITY_WEBGL
             if (this.TransportProtocol == ConnectionProtocol.Tcp || this.TransportProtocol == ConnectionProtocol.Udp)
             {
                 this.listener.DebugReturn(DebugLevel.WARNING, "WebGL requires WebSockets. Switching TransportProtocol to WebSocketSecure.");
                 this.TransportProtocol = ConnectionProtocol.WebSocketSecure;
             }
-            #endif
+#endif
 
             if (!this.chatPeer.Connect(this.FrontendAddress, this.ProxyServerAddress, ChatAppName, null))
             {
                 if (this.DebugOut >= DebugLevel.ERROR)
                 {
-                    this.listener.DebugReturn(DebugLevel.ERROR, string.Format("Connecting to frontend {0} failed.", this.FrontendAddress));
+                    this.listener.DebugReturn(DebugLevel.ERROR,
+                        string.Format("Connecting to frontend {0} failed.", this.FrontendAddress));
                 }
+
                 return false;
             }
 
@@ -1497,27 +1597,33 @@ namespace Photon.Chat
                 {
                     if (this.DebugOut >= DebugLevel.ERROR)
                     {
-                        this.listener.DebugReturn(DebugLevel.ERROR, "Can't authenticate on front end server. Secret (AuthValues.Token) is not set");
+                        this.listener.DebugReturn(DebugLevel.ERROR,
+                            "Can't authenticate on front end server. Secret (AuthValues.Token) is not set");
                     }
+
                     return false;
                 }
                 else
                 {
-                    Dictionary<byte, object> opParameters = new Dictionary<byte, object> { { (byte)ChatParameterCode.Secret, this.AuthValues.Token } };
+                    Dictionary<byte, object> opParameters = new Dictionary<byte, object>
+                        { { (byte)ChatParameterCode.Secret, this.AuthValues.Token } };
                     if (this.PrivateChatHistoryLength > -1)
                     {
                         opParameters[(byte)ChatParameterCode.HistoryLength] = this.PrivateChatHistoryLength;
                     }
 
-                    return this.chatPeer.SendOperation(ChatOperationCode.Authenticate, opParameters, SendOptions.SendReliable);
+                    return this.chatPeer.SendOperation(ChatOperationCode.Authenticate, opParameters,
+                        SendOptions.SendReliable);
                 }
             }
             else
             {
                 if (this.DebugOut >= DebugLevel.ERROR)
                 {
-                    this.listener.DebugReturn(DebugLevel.ERROR, "Can't authenticate on front end server. Authentication Values are not set");
+                    this.listener.DebugReturn(DebugLevel.ERROR,
+                        "Can't authenticate on front end server. Authentication Values are not set");
                 }
+
                 return false;
             }
         }
@@ -1533,14 +1639,20 @@ namespace Photon.Chat
                 {
                     if (this.DebugOut >= DebugLevel.WARNING)
                     {
-                        this.listener.DebugReturn(DebugLevel.WARNING, string.Format("Channel \"{0}\" for incoming UserUnsubscribed (\"{1}\") event does not have PublishSubscribers enabled.", channelName, userId));
+                        this.listener.DebugReturn(DebugLevel.WARNING,
+                            string.Format(
+                                "Channel \"{0}\" for incoming UserUnsubscribed (\"{1}\") event does not have PublishSubscribers enabled.",
+                                channelName, userId));
                     }
                 }
+
                 if (!channel.RemoveSubscriber(userId)) // user not found!
                 {
                     if (this.DebugOut >= DebugLevel.WARNING)
                     {
-                        this.listener.DebugReturn(DebugLevel.WARNING, string.Format("Channel \"{0}\" does not contain unsubscribed user \"{1}\".", channelName, userId));
+                        this.listener.DebugReturn(DebugLevel.WARNING,
+                            string.Format("Channel \"{0}\" does not contain unsubscribed user \"{1}\".", channelName,
+                                userId));
                     }
                 }
             }
@@ -1548,9 +1660,12 @@ namespace Photon.Chat
             {
                 if (this.DebugOut >= DebugLevel.WARNING)
                 {
-                    this.listener.DebugReturn(DebugLevel.WARNING, string.Format("Channel \"{0}\" not found for incoming UserUnsubscribed (\"{1}\") event.", channelName, userId));
+                    this.listener.DebugReturn(DebugLevel.WARNING,
+                        string.Format("Channel \"{0}\" not found for incoming UserUnsubscribed (\"{1}\") event.",
+                            channelName, userId));
                 }
             }
+
             this.listener.OnUserUnsubscribed(channelName, userId);
         }
 
@@ -1565,39 +1680,50 @@ namespace Photon.Chat
                 {
                     if (this.DebugOut >= DebugLevel.WARNING)
                     {
-                        this.listener.DebugReturn(DebugLevel.WARNING, string.Format("Channel \"{0}\" for incoming UserSubscribed (\"{1}\") event does not have PublishSubscribers enabled.", channelName, userId));
+                        this.listener.DebugReturn(DebugLevel.WARNING,
+                            string.Format(
+                                "Channel \"{0}\" for incoming UserSubscribed (\"{1}\") event does not have PublishSubscribers enabled.",
+                                channelName, userId));
                     }
                 }
+
                 if (!channel.AddSubscriber(userId)) // user came back from the dead ?
                 {
                     if (this.DebugOut >= DebugLevel.WARNING)
                     {
-                        this.listener.DebugReturn(DebugLevel.WARNING, string.Format("Channel \"{0}\" already contains newly subscribed user \"{1}\".", channelName, userId));
+                        this.listener.DebugReturn(DebugLevel.WARNING,
+                            string.Format("Channel \"{0}\" already contains newly subscribed user \"{1}\".",
+                                channelName, userId));
                     }
                 }
                 else if (channel.MaxSubscribers > 0 && channel.Subscribers.Count > channel.MaxSubscribers)
                 {
                     if (this.DebugOut >= DebugLevel.WARNING)
                     {
-                        this.listener.DebugReturn(DebugLevel.WARNING, string.Format("Channel \"{0}\"'s MaxSubscribers exceeded. count={1} > MaxSubscribers={2}.", channelName, channel.Subscribers.Count, channel.MaxSubscribers));
+                        this.listener.DebugReturn(DebugLevel.WARNING,
+                            string.Format("Channel \"{0}\"'s MaxSubscribers exceeded. count={1} > MaxSubscribers={2}.",
+                                channelName, channel.Subscribers.Count, channel.MaxSubscribers));
                     }
                 }
-                #if CHAT_EXTENDED
+#if CHAT_EXTENDED
                 object temp;
                 if (eventData.Parameters.TryGetValue(ChatParameterCode.UserProperties, out temp))
                 {
                     Dictionary<object, object> userProperties = temp as Dictionary<object, object>;
                     channel.ReadUserProperties(userId, userProperties);
                 }
-                #endif
+#endif
             }
             else
             {
                 if (this.DebugOut >= DebugLevel.WARNING)
                 {
-                    this.listener.DebugReturn(DebugLevel.WARNING, string.Format("Channel \"{0}\" not found for incoming UserSubscribed (\"{1}\") event.", channelName, userId));
+                    this.listener.DebugReturn(DebugLevel.WARNING,
+                        string.Format("Channel \"{0}\" not found for incoming UserSubscribed (\"{1}\") event.",
+                            channelName, userId));
                 }
             }
+
             this.listener.OnUserSubscribed(channelName, userId);
         }
 
@@ -1611,12 +1737,14 @@ namespace Photon.Chat
         /// <param name="messagesFromHistory">how many missed messages to receive from history, default is -1 (available history). 0 will get you no items. Positive values are capped by a server side limit.</param>
         /// <param name="creationOptions">options to be used in case the channel to subscribe to will be created.</param>
         /// <returns></returns>
-        public bool Subscribe(string channel, int lastMsgId = 0, int messagesFromHistory = -1, ChannelCreationOptions creationOptions = null)
+        public bool Subscribe(string channel, int lastMsgId = 0, int messagesFromHistory = -1,
+            ChannelCreationOptions creationOptions = null)
         {
             if (creationOptions == null)
             {
                 creationOptions = ChannelCreationOptions.Default;
             }
+
             int maxSubscribers = creationOptions.MaxSubscribers;
             bool publishSubscribers = creationOptions.PublishSubscribers;
             if (maxSubscribers < 0)
@@ -1625,32 +1753,41 @@ namespace Photon.Chat
                 {
                     this.listener.DebugReturn(DebugLevel.ERROR, "Cannot set MaxSubscribers < 0.");
                 }
+
                 return false;
             }
+
             if (lastMsgId < 0)
             {
                 if (this.DebugOut >= DebugLevel.ERROR)
                 {
                     this.listener.DebugReturn(DebugLevel.ERROR, "lastMsgId cannot be < 0.");
                 }
+
                 return false;
             }
+
             if (messagesFromHistory < -1)
             {
                 if (this.DebugOut >= DebugLevel.WARNING)
                 {
                     this.listener.DebugReturn(DebugLevel.WARNING, "messagesFromHistory < -1, setting it to -1");
                 }
+
                 messagesFromHistory = -1;
             }
+
             if (lastMsgId > 0 && messagesFromHistory == 0)
             {
                 if (this.DebugOut >= DebugLevel.WARNING)
                 {
-                    this.listener.DebugReturn(DebugLevel.WARNING, "lastMsgId will be ignored because messagesFromHistory == 0");
+                    this.listener.DebugReturn(DebugLevel.WARNING,
+                        "lastMsgId will be ignored because messagesFromHistory == 0");
                 }
+
                 lastMsgId = 0;
             }
+
             Dictionary<object, object> properties = null;
             if (publishSubscribers)
             {
@@ -1659,22 +1796,27 @@ namespace Photon.Chat
                     if (this.DebugOut >= DebugLevel.ERROR)
                     {
                         this.listener.DebugReturn(DebugLevel.ERROR,
-                            string.Format("Cannot set MaxSubscribers > {0} when PublishSubscribers == true.", DefaultMaxSubscribers));
+                            string.Format("Cannot set MaxSubscribers > {0} when PublishSubscribers == true.",
+                                DefaultMaxSubscribers));
                     }
+
                     return false;
                 }
+
                 properties = new Dictionary<object, object>();
                 properties[ChannelWellKnownProperties.PublishSubscribers] = true;
             }
+
             if (maxSubscribers > 0)
             {
                 if (properties == null)
                 {
                     properties = new Dictionary<object, object>();
                 }
+
                 properties[ChannelWellKnownProperties.MaxSubscribers] = maxSubscribers;
             }
-            #if CHAT_EXTENDED
+#if CHAT_EXTENDED
             if (creationOptions.CustomProperties != null && creationOptions.CustomProperties.Count > 0)
             {
                 foreach (var pair in creationOptions.CustomProperties)
@@ -1682,16 +1824,19 @@ namespace Photon.Chat
                     properties.Add(pair.Key, pair.Value);
                 }
             }
-            #endif
-            Dictionary<byte, object> opParameters = new Dictionary<byte, object> { { ChatParameterCode.Channels, new[] { channel } } };
+#endif
+            Dictionary<byte, object> opParameters = new Dictionary<byte, object>
+                { { ChatParameterCode.Channels, new[] { channel } } };
             if (messagesFromHistory != 0)
             {
                 opParameters.Add(ChatParameterCode.HistoryLength, messagesFromHistory);
             }
+
             if (lastMsgId > 0)
             {
                 opParameters.Add(ChatParameterCode.MsgIds, new[] { lastMsgId });
             }
+
             if (properties != null && properties.Count > 0)
             {
                 opParameters.Add(ChatParameterCode.Properties, properties);
@@ -1700,9 +1845,9 @@ namespace Photon.Chat
             return this.chatPeer.SendOperation(ChatOperationCode.Subscribe, opParameters, SendOptions.SendReliable);
         }
 
-        #if CHAT_EXTENDED
-
-        internal bool SetChannelProperties(string channelName, Dictionary<object, object> channelProperties, Dictionary<object, object> expectedProperties = null, bool httpForward = false)
+#if CHAT_EXTENDED
+        internal bool SetChannelProperties(string channelName, Dictionary<object, object> channelProperties, Dictionary<object, object> expectedProperties
+ = null, bool httpForward = false)
         {
             if (!this.CanChat)
             {
@@ -1732,7 +1877,8 @@ namespace Photon.Chat
             return this.chatPeer.SendOperation(ChatOperationCode.SetProperties, parameters, SendOptions.SendReliable);
         }
 
-        public bool SetCustomChannelProperties(string channelName, Dictionary<string, object> channelProperties, Dictionary<string, object> expectedProperties = null, bool httpForward = false)
+        public bool SetCustomChannelProperties(string channelName, Dictionary<string, object> channelProperties, Dictionary<string, object> expectedProperties
+ = null, bool httpForward = false)
         {
             if (channelProperties != null && channelProperties.Count > 0)
             {
@@ -1755,7 +1901,8 @@ namespace Photon.Chat
             return this.SetChannelProperties(channelName, null);
         }
 
-        public bool SetCustomUserProperties(string channelName, string userId, Dictionary<string, object> userProperties, Dictionary<string, object> expectedProperties = null, bool httpForward = false)
+        public bool SetCustomUserProperties(string channelName, string userId, Dictionary<string, object> userProperties, Dictionary<string, object> expectedProperties
+ = null, bool httpForward = false)
         {
             if (userProperties != null && userProperties.Count > 0)
             {
@@ -1778,7 +1925,8 @@ namespace Photon.Chat
             return this.SetUserProperties(channelName, userId, null);
         }
 
-        internal bool SetUserProperties(string channelName, string userId, Dictionary<object, object> channelProperties, Dictionary<object, object> expectedProperties = null, bool httpForward = false)
+        internal bool SetUserProperties(string channelName, string userId, Dictionary<object, object> channelProperties, Dictionary<object, object> expectedProperties
+ = null, bool httpForward = false)
         {
             if (!this.CanChat)
             {
@@ -1828,7 +1976,8 @@ namespace Photon.Chat
                 return;
             }
             string senderId = eventData.Parameters[ChatParameterCode.Sender] as string;
-            Dictionary<object, object> changedProperties = eventData.Parameters[ChatParameterCode.Properties] as Dictionary<object, object>;
+            Dictionary<object, object> changedProperties =
+ eventData.Parameters[ChatParameterCode.Properties] as Dictionary<object, object>;
             object temp;
             if (eventData.Parameters.TryGetValue(ChatParameterCode.UserId, out temp))
             {
@@ -1851,6 +2000,6 @@ namespace Photon.Chat
             this.listener.OnErrorInfo(channel, msg, data);
         }
 
-        #endif
+#endif
     }
 }

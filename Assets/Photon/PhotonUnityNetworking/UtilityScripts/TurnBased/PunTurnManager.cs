@@ -10,11 +10,8 @@
 
 using System;
 using System.Collections.Generic;
-
 using UnityEngine;
-
 using Photon.Realtime;
-
 using ExitGames.Client.Photon;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
 
@@ -25,14 +22,13 @@ namespace Photon.Pun.UtilityScripts
     /// Provides an Interface (IPunTurnManagerCallbacks) for the typical turn flow and logic, between players
     /// Provides Extensions for Player, Room and RoomInfo to feature dedicated api for TurnBased Needs
     /// </summary>
-	public class PunTurnManager : MonoBehaviourPunCallbacks, IOnEventCallback
+    public class PunTurnManager : MonoBehaviourPunCallbacks, IOnEventCallback
     {
-        
         /// <summary>
         /// External definition for better garbage collection management, used in ProcessEvent.
         /// </summary>
         Player sender;
-        
+
         /// <summary>
         /// Wraps accessing the "turn" custom properties of a room.
         /// </summary>
@@ -42,7 +38,6 @@ namespace Photon.Pun.UtilityScripts
             get { return PhotonNetwork.CurrentRoom.GetTurn(); }
             private set
             {
-
                 _isOverCallProcessed = false;
 
                 PhotonNetwork.CurrentRoom.SetTurn(value, true);
@@ -61,7 +56,10 @@ namespace Photon.Pun.UtilityScripts
         /// <value>The elapsed time in the turn.</value>
         public float ElapsedTimeInTurn
         {
-            get { return ((float) (PhotonNetwork.ServerTimestamp - PhotonNetwork.CurrentRoom.GetTurnStart())) / 1000.0f; }
+            get
+            {
+                return ((float)(PhotonNetwork.ServerTimestamp - PhotonNetwork.CurrentRoom.GetTurnStart())) / 1000.0f;
+            }
         }
 
 
@@ -81,7 +79,11 @@ namespace Photon.Pun.UtilityScripts
         /// <value><c>true</c> if this turn is completed by all; otherwise, <c>false</c>.</value>
         public bool IsCompletedByAll
         {
-            get { return PhotonNetwork.CurrentRoom != null && Turn > 0 && this.finishedPlayers.Count == PhotonNetwork.CurrentRoom.PlayerCount; }
+            get
+            {
+                return PhotonNetwork.CurrentRoom != null && Turn > 0 &&
+                       this.finishedPlayers.Count == PhotonNetwork.CurrentRoom.PlayerCount;
+            }
         }
 
         /// <summary>
@@ -133,8 +135,9 @@ namespace Photon.Pun.UtilityScripts
 
         #region MonoBehaviour CallBack
 
-
-        void Start(){}
+        void Start()
+        {
+        }
 
         void Update()
         {
@@ -143,7 +146,6 @@ namespace Photon.Pun.UtilityScripts
                 _isOverCallProcessed = true;
                 this.TurnManagerListener.OnTurnTimeEnds(this.Turn);
             }
-
         }
 
         #endregion
@@ -154,7 +156,8 @@ namespace Photon.Pun.UtilityScripts
         /// </summary>
         public void BeginTurn()
         {
-            Turn = this.Turn + 1; // note: this will set a property in the room, which is available to the other players.
+            Turn = this.Turn +
+                   1; // note: this will set a property in the room, which is available to the other players.
         }
 
 
@@ -178,7 +181,8 @@ namespace Photon.Pun.UtilityScripts
             moveHt.Add("move", move);
 
             byte evCode = (finished) ? EvFinalMove : EvMove;
-            PhotonNetwork.RaiseEvent(evCode, moveHt, new RaiseEventOptions() {CachingOption = EventCaching.AddToRoomCache}, SendOptions.SendReliable);
+            PhotonNetwork.RaiseEvent(evCode, moveHt,
+                new RaiseEventOptions() { CachingOption = EventCaching.AddToRoomCache }, SendOptions.SendReliable);
             if (finished)
             {
                 PhotonNetwork.LocalPlayer.SetFinishedTurn(Turn);
@@ -186,7 +190,7 @@ namespace Photon.Pun.UtilityScripts
 
             // the server won't send the event back to the origin (by default). to get the event, call it locally
             // (note: the order of events might be mixed up as we do this locally)
-			ProcessOnEvent(evCode, moveHt, PhotonNetwork.LocalPlayer.ActorNumber);
+            ProcessOnEvent(evCode, moveHt, PhotonNetwork.LocalPlayer.ActorNumber);
         }
 
         /// <summary>
@@ -206,57 +210,57 @@ namespace Photon.Pun.UtilityScripts
 
         #region Callbacks
 
-		// called internally
-		void ProcessOnEvent(byte eventCode, object content, int senderId)
-		{
+        // called internally
+        void ProcessOnEvent(byte eventCode, object content, int senderId)
+        {
             if (senderId == -1)
             {
                 return;
             }
-            
+
             sender = PhotonNetwork.CurrentRoom.GetPlayer(senderId);
-            
+
             switch (eventCode)
-			{
-			case EvMove:
-				{
-					Hashtable evTable = content as Hashtable;
-					int turn = (int)evTable["turn"];
-					object move = evTable["move"];
-					this.TurnManagerListener.OnPlayerMove(sender, turn, move);
+            {
+                case EvMove:
+                {
+                    Hashtable evTable = content as Hashtable;
+                    int turn = (int)evTable["turn"];
+                    object move = evTable["move"];
+                    this.TurnManagerListener.OnPlayerMove(sender, turn, move);
 
-					break;
-				}
-			case EvFinalMove:
-				{
-					Hashtable evTable = content as Hashtable;
-					int turn = (int)evTable["turn"];
-					object move = evTable["move"];
+                    break;
+                }
+                case EvFinalMove:
+                {
+                    Hashtable evTable = content as Hashtable;
+                    int turn = (int)evTable["turn"];
+                    object move = evTable["move"];
 
-					if (turn == this.Turn)
-					{
-						this.finishedPlayers.Add(sender);
+                    if (turn == this.Turn)
+                    {
+                        this.finishedPlayers.Add(sender);
 
-						this.TurnManagerListener.OnPlayerFinished(sender, turn, move);
+                        this.TurnManagerListener.OnPlayerFinished(sender, turn, move);
+                    }
 
-					}
+                    if (IsCompletedByAll)
+                    {
+                        this.TurnManagerListener.OnTurnCompleted(this.Turn);
+                    }
 
-					if (IsCompletedByAll)
-					{
-						this.TurnManagerListener.OnTurnCompleted(this.Turn);
-					}
-					break;
-				}
-			}
-		}
+                    break;
+                }
+            }
+        }
 
         /// <summary>
         /// Called by PhotonNetwork.OnEventCall registration
         /// </summary>
-		/// <param name="photonEvent">Photon event.</param>
-		public void OnEvent(EventData photonEvent)
+        /// <param name="photonEvent">Photon event.</param>
+        public void OnEvent(EventData photonEvent)
         {
-			this.ProcessOnEvent(photonEvent.Code, photonEvent.CustomData, photonEvent.Sender);
+            this.ProcessOnEvent(photonEvent.Code, photonEvent.CustomData, photonEvent.Sender);
         }
 
         /// <summary>
@@ -265,7 +269,6 @@ namespace Photon.Pun.UtilityScripts
         /// <param name="propertiesThatChanged">Properties that changed.</param>
         public override void OnRoomPropertiesUpdate(Hashtable propertiesThatChanged)
         {
-
             //   Debug.Log("OnRoomPropertiesUpdate: "+propertiesThatChanged.ToStringFull());
 
             if (propertiesThatChanged.ContainsKey("Turn"))
@@ -371,7 +374,7 @@ namespace Photon.Pun.UtilityScripts
                 return 0;
             }
 
-            return (int) room.CustomProperties[TurnPropKey];
+            return (int)room.CustomProperties[TurnPropKey];
         }
 
 
@@ -387,7 +390,7 @@ namespace Photon.Pun.UtilityScripts
                 return 0;
             }
 
-            return (int) room.CustomProperties[TurnStartPropKey];
+            return (int)room.CustomProperties[TurnStartPropKey];
         }
 
         /// <summary>
@@ -404,7 +407,7 @@ namespace Photon.Pun.UtilityScripts
             }
 
             string propKey = FinishedTurnPropKey + player.ActorNumber;
-            return (int) room.CustomProperties[propKey];
+            return (int)room.CustomProperties[propKey];
         }
 
         /// <summary>

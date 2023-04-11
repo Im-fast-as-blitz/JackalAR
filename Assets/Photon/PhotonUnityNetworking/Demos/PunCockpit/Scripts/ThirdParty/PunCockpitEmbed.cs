@@ -9,10 +9,8 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 using System.Collections;
-
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
 using Photon.Pun.UtilityScripts;
 
 namespace Photon.Pun.Demo.Cockpit
@@ -23,7 +21,6 @@ namespace Photon.Pun.Demo.Cockpit
     /// </summary>
     public class PunCockpitEmbed : MonoBehaviourPunCallbacks
     {
-
         string PunCockpit_scene = "PunCockpit-Scene";
 
         public bool EmbeddCockpit = true;
@@ -43,8 +40,6 @@ namespace Photon.Pun.Demo.Cockpit
         // Use this for initialization
         IEnumerator Start()
         {
-
-
             PunCockpit.Embedded = EmbeddCockpit;
             PunCockpit.EmbeddedGameTitle = CockpitGameTitle;
 
@@ -56,7 +51,6 @@ namespace Photon.Pun.Demo.Cockpit
 
             if (SceneManager.sceneCount == 1)
             {
-
                 AutoConnect.ConnectNow();
 
                 if (LoadingIndicator != null)
@@ -87,16 +81,9 @@ namespace Photon.Pun.Demo.Cockpit
             {
                 //Debug.Log("switch to minimal panel", this);
                 PunCockpit.Instance.SwitchtoMinimalPanel();
-
             }
         }
+
         #endregion
-
-
-
-
-
     }
-
-
 }

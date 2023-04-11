@@ -22,7 +22,8 @@ namespace Photon.Pun.Demo.Cockpit
         {
             if (PhotonNetwork.CurrentRoom != null)
             {
-                if ((PhotonNetwork.CurrentRoom.IsOpen && _cache != 1) || (!PhotonNetwork.CurrentRoom.IsOpen && _cache != 0))
+                if ((PhotonNetwork.CurrentRoom.IsOpen && _cache != 1) ||
+                    (!PhotonNetwork.CurrentRoom.IsOpen && _cache != 0))
                 {
                     _cache = PhotonNetwork.CurrentRoom.IsOpen ? 1 : 0;
                     Text.text = PhotonNetwork.CurrentRoom.IsOpen ? "true" : "false";

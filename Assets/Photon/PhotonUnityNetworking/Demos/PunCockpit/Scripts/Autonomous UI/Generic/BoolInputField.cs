@@ -19,7 +19,9 @@ namespace Photon.Pun.Demo.Cockpit
         public Toggle PropertyValueInput;
 
         [System.Serializable]
-        public class OnSubmitEvent : UnityEvent<bool> { }
+        public class OnSubmitEvent : UnityEvent<bool>
+        {
+        }
 
         public OnSubmitEvent OnSubmit;
 
@@ -49,6 +51,5 @@ namespace Photon.Pun.Demo.Cockpit
         {
             PropertyValueInput.isOn = value;
         }
-
     }
 }

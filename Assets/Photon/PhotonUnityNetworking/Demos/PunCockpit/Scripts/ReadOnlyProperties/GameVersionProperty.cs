@@ -10,21 +10,22 @@ using UnityEngine.UI;
 
 namespace Photon.Pun.Demo.Cockpit
 {
-	/// <summary>
-	/// PhotonNetwork.GameVersion UI property.
-	/// </summary>
-	public class GameVersionProperty : MonoBehaviour 
+    /// <summary>
+    /// PhotonNetwork.GameVersion UI property.
+    /// </summary>
+    public class GameVersionProperty : MonoBehaviour
     {
-		public Text Text;
+        public Text Text;
 
-		string _cache;
+        string _cache;
 
-		void Update()
-		{
-			if (PhotonNetwork.GameVersion != _cache) {
-				_cache = PhotonNetwork.GameVersion;
-				Text.text = _cache;
-			}
-		}
-	}
+        void Update()
+        {
+            if (PhotonNetwork.GameVersion != _cache)
+            {
+                _cache = PhotonNetwork.GameVersion;
+                Text.text = _cache;
+            }
+        }
+    }
 }

@@ -67,9 +67,9 @@ namespace Photon.Pun
 
         #region Properties
 
-        #if PHOTON_DEVELOP
+#if PHOTON_DEVELOP
         public PhotonAnimatorView ReceivingSender;
-        #endif
+#endif
 
         #endregion
 
@@ -77,31 +77,25 @@ namespace Photon.Pun
         #region Members
 
         private bool TriggerUsageWarningDone;
-        
+
         private Animator m_Animator;
 
         private PhotonStreamQueue m_StreamQueue = new PhotonStreamQueue(120);
 
         //These fields are only used in the CustomEditor for this script and would trigger a
         //"this variable is never used" warning, which I am suppressing here
-        #pragma warning disable 0414
+#pragma warning disable 0414
 
-        [HideInInspector]
-        [SerializeField]
-        private bool ShowLayerWeightsInspector = true;
+        [HideInInspector] [SerializeField] private bool ShowLayerWeightsInspector = true;
 
-        [HideInInspector]
-        [SerializeField]
-        private bool ShowParameterInspector = true;
+        [HideInInspector] [SerializeField] private bool ShowParameterInspector = true;
 
-        #pragma warning restore 0414
+#pragma warning restore 0414
 
-        [HideInInspector]
-        [SerializeField]
+        [HideInInspector] [SerializeField]
         private List<SynchronizedParameter> m_SynchronizeParameters = new List<SynchronizedParameter>();
 
-        [HideInInspector]
-        [SerializeField]
+        [HideInInspector] [SerializeField]
         private List<SynchronizedLayer> m_SynchronizeLayers = new List<SynchronizedLayer>();
 
         private Vector3 m_ReceiverPosition;
@@ -163,7 +157,8 @@ namespace Photon.Pun
             {
                 SynchronizedParameter parameter = this.m_SynchronizeParameters[i];
 
-                if (parameter.SynchronizeType == SynchronizeType.Discrete && parameter.Type == ParameterType.Trigger && this.m_Animator.GetBool(parameter.Name))
+                if (parameter.SynchronizeType == SynchronizeType.Discrete && parameter.Type == ParameterType.Trigger &&
+                    this.m_Animator.GetBool(parameter.Name))
                 {
                     if (parameter.Type == ParameterType.Trigger)
                     {
@@ -262,7 +257,8 @@ namespace Photon.Pun
 
             if (index == -1)
             {
-                this.m_SynchronizeLayers.Add(new SynchronizedLayer {LayerIndex = layerIndex, SynchronizeType = synchronizeType});
+                this.m_SynchronizeLayers.Add(new SynchronizedLayer
+                    { LayerIndex = layerIndex, SynchronizeType = synchronizeType });
             }
             else
             {
@@ -287,7 +283,8 @@ namespace Photon.Pun
 
             if (index == -1)
             {
-                this.m_SynchronizeParameters.Add(new SynchronizedParameter {Name = name, Type = type, SynchronizeType = synchronizeType});
+                this.m_SynchronizeParameters.Add(new SynchronizedParameter
+                    { Name = name, Type = type, SynchronizeType = synchronizeType });
             }
             else
             {
@@ -336,11 +333,12 @@ namespace Photon.Pun
                             if (!TriggerUsageWarningDone)
                             {
                                 TriggerUsageWarningDone = true;
-                                Debug.Log("PhotonAnimatorView: When using triggers, make sure this component is last in the stack.\n" +
-                                          "If you still experience issues, implement triggers as a regular RPC \n" +
-                                          "or in custom IPunObservable component instead",this);
-                            
+                                Debug.Log(
+                                    "PhotonAnimatorView: When using triggers, make sure this component is last in the stack.\n" +
+                                    "If you still experience issues, implement triggers as a regular RPC \n" +
+                                    "or in custom IPunObservable component instead", this);
                             }
+
                             this.m_StreamQueue.SendNext(this.m_Animator.GetBool(parameter.Name));
                             break;
                     }
@@ -360,7 +358,8 @@ namespace Photon.Pun
             {
                 if (this.m_SynchronizeLayers[i].SynchronizeType == SynchronizeType.Continuous)
                 {
-                    this.m_Animator.SetLayerWeight(this.m_SynchronizeLayers[i].LayerIndex, (float) this.m_StreamQueue.ReceiveNext());
+                    this.m_Animator.SetLayerWeight(this.m_SynchronizeLayers[i].LayerIndex,
+                        (float)this.m_StreamQueue.ReceiveNext());
                 }
             }
 
@@ -373,16 +372,16 @@ namespace Photon.Pun
                     switch (parameter.Type)
                     {
                         case ParameterType.Bool:
-                            this.m_Animator.SetBool(parameter.Name, (bool) this.m_StreamQueue.ReceiveNext());
+                            this.m_Animator.SetBool(parameter.Name, (bool)this.m_StreamQueue.ReceiveNext());
                             break;
                         case ParameterType.Float:
-                            this.m_Animator.SetFloat(parameter.Name, (float) this.m_StreamQueue.ReceiveNext());
+                            this.m_Animator.SetFloat(parameter.Name, (float)this.m_StreamQueue.ReceiveNext());
                             break;
                         case ParameterType.Int:
-                            this.m_Animator.SetInteger(parameter.Name, (int) this.m_StreamQueue.ReceiveNext());
+                            this.m_Animator.SetInteger(parameter.Name, (int)this.m_StreamQueue.ReceiveNext());
                             break;
                         case ParameterType.Trigger:
-                            this.m_Animator.SetBool(parameter.Name, (bool) this.m_StreamQueue.ReceiveNext());
+                            this.m_Animator.SetBool(parameter.Name, (bool)this.m_StreamQueue.ReceiveNext());
                             break;
                     }
                 }
@@ -401,9 +400,8 @@ namespace Photon.Pun
 
             for (int i = 0; i < this.m_SynchronizeParameters.Count; ++i)
             {
-               
                 SynchronizedParameter parameter = this.m_SynchronizeParameters[i];
-       
+
                 if (parameter.SynchronizeType == SynchronizeType.Discrete)
                 {
                     switch (parameter.Type)
@@ -421,11 +419,12 @@ namespace Photon.Pun
                             if (!TriggerUsageWarningDone)
                             {
                                 TriggerUsageWarningDone = true;
-                                Debug.Log("PhotonAnimatorView: When using triggers, make sure this component is last in the stack.\n" +
-                                          "If you still experience issues, implement triggers as a regular RPC \n" +
-                                          "or in custom IPunObservable component instead",this);
-                            
+                                Debug.Log(
+                                    "PhotonAnimatorView: When using triggers, make sure this component is last in the stack.\n" +
+                                    "If you still experience issues, implement triggers as a regular RPC \n" +
+                                    "or in custom IPunObservable component instead", this);
                             }
+
                             // here we can't rely on the current real state of the trigger, we might have missed its raise
                             stream.SendNext(this.m_raisedDiscreteTriggersCache.Contains(parameter.Name));
                             break;
@@ -443,7 +442,7 @@ namespace Photon.Pun
             {
                 if (this.m_SynchronizeLayers[i].SynchronizeType == SynchronizeType.Discrete)
                 {
-                    this.m_Animator.SetLayerWeight(this.m_SynchronizeLayers[i].LayerIndex, (float) stream.ReceiveNext());
+                    this.m_Animator.SetLayerWeight(this.m_SynchronizeLayers[i].LayerIndex, (float)stream.ReceiveNext());
                 }
             }
 
@@ -460,7 +459,8 @@ namespace Photon.Pun
                             {
                                 return;
                             }
-                            this.m_Animator.SetBool(parameter.Name, (bool) stream.ReceiveNext());
+
+                            this.m_Animator.SetBool(parameter.Name, (bool)stream.ReceiveNext());
                             break;
                         case ParameterType.Float:
                             if (stream.PeekNext() is float == false)
@@ -468,7 +468,7 @@ namespace Photon.Pun
                                 return;
                             }
 
-                            this.m_Animator.SetFloat(parameter.Name, (float) stream.ReceiveNext());
+                            this.m_Animator.SetFloat(parameter.Name, (float)stream.ReceiveNext());
                             break;
                         case ParameterType.Int:
                             if (stream.PeekNext() is int == false)
@@ -476,7 +476,7 @@ namespace Photon.Pun
                                 return;
                             }
 
-                            this.m_Animator.SetInteger(parameter.Name, (int) stream.ReceiveNext());
+                            this.m_Animator.SetInteger(parameter.Name, (int)stream.ReceiveNext());
                             break;
                         case ParameterType.Trigger:
                             if (stream.PeekNext() is bool == false)
@@ -484,10 +484,11 @@ namespace Photon.Pun
                                 return;
                             }
 
-                            if ((bool) stream.ReceiveNext())
+                            if ((bool)stream.ReceiveNext())
                             {
                                 this.m_Animator.SetTrigger(parameter.Name);
                             }
+
                             break;
                     }
                 }
@@ -500,12 +501,12 @@ namespace Photon.Pun
 
             for (int i = 0; i < this.m_SynchronizeLayers.Count; ++i)
             {
-                states[i] = (byte) this.m_SynchronizeLayers[i].SynchronizeType;
+                states[i] = (byte)this.m_SynchronizeLayers[i].SynchronizeType;
             }
 
             for (int i = 0; i < this.m_SynchronizeParameters.Count; ++i)
             {
-                states[this.m_SynchronizeLayers.Count + i] = (byte) this.m_SynchronizeParameters[i].SynchronizeType;
+                states[this.m_SynchronizeLayers.Count + i] = (byte)this.m_SynchronizeParameters[i].SynchronizeType;
             }
 
             stream.SendNext(states);
@@ -513,16 +514,17 @@ namespace Photon.Pun
 
         private void DeserializeSynchronizationTypeState(PhotonStream stream)
         {
-            byte[] state = (byte[]) stream.ReceiveNext();
+            byte[] state = (byte[])stream.ReceiveNext();
 
             for (int i = 0; i < this.m_SynchronizeLayers.Count; ++i)
             {
-                this.m_SynchronizeLayers[i].SynchronizeType = (SynchronizeType) state[i];
+                this.m_SynchronizeLayers[i].SynchronizeType = (SynchronizeType)state[i];
             }
 
             for (int i = 0; i < this.m_SynchronizeParameters.Count; ++i)
             {
-                this.m_SynchronizeParameters[i].SynchronizeType = (SynchronizeType) state[this.m_SynchronizeLayers.Count + i];
+                this.m_SynchronizeParameters[i].SynchronizeType =
+                    (SynchronizeType)state[this.m_SynchronizeLayers.Count + i];
             }
         }
 
@@ -548,13 +550,13 @@ namespace Photon.Pun
             }
             else
             {
-                #if PHOTON_DEVELOP
+#if PHOTON_DEVELOP
                 if( ReceivingSender != null )
                 {
                     ReceivingSender.OnPhotonSerializeView( stream, info );
                 }
                 else
-                #endif
+#endif
                 {
                     if (stream.PeekNext() is byte[])
                     {

@@ -12,7 +12,6 @@
 
 
 using UnityEngine;
-
 using Photon.Pun;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
@@ -52,7 +51,8 @@ namespace Photon.Pun.UtilityScripts
 
             if (this.Peer == null)
             {
-                this.WindowRect = GUILayout.Window(this.WindowId, this.WindowRect, this.NetSimHasNoPeerWindow, "Netw. Sim.");
+                this.WindowRect = GUILayout.Window(this.WindowId, this.WindowRect, this.NetSimHasNoPeerWindow,
+                    "Netw. Sim.");
             }
             else
             {
@@ -67,7 +67,8 @@ namespace Photon.Pun.UtilityScripts
 
         private void NetSimWindow(int windowId)
         {
-            GUILayout.Label(string.Format("Rtt:{0,4} +/-{1,3}", this.Peer.RoundTripTime, this.Peer.RoundTripTimeVariance));
+            GUILayout.Label(string.Format("Rtt:{0,4} +/-{1,3}", this.Peer.RoundTripTime,
+                this.Peer.RoundTripTimeVariance));
 
             bool simEnabled = this.Peer.IsSimulationEnabled;
             bool newSimEnabled = GUILayout.Toggle(simEnabled, "Simulate");

@@ -15,10 +15,10 @@ namespace Photon.Realtime
     using System;
     using ExitGames.Client.Photon;
 
-    #if SUPPORTED_UNITY || NETFX_CORE
+#if SUPPORTED_UNITY || NETFX_CORE
     using Hashtable = ExitGames.Client.Photon.Hashtable;
     using SupportClass = ExitGames.Client.Photon.SupportClass;
-    #endif
+#endif
 
 
     /// <summary>
@@ -27,9 +27,9 @@ namespace Photon.Realtime
     /// <remarks>
     /// This is Serializable for Unity, so it can be included in ScriptableObject instances.
     /// </remarks>
-    #if !NETFX_CORE || SUPPORTED_UNITY
+#if !NETFX_CORE || SUPPORTED_UNITY
     [Serializable]
-    #endif
+#endif
     public class AppSettings
     {
         /// <summary>AppId for Realtime or PUN.</summary>
@@ -67,9 +67,9 @@ namespace Photon.Realtime
         /// If <see cref="LoadBalancingClient.SummaryToCache"/> is not null, store this string.
         /// To avoid storing the value multiple times, you could set SummaryToCache to null.
         /// </remarks>
-        #if SUPPORTED_UNITY
+#if SUPPORTED_UNITY
         [NonSerialized]
-        #endif
+#endif
         public string BestRegionSummaryFromStorage;
 
         /// <summary>The address (hostname or IP) of the server to connect to.</summary>
@@ -126,26 +126,32 @@ namespace Photon.Realtime
         public string ToStringFull()
         {
             return string.Format(
-                                 "appId {0}{1}{2}{3}" +
-                                 "use ns: {4}, reg: {5}, {9}, " +
-                                 "{6}{7}{8}" +
-                                 "auth: {10}",
-                                 String.IsNullOrEmpty(this.AppIdRealtime) ? string.Empty : "Realtime/PUN: " + this.HideAppId(this.AppIdRealtime) + ", ",
-                                 String.IsNullOrEmpty(this.AppIdFusion) ? string.Empty : "Fusion: " + this.HideAppId(this.AppIdFusion) + ", ",
-                                 String.IsNullOrEmpty(this.AppIdChat) ? string.Empty : "Chat: " + this.HideAppId(this.AppIdChat) + ", ",
-                                 String.IsNullOrEmpty(this.AppIdVoice) ? string.Empty : "Voice: " + this.HideAppId(this.AppIdVoice) + ", ",
-                                 String.IsNullOrEmpty(this.AppVersion) ? string.Empty : "AppVersion: " + this.AppVersion + ", ",
-                                 "UseNameServer: " + this.UseNameServer + ", ",
-                                 "Fixed Region: " + this.FixedRegion + ", ",
-                                 //this.BestRegionSummaryFromStorage,
-                                 String.IsNullOrEmpty(this.Server) ? string.Empty : "Server: " + this.Server + ", ",
-                                 this.IsDefaultPort ? string.Empty : "Port: " + this.Port + ", ",
-                                 String.IsNullOrEmpty(ProxyServer) ? string.Empty : "Proxy: " + this.ProxyServer + ", ",
-                                 this.Protocol,
-                                 this.AuthMode
-                                 //this.EnableLobbyStatistics,
-                                 //this.NetworkLogging,
-                                );
+                "appId {0}{1}{2}{3}" +
+                "use ns: {4}, reg: {5}, {9}, " +
+                "{6}{7}{8}" +
+                "auth: {10}",
+                String.IsNullOrEmpty(this.AppIdRealtime)
+                    ? string.Empty
+                    : "Realtime/PUN: " + this.HideAppId(this.AppIdRealtime) + ", ",
+                String.IsNullOrEmpty(this.AppIdFusion)
+                    ? string.Empty
+                    : "Fusion: " + this.HideAppId(this.AppIdFusion) + ", ",
+                String.IsNullOrEmpty(this.AppIdChat) ? string.Empty : "Chat: " + this.HideAppId(this.AppIdChat) + ", ",
+                String.IsNullOrEmpty(this.AppIdVoice)
+                    ? string.Empty
+                    : "Voice: " + this.HideAppId(this.AppIdVoice) + ", ",
+                String.IsNullOrEmpty(this.AppVersion) ? string.Empty : "AppVersion: " + this.AppVersion + ", ",
+                "UseNameServer: " + this.UseNameServer + ", ",
+                "Fixed Region: " + this.FixedRegion + ", ",
+                //this.BestRegionSummaryFromStorage,
+                String.IsNullOrEmpty(this.Server) ? string.Empty : "Server: " + this.Server + ", ",
+                this.IsDefaultPort ? string.Empty : "Port: " + this.Port + ", ",
+                String.IsNullOrEmpty(ProxyServer) ? string.Empty : "Proxy: " + this.ProxyServer + ", ",
+                this.Protocol,
+                this.AuthMode
+                //this.EnableLobbyStatistics,
+                //this.NetworkLogging,
+            );
         }
 
 
@@ -170,8 +176,8 @@ namespace Photon.Realtime
         private string HideAppId(string appId)
         {
             return string.IsNullOrEmpty(appId) || appId.Length < 8
-                       ? appId
-                       : string.Concat(appId.Substring(0, 8), "***");
+                ? appId
+                : string.Concat(appId.Substring(0, 8), "***");
         }
 
         public AppSettings CopyTo(AppSettings d)

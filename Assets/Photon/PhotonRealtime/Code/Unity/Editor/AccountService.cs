@@ -45,7 +45,7 @@ namespace Photon.Realtime
         /// <summary>
         /// third parties custom context, if null, defaults to DefaultContext property value
         /// </summary>
-        public string CustomContext = null;     // "PartnerCode" on the server
+        public string CustomContext = null; // "PartnerCode" on the server
 
         /// <summary>
         /// third parties custom token. If null, defaults to DefaultToken property value
@@ -68,7 +68,8 @@ namespace Photon.Realtime
         /// <param name="callback">Called when the result is available.</param>
         /// <param name="errorCallback">Called when the request failed.</param>
         /// <param name="origin">Can be used to identify the origin of the registration (which package is being used).</param>
-        public bool RegisterByEmail(string email, List<ServiceTypes> serviceTypes, Action<AccountServiceResponse> callback = null, Action<string> errorCallback = null, string origin = null)
+        public bool RegisterByEmail(string email, List<ServiceTypes> serviceTypes,
+            Action<AccountServiceResponse> callback = null, Action<string> errorCallback = null, string origin = null)
         {
             if (this.RequestPendingResult)
             {
@@ -108,7 +109,8 @@ namespace Photon.Realtime
                         {
                             if (errorCallback != null)
                             {
-                                errorCallback("Server's response was empty. Please register through account website during this service interruption.");
+                                errorCallback(
+                                    "Server's response was empty. Please register through account website during this service interruption.");
                             }
                         }
                         else
@@ -118,7 +120,8 @@ namespace Photon.Realtime
                             {
                                 if (errorCallback != null)
                                 {
-                                    errorCallback("Error parsing registration response. Please try registering from account website");
+                                    errorCallback(
+                                        "Error parsing registration response. Please try registering from account website");
                                 }
                             }
                             else if (callback != null)
@@ -145,7 +148,8 @@ namespace Photon.Realtime
             string emailEscaped = UnityEngine.Networking.UnityWebRequest.EscapeURL(email);
             string st = UnityEngine.Networking.UnityWebRequest.EscapeURL(serviceTypes);
             string uv = UnityEngine.Networking.UnityWebRequest.EscapeURL(Application.unityVersion);
-            string serviceUrl = string.Format(ServiceUrl, string.IsNullOrEmpty(CustomContext) ? DefaultContext : CustomContext );
+            string serviceUrl = string.Format(ServiceUrl,
+                string.IsNullOrEmpty(CustomContext) ? DefaultContext : CustomContext);
 
             return string.Format("{0}?email={1}&st={2}&uv={3}&av={4}", serviceUrl, emailEscaped, st, uv, originAv);
         }
@@ -162,7 +166,8 @@ namespace Photon.Realtime
                 // Unity's JsonUtility does not support deserializing Dictionary, we manually parse it, dirty & ugly af, better then using a 3rd party lib
                 if (res.ReturnCode == AccountServiceReturnCodes.Success)
                 {
-                    string[] parts = result.Split(new[] { "\"ApplicationIds\":{" }, StringSplitOptions.RemoveEmptyEntries);
+                    string[] parts = result.Split(new[] { "\"ApplicationIds\":{" },
+                        StringSplitOptions.RemoveEmptyEntries);
                     parts = parts[1].Split('}');
                     string applicationIds = parts[0];
                     if (!string.IsNullOrEmpty(applicationIds))
@@ -176,10 +181,12 @@ namespace Photon.Realtime
                     }
                     else
                     {
-                        Debug.LogError("The server did not return any AppId, ApplicationIds was empty in the response.");
+                        Debug.LogError(
+                            "The server did not return any AppId, ApplicationIds was empty in the response.");
                         return null;
                     }
                 }
+
                 return res;
             }
             catch (Exception ex) // probably JSON parsing exception, check if returned string is valid JSON
@@ -213,14 +220,17 @@ namespace Photon.Realtime
 
         // RFC2822 compliant matching 99.9% of all email addresses in actual use today
         // according to http://www.regular-expressions.info/email.html [22.02.2012]
-        private static Regex reg = new Regex("^((?>[a-zA-Z\\d!#$%&'*+\\-/=?^_{|}~]+\\x20*|\"((?=[\\x01-\\x7f])[^\"\\]|\\[\\x01-\\x7f])*\"\\x20*)*(?<angle><))?((?!\\.)(?>\\.?[a-zA-Z\\d!#$%&'*+\\-/=?^_{|}~]+)+|\"((?=[\\x01-\\x7f])[^\"\\]|\\[\\x01-\\x7f])*\")@(((?!-)[a-zA-Z\\d\\-]+(?<!-)\\.)+[a-zA-Z]{2,}|\\[(((?(?<!\\[)\\.)(25[0-5]|2[0-4]\\d|[01]?\\d?\\d)){4}|[a-zA-Z\\d\\-]*[a-zA-Z\\d]:((?=[\\x01-\\x7f])[^\\\\[\\]]|\\[\\x01-\\x7f])+)\\])(?(angle)>)$",
-             RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+        private static Regex reg = new Regex(
+            "^((?>[a-zA-Z\\d!#$%&'*+\\-/=?^_{|}~]+\\x20*|\"((?=[\\x01-\\x7f])[^\"\\]|\\[\\x01-\\x7f])*\"\\x20*)*(?<angle><))?((?!\\.)(?>\\.?[a-zA-Z\\d!#$%&'*+\\-/=?^_{|}~]+)+|\"((?=[\\x01-\\x7f])[^\"\\]|\\[\\x01-\\x7f])*\")@(((?!-)[a-zA-Z\\d\\-]+(?<!-)\\.)+[a-zA-Z]{2,}|\\[(((?(?<!\\[)\\.)(25[0-5]|2[0-4]\\d|[01]?\\d?\\d)){4}|[a-zA-Z\\d\\-]*[a-zA-Z\\d]:((?=[\\x01-\\x7f])[^\\\\[\\]]|\\[\\x01-\\x7f])+)\\])(?(angle)>)$",
+            RegexOptions.CultureInvariant | RegexOptions.IgnoreCase);
+
         public static bool IsValidEmail(string mailAddress)
         {
             if (string.IsNullOrEmpty(mailAddress))
             {
                 return false;
             }
+
             var result = reg.Match(mailAddress);
             return result.Success;
         }
@@ -231,7 +241,9 @@ namespace Photon.Realtime
     {
         public int ReturnCode;
         public string Message;
-        public Dictionary<string, string> ApplicationIds; // Unity's JsonUtility does not support deserializing Dictionary
+
+        public Dictionary<string, string>
+            ApplicationIds; // Unity's JsonUtility does not support deserializing Dictionary
     }
 
 

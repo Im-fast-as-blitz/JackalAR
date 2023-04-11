@@ -4,7 +4,7 @@
 // </copyright>
 // <author>developer@exitgames.com</author>
 // --------------------------------------------------------------------------------------------------------------------
- 
+
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -38,9 +38,9 @@ namespace Photon.Pun.Demo.Cockpit
 
         private void Update()
         {
-			if (PhotonNetwork.PhotonServerSettings.AppSettings.AppVersion != this._cache)
+            if (PhotonNetwork.PhotonServerSettings.AppSettings.AppVersion != this._cache)
             {
-				this._cache = PhotonNetwork.PhotonServerSettings.AppSettings.AppVersion;
+                this._cache = PhotonNetwork.PhotonServerSettings.AppSettings.AppVersion;
                 this.PropertyValueInput.text = this._cache;
             }
         }
@@ -61,8 +61,8 @@ namespace Photon.Pun.Demo.Cockpit
         public void SubmitForm(string value)
         {
             this._cache = value;
-			PunCockpit.Instance.GameVersionOverride = this._cache;
-			//Debug.Log("PunCockpit.GameVersionOverride = " + PunCockpit.Instance.GameVersionOverride, this);
+            PunCockpit.Instance.GameVersionOverride = this._cache;
+            //Debug.Log("PunCockpit.GameVersionOverride = " + PunCockpit.Instance.GameVersionOverride, this);
         }
     }
 }

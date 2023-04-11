@@ -1,5 +1,4 @@
 #if UNITY_WEBGL || WEBSOCKET || WEBSOCKET_PROXYCONFIG
-
 // --------------------------------------------------------------------------------------------------------------------
 // <copyright file="SocketWebTcp.cs" company="Exit Games GmbH">
 //   Copyright (c) Exit Games GmbH.  All rights reserved.
@@ -108,7 +107,8 @@ namespace ExitGames.Client.Photon
             UnityEngine.Object.DontDestroyOnLoad(this.websocketConnectionObject);
 
 
-            this.ConnectAddress += "&IPv6"; // this makes the Photon Server return a host name for the next server (NS points to MS and MS points to GS)
+            this.ConnectAddress +=
+ "&IPv6"; // this makes the Photon Server return a host name for the next server (NS points to MS and MS points to GS)
 
 
             // earlier, we read the proxy address/scheme and failed to connect entirely, if that wasn't successful...
@@ -184,7 +184,8 @@ namespace ExitGames.Client.Photon
 
             if (!string.IsNullOrEmpty(proxyAddress))
             {
-                var httpUrl = url.ToString().Replace("ws://", "http://").Replace("wss://", "https://"); // http(s) schema required in GetProxyForUrlUsingPac call
+                var httpUrl =
+ url.ToString().Replace("ws://", "http://").Replace("wss://", "https://"); // http(s) schema required in GetProxyForUrlUsingPac call
                 bool auto = proxyAddress.StartsWith("auto:", StringComparison.InvariantCultureIgnoreCase);
                 bool pac = proxyAddress.StartsWith("pac:", StringComparison.InvariantCultureIgnoreCase);
 
@@ -231,7 +232,8 @@ namespace ExitGames.Client.Photon
                         }
                         this.Listener.DebugReturn(DebugLevel.INFO, "WebSocket Proxy: " + url + " system settings AutoConfigURL: " + proxyAutoConfigPacUrl);
                         string errDescr = "";
-                        err = ProxyAutoConfig.GetProxyForUrlUsingPac(httpUrl, proxyAutoConfigPacUrl, out proxyUrl, out errDescr);
+                        err =
+ ProxyAutoConfig.GetProxyForUrlUsingPac(httpUrl, proxyAutoConfigPacUrl, out proxyUrl, out errDescr);
 
                         if (err != 0)
                         {

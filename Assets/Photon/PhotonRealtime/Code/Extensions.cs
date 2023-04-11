@@ -16,17 +16,17 @@
 namespace Photon.Realtime
 {
     using System.Collections;
-	using System.Collections.Generic;
+    using System.Collections.Generic;
     using ExitGames.Client.Photon;
 
-    #if SUPPORTED_UNITY
+#if SUPPORTED_UNITY
     using UnityEngine;
     using Debug = UnityEngine.Debug;
-    #endif
-    #if SUPPORTED_UNITY || NETFX_CORE
+#endif
+#if SUPPORTED_UNITY || NETFX_CORE
     using Hashtable = ExitGames.Client.Photon.Hashtable;
     using SupportClass = ExitGames.Client.Photon.SupportClass;
-    #endif
+#endif
 
 
     /// <summary>
@@ -86,23 +86,23 @@ namespace Photon.Realtime
             return SupportClass.DictionaryToString(origin, false);
         }
 
-		/// <summary>Helper method for debugging of List<T> content. Using this is not performant.</summary>
-		/// <remarks>Should only be used for debugging as necessary.</remarks>
-		/// <param name="data">Any List<T> where T implements .ToString().</param>
-		/// <returns>A comma-separated string containing each value's ToString().</returns>
-		public static string ToStringFull<T>(this List<T> data)
-		{
-			if (data == null) return "null";
+        /// <summary>Helper method for debugging of List<T> content. Using this is not performant.</summary>
+        /// <remarks>Should only be used for debugging as necessary.</remarks>
+        /// <param name="data">Any List<T> where T implements .ToString().</param>
+        /// <returns>A comma-separated string containing each value's ToString().</returns>
+        public static string ToStringFull<T>(this List<T> data)
+        {
+            if (data == null) return "null";
 
-			string[] sb = new string[data.Count];
-			for (int i = 0; i < data.Count; i++)
-			{
-				object o = data[i];
-				sb[i] = (o != null) ? o.ToString() : "null";
-			}
+            string[] sb = new string[data.Count];
+            for (int i = 0; i < data.Count; i++)
+            {
+                object o = data[i];
+                sb[i] = (o != null) ? o.ToString() : "null";
+            }
 
-			return string.Join(", ", sb);
-		}
+            return string.Join(", ", sb);
+        }
 
         /// <summary>Helper method for debugging of object[] content. Using this is not performant.</summary>
         /// <remarks>Should only be used for debugging as necessary.</remarks>
@@ -266,4 +266,3 @@ namespace Photon.Realtime
         }
     }
 }
-

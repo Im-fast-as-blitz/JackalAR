@@ -16,10 +16,13 @@ namespace Photon.Chat
 
         /// <summary>(0) Operation to subscribe to chat channels.</summary>
         public const byte Subscribe = 0;
+
         /// <summary>(1) Operation to unsubscribe from chat channels.</summary>
         public const byte Unsubscribe = 1;
+
         /// <summary>(2) Operation to publish a message in a chat channel.</summary>
         public const byte Publish = 2;
+
         /// <summary>(3) Operation to send a private message to some other user.</summary>
         public const byte SendPrivate = 3;
 
@@ -28,10 +31,13 @@ namespace Photon.Chat
 
         /// <summary>(5) Set your (client's) status.</summary>
         public const byte UpdateStatus = 5;
+
         /// <summary>(6) Add friends the list of friends that should update you of their status.</summary>
         public const byte AddFriends = 6;
+
         /// <summary>(7) Remove friends from list of friends that should update you of their status.</summary>
         public const byte RemoveFriends = 7;
+
         /// <summary>(8) Operation to set properties of public chat channel or users in public chat channels.</summary>
         public const byte SetProperties = 8;
     }

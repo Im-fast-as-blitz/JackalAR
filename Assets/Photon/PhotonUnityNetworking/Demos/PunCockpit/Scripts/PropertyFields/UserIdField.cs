@@ -10,12 +10,11 @@ using UnityEngine.UI;
 
 namespace Photon.Pun.Demo.Cockpit
 {
-	/// <summary>
-	/// User identifier InputField.
-	/// </summary>
+    /// <summary>
+    /// User identifier InputField.
+    /// </summary>
     public class UserIdField : MonoBehaviour
     {
-
         public PunCockpit Manager;
 
         public InputField PropertyValueInput;

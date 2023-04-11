@@ -37,8 +37,7 @@ namespace Photon.Pun
         [HideInInspector]
         public PhotonTransformViewRotationModel m_RotationModel = new PhotonTransformViewRotationModel();
 
-        [HideInInspector]
-        public PhotonTransformViewScaleModel m_ScaleModel = new PhotonTransformViewScaleModel();
+        [HideInInspector] public PhotonTransformViewScaleModel m_ScaleModel = new PhotonTransformViewScaleModel();
 
         PhotonTransformViewPositionControl m_PositionControl;
         PhotonTransformViewRotationControl m_RotationControl;
@@ -69,7 +68,8 @@ namespace Photon.Pun
 
         void Update()
         {
-            if (this.m_PhotonView == null || this.m_PhotonView.IsMine == true || PhotonNetwork.IsConnectedAndReady == false)
+            if (this.m_PhotonView == null || this.m_PhotonView.IsMine == true ||
+                PhotonNetwork.IsConnectedAndReady == false)
             {
                 return;
             }
@@ -261,7 +261,8 @@ namespace Photon.Pun
                     break;
 
                 case PhotonTransformViewPositionModel.InterpolateOptions.FixedSpeed:
-                    currentPosition = Vector3.MoveTowards(currentPosition, targetPosition, Time.deltaTime * m_Model.InterpolateMoveTowardsSpeed);
+                    currentPosition = Vector3.MoveTowards(currentPosition, targetPosition,
+                        Time.deltaTime * m_Model.InterpolateMoveTowardsSpeed);
                     break;
 
                 case PhotonTransformViewPositionModel.InterpolateOptions.EstimatedSpeed:
@@ -273,10 +274,13 @@ namespace Photon.Pun
 
                     // knowing the last (incoming) position and the one before, we can guess a speed.
                     // note that the speed is times sendRateOnSerialize! we send X updates/sec, so our estimate has to factor that in.
-                    float estimatedSpeed = (Vector3.Distance(m_NetworkPosition, GetOldestStoredNetworkPosition()) / m_OldNetworkPositions.Count) * PhotonNetwork.SerializationRate;
+                    float estimatedSpeed =
+                        (Vector3.Distance(m_NetworkPosition, GetOldestStoredNetworkPosition()) /
+                         m_OldNetworkPositions.Count) * PhotonNetwork.SerializationRate;
 
                     // move towards the targetPosition (including estimates, if that's active) with the speed calculated from the last updates.
-                    currentPosition = Vector3.MoveTowards(currentPosition, targetPosition, Time.deltaTime * estimatedSpeed);
+                    currentPosition =
+                        Vector3.MoveTowards(currentPosition, targetPosition, Time.deltaTime * estimatedSpeed);
                     break;
 
                 case PhotonTransformViewPositionModel.InterpolateOptions.SynchronizeValues:
@@ -286,13 +290,15 @@ namespace Photon.Pun
                     }
                     else
                     {
-                        currentPosition = Vector3.MoveTowards(currentPosition, targetPosition, Time.deltaTime * m_SynchronizedSpeed.magnitude);
+                        currentPosition = Vector3.MoveTowards(currentPosition, targetPosition,
+                            Time.deltaTime * m_SynchronizedSpeed.magnitude);
                     }
 
                     break;
 
                 case PhotonTransformViewPositionModel.InterpolateOptions.Lerp:
-                    currentPosition = Vector3.Lerp(currentPosition, targetPosition, Time.deltaTime * m_Model.InterpolateLerpSpeed);
+                    currentPosition = Vector3.Lerp(currentPosition, targetPosition,
+                        Time.deltaTime * m_Model.InterpolateLerpSpeed);
                     break;
             }
 
@@ -344,7 +350,8 @@ namespace Photon.Pun
                     extrapolatePosition = moveDirection * m_Model.ExtrapolateSpeed * timePassed;
                     break;
                 case PhotonTransformViewPositionModel.ExtrapolateOptions.EstimateSpeedAndTurn:
-                    Vector3 moveDelta = (m_NetworkPosition - GetOldestStoredNetworkPosition()) * PhotonNetwork.SerializationRate;
+                    Vector3 moveDelta = (m_NetworkPosition - GetOldestStoredNetworkPosition()) *
+                                        PhotonNetwork.SerializationRate;
                     extrapolatePosition = moveDelta * timePassed;
                     break;
             }
@@ -459,9 +466,11 @@ namespace Photon.Pun
                 case PhotonTransformViewRotationModel.InterpolateOptions.Disabled:
                     return m_NetworkRotation;
                 case PhotonTransformViewRotationModel.InterpolateOptions.RotateTowards:
-                    return Quaternion.RotateTowards(currentRotation, m_NetworkRotation, m_Model.InterpolateRotateTowardsSpeed * Time.deltaTime);
+                    return Quaternion.RotateTowards(currentRotation, m_NetworkRotation,
+                        m_Model.InterpolateRotateTowardsSpeed * Time.deltaTime);
                 case PhotonTransformViewRotationModel.InterpolateOptions.Lerp:
-                    return Quaternion.Lerp(currentRotation, m_NetworkRotation, m_Model.InterpolateLerpSpeed * Time.deltaTime);
+                    return Quaternion.Lerp(currentRotation, m_NetworkRotation,
+                        m_Model.InterpolateLerpSpeed * Time.deltaTime);
             }
         }
 
@@ -530,7 +539,8 @@ namespace Photon.Pun
                 case PhotonTransformViewScaleModel.InterpolateOptions.Disabled:
                     return m_NetworkScale;
                 case PhotonTransformViewScaleModel.InterpolateOptions.MoveTowards:
-                    return Vector3.MoveTowards(currentScale, m_NetworkScale, m_Model.InterpolateMoveTowardsSpeed * Time.deltaTime);
+                    return Vector3.MoveTowards(currentScale, m_NetworkScale,
+                        m_Model.InterpolateMoveTowardsSpeed * Time.deltaTime);
                 case PhotonTransformViewScaleModel.InterpolateOptions.Lerp:
                     return Vector3.Lerp(currentScale, m_NetworkScale, m_Model.InterpolateLerpSpeed * Time.deltaTime);
             }

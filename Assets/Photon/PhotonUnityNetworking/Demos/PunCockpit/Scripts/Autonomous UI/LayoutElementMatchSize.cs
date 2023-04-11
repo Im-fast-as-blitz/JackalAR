@@ -15,7 +15,6 @@ namespace Photon.Pun.Demo.Cockpit
     /// </summary>
     public class LayoutElementMatchSize : MonoBehaviour
     {
-
         public LayoutElement layoutElement;
         public RectTransform Target;
 
@@ -26,7 +25,6 @@ namespace Photon.Pun.Demo.Cockpit
 
         void Update()
         {
-
             if (MatchHeight)
             {
                 if (layoutElement.minHeight != Target.sizeDelta.y)
@@ -34,7 +32,6 @@ namespace Photon.Pun.Demo.Cockpit
                     layoutElement.minHeight = Target.sizeDelta.y;
                 }
             }
-
         }
     }
 }

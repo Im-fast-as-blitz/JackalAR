@@ -7,7 +7,6 @@
 
 using UnityEngine;
 using UnityEngine.UI;
-
 using Photon.Realtime;
 
 namespace Photon.Pun.Demo.Cockpit
@@ -58,6 +57,5 @@ namespace Photon.Pun.Demo.Cockpit
         {
             Destroy(this.gameObject);
         }
-
     }
 }

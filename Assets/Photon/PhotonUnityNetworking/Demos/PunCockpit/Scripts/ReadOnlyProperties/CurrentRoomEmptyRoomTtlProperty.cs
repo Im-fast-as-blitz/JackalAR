@@ -37,7 +37,6 @@ namespace Photon.Pun.Demo.Cockpit
                     Text.text = "n/a";
                 }
             }
-
         }
     }
 }

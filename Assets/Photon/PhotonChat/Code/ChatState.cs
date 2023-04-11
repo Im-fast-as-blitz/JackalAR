@@ -11,28 +11,40 @@ namespace Photon.Chat
     {
         /// <summary>Peer is created but not used yet.</summary>
         Uninitialized,
+
         /// <summary>Connecting to name server.</summary>
         ConnectingToNameServer,
+
         /// <summary>Connected to name server.</summary>
         ConnectedToNameServer,
+
         /// <summary>Authenticating on current server.</summary>
         Authenticating,
+
         /// <summary>Finished authentication on current server.</summary>
         Authenticated,
+
         /// <summary>Disconnecting from name server. This is usually a transition from name server to frontend server.</summary>
         DisconnectingFromNameServer,
+
         /// <summary>Connecting to frontend server.</summary>
         ConnectingToFrontEnd,
+
         /// <summary>Connected to frontend server.</summary>
         ConnectedToFrontEnd,
+
         /// <summary>Disconnecting from frontend server.</summary>
         DisconnectingFromFrontEnd,
+
         /// <summary>Currently not used.</summary>
         QueuedComingFromFrontEnd,
+
         /// <summary>The client disconnects (from any server).</summary>
         Disconnecting,
+
         /// <summary>The client is no longer connected (to any server).</summary>
         Disconnected,
+
         /// <summary>Client was unable to connect to Name Server and will attempt to connect with an alternative network protocol (TCP).</summary>
         ConnectWithFallbackProtocol
     }

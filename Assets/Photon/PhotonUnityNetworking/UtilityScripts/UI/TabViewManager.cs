@@ -12,7 +12,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
@@ -24,12 +23,13 @@ namespace Photon.Pun.UtilityScripts
     /// </summary>
     public class TabViewManager : MonoBehaviour
     {
-
         /// <summary>
         /// Tab change event.
         /// </summary>
         [System.Serializable]
-        public class TabChangeEvent : UnityEvent<string> { }
+        public class TabChangeEvent : UnityEvent<string>
+        {
+        }
 
         [Serializable]
         public class Tab
@@ -60,12 +60,10 @@ namespace Photon.Pun.UtilityScripts
 
         void Start()
         {
-
             Tab_lut = new Dictionary<Toggle, Tab>();
 
             foreach (Tab _tab in this.Tabs)
             {
-
                 Tab_lut[_tab.Toggle] = _tab;
 
                 _tab.View.gameObject.SetActive(_tab.Toggle.isOn);
@@ -74,17 +72,17 @@ namespace Photon.Pun.UtilityScripts
                 {
                     CurrentTab = _tab;
                 }
+
                 _tab.Toggle.onValueChanged.AddListener((isSelected) =>
                 {
                     if (!isSelected)
                     {
                         return;
                     }
+
                     OnTabSelected(_tab);
                 });
             }
-
-
         }
 
         /// <summary>
@@ -117,7 +115,6 @@ namespace Photon.Pun.UtilityScripts
             CurrentTab.View.gameObject.SetActive(true);
 
             OnTabChanged.Invoke(CurrentTab.ID);
-
         }
     }
 }

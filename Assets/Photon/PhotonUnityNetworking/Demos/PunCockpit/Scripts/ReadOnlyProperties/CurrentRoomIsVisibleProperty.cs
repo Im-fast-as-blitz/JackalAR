@@ -14,17 +14,16 @@ namespace Photon.Pun.Demo.Cockpit
     /// </summary>
     public class CurrentRoomIsVisibleProperty : PropertyListenerBase
     {
-
         public Text Text;
 
         int _cache = -1;
 
         void Update()
         {
-
             if (PhotonNetwork.CurrentRoom != null)
             {
-                if ((PhotonNetwork.CurrentRoom.IsVisible && _cache != 1) || (!PhotonNetwork.CurrentRoom.IsVisible && _cache != 0))
+                if ((PhotonNetwork.CurrentRoom.IsVisible && _cache != 1) ||
+                    (!PhotonNetwork.CurrentRoom.IsVisible && _cache != 0))
                 {
                     _cache = PhotonNetwork.CurrentRoom.IsVisible ? 1 : 0;
                     Text.text = PhotonNetwork.CurrentRoom.IsVisible ? "true" : "false";

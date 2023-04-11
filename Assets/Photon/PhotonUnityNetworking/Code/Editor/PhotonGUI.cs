@@ -90,7 +90,9 @@ namespace Photon.Pun
                     m_DefaultRemoveButtonStyle = new GUIStyle();
                     m_DefaultRemoveButtonStyle.fixedWidth = 30;
                     m_DefaultRemoveButtonStyle.fixedHeight = 20;
-                    m_DefaultRemoveButtonStyle.active.background = ReorderableListResources.CreatePixelTexture("Dark Pixel (List GUI)", new Color32(18, 18, 18, 255));
+                    m_DefaultRemoveButtonStyle.active.background =
+                        ReorderableListResources.CreatePixelTexture("Dark Pixel (List GUI)",
+                            new Color32(18, 18, 18, 255));
                     m_DefaultRemoveButtonStyle.imagePosition = ImagePosition.ImageOnly;
                     m_DefaultRemoveButtonStyle.alignment = TextAnchor.MiddleCenter;
                 }
@@ -157,11 +159,11 @@ namespace Photon.Pun
 
         internal static string GetIconPath(string iconFileName)
         {
-            string _thisIconPath = PhotonNetwork.FindAssetPath ("PhotonGUI");
+            string _thisIconPath = PhotonNetwork.FindAssetPath("PhotonGUI");
 
             if (string.IsNullOrEmpty(_thisIconPath))
             {
-                _thisIconPath = "Assets/Photon/PhotonUnityNetworking/Code/Editor/"+iconFileName;
+                _thisIconPath = "Assets/Photon/PhotonUnityNetworking/Code/Editor/" + iconFileName;
             }
             else
             {
@@ -170,7 +172,7 @@ namespace Photon.Pun
 
             return _thisIconPath;
         }
-        
+
         static Texture2D m_HelpIcon;
 
         public static Texture2D HelpIcon
@@ -182,15 +184,15 @@ namespace Photon.Pun
                     m_HelpIcon = AssetDatabase.LoadAssetAtPath(GetIconPath("help.png"), typeof(Texture2D)) as Texture2D;
                 }
 
-                
+
                 return m_HelpIcon;
             }
         }
-        
-        
+
+
         static Texture2D m_CopyIcon;
         static Texture2D m_CopyIconPro;
-        
+
         public static Texture2D CopyIcon
         {
             get
@@ -199,15 +201,18 @@ namespace Photon.Pun
                 {
                     if (m_CopyIconPro == null)
                     {
-                        m_CopyIconPro = AssetDatabase.LoadAssetAtPath(GetIconPath("CopyIconPro.png"), typeof(Texture2D)) as Texture2D;
+                        m_CopyIconPro =
+                            AssetDatabase.LoadAssetAtPath(GetIconPath("CopyIconPro.png"), typeof(Texture2D)) as
+                                Texture2D;
                     }
 
                     return m_CopyIconPro;
                 }
-                
+
                 if (m_CopyIcon == null)
                 {
-                    m_CopyIcon = AssetDatabase.LoadAssetAtPath(GetIconPath("CopyIcon.png"), typeof(Texture2D)) as Texture2D;
+                    m_CopyIcon =
+                        AssetDatabase.LoadAssetAtPath(GetIconPath("CopyIcon.png"), typeof(Texture2D)) as Texture2D;
                 }
 
                 return m_CopyIcon;
@@ -226,7 +231,8 @@ namespace Photon.Pun
             return DoContainerHeaderToggle(headline, toggle);
         }
 
-        public static bool ContainerHeaderFoldout(string headline, bool foldout, System.Action buttonAction = null, string buttonName = null)
+        public static bool ContainerHeaderFoldout(string headline, bool foldout, System.Action buttonAction = null,
+            string buttonName = null)
         {
             return DoContainerHeaderFoldout(headline, foldout, buttonAction, buttonName);
         }
@@ -243,9 +249,9 @@ namespace Photon.Pun
             controlRect.yMax -= 5;
 
             Rect addButtonRect = new Rect(controlRect.xMax - DefaultAddButtonStyle.fixedWidth,
-                                          controlRect.yMin,
-                                          DefaultAddButtonStyle.fixedWidth,
-                                          DefaultAddButtonStyle.fixedHeight);
+                controlRect.yMin,
+                DefaultAddButtonStyle.fixedWidth,
+                DefaultAddButtonStyle.fixedHeight);
 
             return GUI.Button(addButtonRect, "", DefaultAddButtonStyle);
         }
@@ -319,20 +325,23 @@ namespace Photon.Pun
         }
 
 
-        static bool DoContainerHeaderFoldout(string headline, bool foldout, System.Action buttonAction = null, string buttonLabel = null, float buttonWidth = 48)
+        static bool DoContainerHeaderFoldout(string headline, bool foldout, System.Action buttonAction = null,
+            string buttonLabel = null, float buttonWidth = 48)
         {
             bool showButton = buttonAction != null;
 
             Rect rect = DoContainerHeader("", 27, 0f);
 
             // Shorten foldout label if button is present, so it doesn't interfere with clicking.
-            float foldoutWidth = rect.width - (showButton ? 15 + buttonWidth: 15);
+            float foldoutWidth = rect.width - (showButton ? 15 + buttonWidth : 15);
             Rect foldoutRect = new Rect(rect.xMin + 15, rect.yMin + 5, foldoutWidth, 16);
 
             bool expanded = EditorGUI.Foldout(foldoutRect, foldout, headline, FoldoutBold);
 
             // If a button is defined show it, and invoke action on click.
-            if (showButton && GUI.Button(new Rect(foldoutRect) { x = foldoutRect.xMax, height = 17, width = buttonWidth - 4 }, buttonLabel == null ? "" : buttonLabel))
+            if (showButton &&
+                GUI.Button(new Rect(foldoutRect) { x = foldoutRect.xMax, height = 17, width = buttonWidth - 4 },
+                    buttonLabel == null ? "" : buttonLabel))
             {
                 buttonAction.Invoke();
             }
@@ -351,7 +360,8 @@ namespace Photon.Pun
             {
                 PhotonGUI.DefaultTitleStyle.Draw(controlRect, GUIContent.none, controlID);
 
-                Rect labelRect = new Rect(controlRect.xMin + 5 + contentOffset, controlRect.yMin + 5, controlRect.width, controlRect.height);
+                Rect labelRect = new Rect(controlRect.xMin + 5 + contentOffset, controlRect.yMin + 5, controlRect.width,
+                    controlRect.height);
                 GUI.Label(labelRect, headline, EditorStyles.boldLabel);
             }
 

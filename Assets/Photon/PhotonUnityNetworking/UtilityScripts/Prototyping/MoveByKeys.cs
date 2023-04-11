@@ -18,13 +18,11 @@
 
 
 using UnityEngine;
-
 using Photon.Pun;
 using Photon.Realtime;
 
 namespace Photon.Pun.UtilityScripts
 {
-
     /// <summary>
     /// Very basic component to move a GameObject by WASD and Space.
     /// </summary>

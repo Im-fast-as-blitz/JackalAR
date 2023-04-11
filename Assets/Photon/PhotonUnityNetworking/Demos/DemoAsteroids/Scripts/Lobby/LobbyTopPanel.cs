@@ -7,8 +7,7 @@ namespace Photon.Pun.Demo.Asteroids
     {
         private readonly string connectionStatusMessage = "    Connection Status: ";
 
-        [Header("UI References")]
-        public Text ConnectionStatusText;
+        [Header("UI References")] public Text ConnectionStatusText;
 
         #region UNITY
 

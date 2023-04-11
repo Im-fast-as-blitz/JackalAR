@@ -19,16 +19,22 @@ namespace Photon.Chat
     {
         /// <summary>(0) Offline.</summary>
         public const int Offline = 0;
+
         /// <summary>(1) Be invisible to everyone. Sends no message.</summary>
         public const int Invisible = 1;
+
         /// <summary>(2) Online and available.</summary>
         public const int Online = 2;
+
         /// <summary>(3) Online but not available.</summary>
         public const int Away = 3;
+
         /// <summary>(4) Do not disturb.</summary>
         public const int DND = 4;
+
         /// <summary>(5) Looking For Game/Group. Could be used when you want to be invited or do matchmaking.</summary>
         public const int LFG = 5;
+
         /// <summary>(6) Could be used when in a room, playing.</summary>
         public const int Playing = 6;
     }

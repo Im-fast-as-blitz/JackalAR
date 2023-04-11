@@ -4,10 +4,8 @@ using UnityEngine;
 
 namespace Photon.Pun
 {
-
     public static class NestedComponentUtilities
     {
-
         public static T EnsureRootComponentExists<T, NestedT>(this Transform transform)
             where T : Component
             where NestedT : Component
@@ -52,6 +50,7 @@ namespace Photon.Pun
                     return found;
                 par = par.parent;
             }
+
             return null;
         }
 
@@ -115,8 +114,8 @@ namespace Photon.Pun
                     // Add node to queue for next depth pass since nothing was found on this layer.
                     nodesQueue.Enqueue(child);
                 }
-
             }
+
             return found;
         }
 
@@ -136,7 +135,6 @@ namespace Photon.Pun
             Transform node = t;
             do
             {
-
                 found = node.GetComponent<T>();
 
                 if (!ReferenceEquals(found, null))
@@ -147,8 +145,7 @@ namespace Photon.Pun
                     return null;
 
                 node = node.parent;
-            }
-            while (!ReferenceEquals(node, null));
+            } while (!ReferenceEquals(node, null));
 
             return null;
         }
@@ -184,7 +181,9 @@ namespace Photon.Pun
                     return null;
 
                 par = par.parent;
-            };
+            }
+
+            ;
 
             return null;
         }
@@ -202,7 +201,6 @@ namespace Photon.Pun
             where T : class
             where NestedT : class
         {
-
             // Get components on the starting node - this is a given.
             t.GetComponents(list);
 
@@ -269,7 +267,8 @@ namespace Photon.Pun
         /// <typeparam name="T"></typeparam>
         /// <param name="t"></param>
         /// <param name="list">Pass null and a reused list will be used. Consume immediately.</param>
-        public static List<T> GetNestedComponentsInChildren<T, NestedT>(this Transform t, List<T> list, bool includeInactive = true)
+        public static List<T> GetNestedComponentsInChildren<T, NestedT>(this Transform t, List<T> list,
+            bool includeInactive = true)
             where T : class
             where NestedT : class
         {
@@ -341,7 +340,8 @@ namespace Photon.Pun
         /// <typeparam name="T"></typeparam>
         /// <param name="t"></param>
         /// <param name="list">Pass null and a reused list will be used. Consume immediately.</param>
-        public static List<T> GetNestedComponentsInChildren<T>(this Transform t, List<T> list, bool includeInactive = true, params System.Type[] stopOn)
+        public static List<T> GetNestedComponentsInChildren<T>(this Transform t, List<T> list,
+            bool includeInactive = true, params System.Type[] stopOn)
             where T : class
         {
             System.Type type = typeof(T);
@@ -377,6 +377,7 @@ namespace Photon.Pun
                         break;
                     }
                 }
+
                 if (stopRecurse)
                     continue;
 
@@ -432,7 +433,8 @@ namespace Photon.Pun
         /// <param name="includeInactive"></param>
         /// <param name="list"></param>
         /// <returns></returns>
-        public static void GetNestedComponentsInChildren<T, SearchT, NestedT>(this Transform t, bool includeInactive, List<T> list)
+        public static void GetNestedComponentsInChildren<T, SearchT, NestedT>(this Transform t, bool includeInactive,
+            List<T> list)
             where T : class
             where SearchT : class
         {
@@ -485,10 +487,8 @@ namespace Photon.Pun
                     nodesQueue.Enqueue(child);
                 }
             }
-
         }
 
         #endregion
     }
-
 }

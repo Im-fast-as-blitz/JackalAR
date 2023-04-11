@@ -9,10 +9,8 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 using System.Collections;
-
 using UnityEngine;
 using UnityEngine.UI;
-
 using Photon.Realtime;
 using Photon.Pun.UtilityScripts;
 
@@ -23,7 +21,6 @@ namespace Photon.Pun.Demo.Cockpit
     /// </summary>
     public class PlayerListCell : MonoBehaviour
     {
-
         public PlayerListView ListManager;
 
         public Text NumberText;
@@ -42,7 +39,6 @@ namespace Photon.Pun.Demo.Cockpit
         public bool isInactiveCache;
 
 
-
         public void RefreshInfo(ExitGames.Client.Photon.Hashtable changedProps)
         {
             UpdateInfo();
@@ -58,7 +54,6 @@ namespace Photon.Pun.Demo.Cockpit
 
             if (animate)
             {
-
                 StartCoroutine("Add");
             }
             else
@@ -86,7 +81,9 @@ namespace Photon.Pun.Demo.Cockpit
             }
 
             int _index = _player.GetPlayerNumber();
-            NumberText.text = "#" + _index.ToString("00"); // if this function was not called on every update, we would need to listen to the PlayerNumbering delegate
+            NumberText.text =
+                "#" + _index
+                    .ToString("00"); // if this function was not called on every update, we would need to listen to the PlayerNumbering delegate
 
             NameText.text = _player.NickName;
 
@@ -113,7 +110,6 @@ namespace Photon.Pun.Demo.Cockpit
 
             while (LayoutElement.minHeight != 30f)
             {
-
                 LayoutElement.minHeight = Mathf.MoveTowards(LayoutElement.minHeight, 30f, 2f);
                 yield return new WaitForEndOfFrame();
             }
@@ -129,6 +125,5 @@ namespace Photon.Pun.Demo.Cockpit
 
             Destroy(this.gameObject);
         }
-
     }
 }

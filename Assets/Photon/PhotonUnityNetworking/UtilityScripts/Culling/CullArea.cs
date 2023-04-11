@@ -119,8 +119,10 @@ namespace Photon.Pun.UtilityScripts
             {
                 if (Debug.isDebugBuild)
                 {
-                    Debug.LogError("There are too many cells created by your subdivision options. Maximum allowed number of cells is " + (MAX_NUMBER_OF_ALLOWED_CELLS - this.FIRST_GROUP_ID) +
-                                   ". Current number of cells is " + this.CellCount + ".");
+                    Debug.LogError(
+                        "There are too many cells created by your subdivision options. Maximum allowed number of cells is " +
+                        (MAX_NUMBER_OF_ALLOWED_CELLS - this.FIRST_GROUP_ID) +
+                        ". Current number of cells is " + this.CellCount + ".");
                     return;
                 }
                 else
@@ -138,8 +140,10 @@ namespace Photon.Pun.UtilityScripts
 
                 rootNode.Center = new Vector3(this.Center.x, this.Center.y, 0.0f);
                 rootNode.Size = new Vector3(this.Size.x, this.Size.y, 0.0f);
-                rootNode.TopLeft = new Vector3((this.Center.x - (this.Size.x / 2.0f)), (this.Center.y - (this.Size.y / 2.0f)), 0.0f);
-                rootNode.BottomRight = new Vector3((this.Center.x + (this.Size.x / 2.0f)), (this.Center.y + (this.Size.y / 2.0f)), 0.0f);
+                rootNode.TopLeft = new Vector3((this.Center.x - (this.Size.x / 2.0f)),
+                    (this.Center.y - (this.Size.y / 2.0f)), 0.0f);
+                rootNode.BottomRight = new Vector3((this.Center.x + (this.Size.x / 2.0f)),
+                    (this.Center.y + (this.Size.y / 2.0f)), 0.0f);
             }
             else
             {
@@ -148,8 +152,10 @@ namespace Photon.Pun.UtilityScripts
 
                 rootNode.Center = new Vector3(this.Center.x, 0.0f, this.Center.y);
                 rootNode.Size = new Vector3(this.Size.x, 0.0f, this.Size.y);
-                rootNode.TopLeft = new Vector3((this.Center.x - (this.Size.x / 2.0f)), 0.0f, (this.Center.y - (this.Size.y / 2.0f)));
-                rootNode.BottomRight = new Vector3((this.Center.x + (this.Size.x / 2.0f)), 0.0f, (this.Center.y + (this.Size.y / 2.0f)));
+                rootNode.TopLeft = new Vector3((this.Center.x - (this.Size.x / 2.0f)), 0.0f,
+                    (this.Center.y - (this.Size.y / 2.0f)));
+                rootNode.BottomRight = new Vector3((this.Center.x + (this.Size.x / 2.0f)), 0.0f,
+                    (this.Center.y + (this.Size.y / 2.0f)));
             }
 
             this.CreateChildCells(rootNode, 1);
@@ -183,7 +189,10 @@ namespace Photon.Pun.UtilityScripts
                 {
                     float xPos = startX + (row * width) + (width / 2.0f);
 
-                    CellTreeNode node = new CellTreeNode(this.idCounter++, (this.NumberOfSubdivisions == cellLevelInHierarchy) ? CellTreeNode.ENodeType.Leaf : CellTreeNode.ENodeType.Node, parent);
+                    CellTreeNode node = new CellTreeNode(this.idCounter++,
+                        (this.NumberOfSubdivisions == cellLevelInHierarchy)
+                            ? CellTreeNode.ENodeType.Leaf
+                            : CellTreeNode.ENodeType.Node, parent);
 
                     if (this.YIsUpAxis)
                     {
@@ -267,6 +276,7 @@ namespace Photon.Pun.UtilityScripts
             {
                 activeCells.Sort(cellsActive, cellsNearby, new ByteComparer());
             }
+
             return activeCells;
         }
     }
@@ -384,21 +394,22 @@ namespace Photon.Pun.UtilityScripts
         public void Draw()
         {
 #if UNITY_EDITOR
-        if (this.Childs != null)
-        {
-            foreach (CellTreeNode node in this.Childs)
+            if (this.Childs != null)
             {
-                node.Draw();
+                foreach (CellTreeNode node in this.Childs)
+                {
+                    node.Draw();
+                }
             }
-        }
 
-        Gizmos.color = new Color((this.NodeType == ENodeType.Root) ? 1 : 0, (this.NodeType == ENodeType.Node) ? 1 : 0, (this.NodeType == ENodeType.Leaf) ? 1 : 0);
-        Gizmos.DrawWireCube(this.Center, this.Size);
+            Gizmos.color = new Color((this.NodeType == ENodeType.Root) ? 1 : 0,
+                (this.NodeType == ENodeType.Node) ? 1 : 0, (this.NodeType == ENodeType.Leaf) ? 1 : 0);
+            Gizmos.DrawWireCube(this.Center, this.Size);
 
-        byte offset = (byte)this.NodeType;
-        GUIStyle gs = new GUIStyle() { fontStyle = FontStyle.Bold };
-        gs.normal.textColor = Gizmos.color;
-        UnityEditor.Handles.Label(this.Center+(Vector3.forward*offset*1f), this.Id.ToString(), gs);
+            byte offset = (byte)this.NodeType;
+            GUIStyle gs = new GUIStyle() { fontStyle = FontStyle.Bold };
+            gs.normal.textColor = Gizmos.color;
+            UnityEditor.Handles.Label(this.Center + (Vector3.forward * offset * 1f), this.Id.ToString(), gs);
 #endif
         }
 

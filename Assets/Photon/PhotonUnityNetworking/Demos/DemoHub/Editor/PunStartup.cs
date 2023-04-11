@@ -14,7 +14,6 @@ using System.IO;
 using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEditor;
-
 using Photon.Pun;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
@@ -25,7 +24,6 @@ namespace Photon.Pun.Demo.Hub
     [InitializeOnLoad]
     public class PunStartup : MonoBehaviour
     {
-
         static PunStartup()
         {
             bool doneBefore = EditorPrefs.GetBool("PunDemosOpenedBefore");
@@ -51,11 +49,13 @@ namespace Photon.Pun.Demo.Hub
                 return;
             }
 
-            if (string.IsNullOrEmpty(SceneManagerHelper.EditorActiveSceneName) && EditorBuildSettings.scenes.Length == 0)
+            if (string.IsNullOrEmpty(SceneManagerHelper.EditorActiveSceneName) &&
+                EditorBuildSettings.scenes.Length == 0)
             {
                 LoadPunDemoHub();
                 SetPunDemoBuildSettings();
-                Debug.Log("No scene was open. Loaded PUN Demo Hub Scene and added demos to build settings. Ready to go! This auto-setup is now disabled in this Editor.");
+                Debug.Log(
+                    "No scene was open. Loaded PUN Demo Hub Scene and added demos to build settings. Ready to go! This auto-setup is now disabled in this Editor.");
             }
         }
 
@@ -76,8 +76,8 @@ namespace Photon.Pun.Demo.Hub
             string scenePath = FindAssetPath("DemoHub-Scene t:scene");
             if (!string.IsNullOrEmpty(scenePath))
             {
-                    EditorSceneManager.OpenScene (scenePath);
-                    Selection.activeObject = AssetDatabase.LoadMainAssetAtPath (scenePath);
+                EditorSceneManager.OpenScene(scenePath);
+                Selection.activeObject = AssetDatabase.LoadMainAssetAtPath(scenePath);
             }
         }
 
@@ -91,7 +91,8 @@ namespace Photon.Pun.Demo.Hub
             {
                 Debug.LogError("We have a problem finding the asset: " + asset);
                 return string.Empty;
-            } else
+            }
+            else
             {
                 return AssetDatabase.GUIDToAssetPath(guids[0]);
             }
@@ -104,15 +105,15 @@ namespace Photon.Pun.Demo.Hub
         {
             string _PunPath = string.Empty;
 
-            string _thisPath = PhotonNetwork.FindAssetPath ("PunStartUp");
+            string _thisPath = PhotonNetwork.FindAssetPath("PunStartUp");
 
-            _thisPath = Application.dataPath + _thisPath.Substring (6); // remove "Assets/"
+            _thisPath = Application.dataPath + _thisPath.Substring(6); // remove "Assets/"
 
             //_PunPath = PhotonEditorUtils.GetParent(_thisPath,"Photon");
 
             if (string.IsNullOrEmpty(_PunPath))
             {
-                _PunPath = Application.dataPath+"/Photon";
+                _PunPath = Application.dataPath + "/Photon";
             }
 
             // find path of pun guide
@@ -123,12 +124,12 @@ namespace Photon.Pun.Demo.Hub
                 return;
             }
 
-            List<EditorBuildSettingsScene> sceneAr = new List<EditorBuildSettingsScene> ();
+            List<EditorBuildSettingsScene> sceneAr = new List<EditorBuildSettingsScene>();
 
             // find scenes of guide
             foreach (string guidePath in tempPaths)
             {
-                tempPaths = Directory.GetFiles (guidePath, "*.unity", SearchOption.AllDirectories);
+                tempPaths = Directory.GetFiles(guidePath, "*.unity", SearchOption.AllDirectories);
 
                 if (tempPaths == null || tempPaths.Length == 0)
                 {
@@ -139,23 +140,23 @@ namespace Photon.Pun.Demo.Hub
                 for (int i = 0; i < tempPaths.Length; i++)
                 {
                     //Debug.Log(tempPaths[i]);
-                    string path = tempPaths [i].Substring (Application.dataPath.Length - "Assets".Length);
-                    path = path.Replace ('\\', '/');
+                    string path = tempPaths[i].Substring(Application.dataPath.Length - "Assets".Length);
+                    path = path.Replace('\\', '/');
                     //Debug.Log(path);
 
-                    if (path.Contains ("PUNGuide_M2H") || path.Contains("DemoLoadBalancing"))
+                    if (path.Contains("PUNGuide_M2H") || path.Contains("DemoLoadBalancing"))
                     {
                         continue;
                     }
 
                     // edited to avoid old scene to be included.
-                    if (path.Contains ("DemoHub-Scene"))
+                    if (path.Contains("DemoHub-Scene"))
                     {
-                        sceneAr.Insert (0, new EditorBuildSettingsScene (path, true));
+                        sceneAr.Insert(0, new EditorBuildSettingsScene(path, true));
                         continue;
                     }
 
-                    sceneAr.Add (new EditorBuildSettingsScene (path, true));
+                    sceneAr.Add(new EditorBuildSettingsScene(path, true));
                 }
             }
 

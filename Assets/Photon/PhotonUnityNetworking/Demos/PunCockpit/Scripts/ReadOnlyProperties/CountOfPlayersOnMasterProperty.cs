@@ -6,7 +6,6 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 using UnityEngine.UI;
-
 using Photon.Realtime;
 
 namespace Photon.Pun.Demo.Cockpit

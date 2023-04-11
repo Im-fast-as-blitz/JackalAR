@@ -13,25 +13,34 @@ namespace Photon.Chat
     {
         /// <summary>(0) Event code for messages published in public channels.</summary>
         public const byte ChatMessages = 0;
+
         /// <summary>(1) Not Used. </summary>
-        public const byte Users = 1;// List of users or List of changes for List of users
+        public const byte Users = 1; // List of users or List of changes for List of users
+
         /// <summary>(2) Event code for messages published in private channels</summary>
         public const byte PrivateMessage = 2;
+
         /// <summary>(3) Not Used. </summary>
         public const byte FriendsList = 3;
+
         /// <summary>(4) Event code for status updates. </summary>
         public const byte StatusUpdate = 4;
+
         /// <summary>(5) Event code for subscription acks. </summary>
         public const byte Subscribe = 5;
+
         /// <summary>(6) Event code for unsubscribe acks. </summary>
         public const byte Unsubscribe = 6;
+
         /// <summary>(7) Event code for properties update. </summary>
         public const byte PropertiesChanged = 7;
 
         /// <summary>(8) Event code for new user subscription to a channel where <see cref="ChatChannel.PublishSubscribers"/> is enabled. </summary>
         public const byte UserSubscribed = 8;
+
         /// <summary>(9) Event code for when user unsubscribes from a channel where <see cref="ChatChannel.PublishSubscribers"/> is enabled. </summary>
         public const byte UserUnsubscribed = 9;
+
         /// <summary>(10) Event code for when the server sends an error to the client. </summary>
         /// <remarks> This is currently only used by Chat WebHooks. </remarks>
         public const byte ErrorInfo = 10;

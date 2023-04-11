@@ -12,31 +12,43 @@ namespace Photon.Chat
     {
         /// <summary>No error was tracked.</summary>
         None,
+
         /// <summary>OnStatusChanged: The server is not available or the address is wrong. Make sure the port is provided and the server is up.</summary>
         ExceptionOnConnect,
+
         /// <summary>OnStatusChanged: The server disconnected this client from within the room's logic (the C# code).</summary>
         DisconnectByServerLogic,
+
         /// <summary>OnStatusChanged: The server disconnected this client for unknown reasons.</summary>
         DisconnectByServerReasonUnknown,
+
         /// <summary>OnStatusChanged: The server disconnected this client due to timing out (missing acknowledgement from the client).</summary>
         ServerTimeout,
 
         /// <summary>OnStatusChanged: This client detected that the server's responses are not received in due time.</summary>
         ClientTimeout,
+
         /// <summary>OnStatusChanged: Some internal exception caused the socket code to fail. Contact Exit Games.</summary>
         Exception,
+
         /// <summary>OnOperationResponse: Authenticate in the Photon Cloud with invalid AppId. Update your subscription or contact Exit Games.</summary>
         InvalidAuthentication,
+
         /// <summary>OnOperationResponse: Authenticate (temporarily) failed when using a Photon Cloud subscription without CCU Burst. Update your subscription.</summary>
         MaxCcuReached,
+
         /// <summary>OnOperationResponse: Authenticate when the app's Photon Cloud subscription is locked to some (other) region(s). Update your subscription or change region.</summary>
         InvalidRegion,
+
         /// <summary>OnOperationResponse: Operation that's (currently) not available for this client (not authorized usually). Only tracked for op Authenticate.</summary>
         OperationNotAllowedInCurrentState,
+
         /// <summary>OnOperationResponse: Authenticate in the Photon Cloud with invalid client values or custom authentication setup in Cloud Dashboard.</summary>
         CustomAuthenticationFailed,
+
         /// <summary>The authentication ticket should provide access to any Photon Cloud server without doing another authentication-service call. However, the ticket expired.</summary>
         AuthenticationTicketExpired,
+
         /// <summary>OnStatusChanged: The client disconnected from within the logic (the C# code).</summary>
         DisconnectByClientLogic
     }

@@ -6,7 +6,6 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 using System.Collections;
-
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -29,7 +28,7 @@ namespace Photon.Pun.Demo.Cockpit
             bool _pingUpdate = string.Equals(this.ValueText.text, value);
             this.ValueText.text = value;
 
-			if (this!=null && this.isActiveAndEnabled && _pingUpdate)
+            if (this != null && this.isActiveAndEnabled && _pingUpdate)
             {
                 StartCoroutine(UpdateUIPing());
             }
@@ -49,10 +48,8 @@ namespace Photon.Pun.Demo.Cockpit
             }
 
 
-
             if (animate)
             {
-
                 StartCoroutine("Add");
             }
             else
@@ -80,7 +77,6 @@ namespace Photon.Pun.Demo.Cockpit
 
             while (LayoutElement.minHeight != 30f)
             {
-
                 LayoutElement.minHeight = Mathf.MoveTowards(LayoutElement.minHeight, 30f, 2f);
                 yield return new WaitForEndOfFrame();
             }
@@ -96,6 +92,5 @@ namespace Photon.Pun.Demo.Cockpit
 
             Destroy(this.gameObject);
         }
-
     }
 }

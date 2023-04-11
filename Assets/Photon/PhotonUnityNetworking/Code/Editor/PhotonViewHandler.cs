@@ -11,28 +11,28 @@
 
 namespace Photon.Pun
 {
-	using System.Collections.Generic;
+    using System.Collections.Generic;
     using Realtime;
     using UnityEditor;
-	using UnityEngine;
+    using UnityEngine;
     using Debug = UnityEngine.Debug;
 
 
     [InitializeOnLoad]
-	public class PhotonViewHandler : EditorWindow
-	{
-		static PhotonViewHandler()
-		{
+    public class PhotonViewHandler : EditorWindow
+    {
+        static PhotonViewHandler()
+        {
             // called once per change (per key-press in inspectors) and once after play-mode ends.
-			#if (UNITY_2018 || UNITY_2018_1_OR_NEWER)
-			EditorApplication.hierarchyChanged += OnHierarchyChanged;
-			#else
+#if (UNITY_2018 || UNITY_2018_1_OR_NEWER)
+            EditorApplication.hierarchyChanged += OnHierarchyChanged;
+#else
 			EditorApplication.hierarchyWindowChanged += OnHierarchyChanged;
-			#endif
-		}
+#endif
+        }
 
 
-		internal static void OnHierarchyChanged()
+        internal static void OnHierarchyChanged()
         {
             // set prefabs to viewID 0 if needed
             // organize resource PVs in a list per viewID
@@ -68,7 +68,7 @@ namespace Photon.Pun
                         EditorUtility.SetDirty(view);
                     }
 
-                    continue;   // skip prefabs in further processing
+                    continue; // skip prefabs in further processing
                 }
 
                 photonViewInstances.Add(view);
@@ -78,7 +78,7 @@ namespace Photon.Pun
                 if (!IsViewIdOkForScene(view))
                 {
                     photonViewsToReassign.Add(view);
-                    continue;   // this view definitely gets cleaned up, so it does not count versus duplicates, checked below
+                    continue; // this view definitely gets cleaned up, so it does not count versus duplicates, checked below
                 }
 
 
@@ -87,6 +87,7 @@ namespace Photon.Pun
                 {
                     viewInstancesPerViewId[view.sceneViewId] = new List<PhotonView>();
                 }
+
                 viewInstancesPerViewId[view.sceneViewId].Add(view);
             }
 
@@ -96,12 +97,13 @@ namespace Photon.Pun
             {
                 if (list.Count <= 1)
                 {
-                    continue;   // skip lists with just one entry (the viewID is unique)
+                    continue; // skip lists with just one entry (the viewID is unique)
                 }
 
 
                 PhotonView previousAssignment = null;
-                bool wasAssigned = PunSceneViews.Instance.Views.TryGetValue(list[0].sceneViewId, out previousAssignment);
+                bool wasAssigned =
+                    PunSceneViews.Instance.Views.TryGetValue(list[0].sceneViewId, out previousAssignment);
 
                 foreach (PhotonView view in list)
                 {
@@ -124,8 +126,10 @@ namespace Photon.Pun
                 {
                     i++;
                 }
+
                 view.sceneViewId = i;
-                viewInstancesPerViewId.Add(i, null);    // we don't need the lists anymore but we care about getting the viewIDs listed
+                viewInstancesPerViewId.Add(i,
+                    null); // we don't need the lists anymore but we care about getting the viewIDs listed
                 EditorUtility.SetDirty(view);
             }
 
@@ -136,7 +140,7 @@ namespace Photon.Pun
             {
                 if (PunSceneViews.Instance.Views.ContainsKey(view.sceneViewId))
                 {
-                    Debug.LogError("ViewIDs should no longer have duplicates! "+view.sceneViewId, view);  
+                    Debug.LogError("ViewIDs should no longer have duplicates! " + view.sceneViewId, view);
                     continue;
                 }
 
@@ -158,17 +162,17 @@ namespace Photon.Pun
         {
             return view.sceneViewId >= MinSceneViewId(view);
         }
-	}
+    }
 
     /// <summary>
     /// Stores a PhotonView instances per viewId (key). Instance is used as cache storage in-Editor.
     /// </summary>
     public class PunSceneViews : ScriptableObject
     {
-        [SerializeField]
-        public Dictionary<int, PhotonView> Views = new Dictionary<int, PhotonView>();
+        [SerializeField] public Dictionary<int, PhotonView> Views = new Dictionary<int, PhotonView>();
 
         private static PunSceneViews instanceField;
+
         public static PunSceneViews Instance
         {
             get

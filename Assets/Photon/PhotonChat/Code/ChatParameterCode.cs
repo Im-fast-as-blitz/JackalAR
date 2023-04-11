@@ -13,33 +13,46 @@ namespace Photon.Chat
     {
         /// <summary>(0) Array of chat channels.</summary>
         public const byte Channels = 0;
+
         /// <summary>(1) Name of a single chat channel.</summary>
         public const byte Channel = 1;
+
         /// <summary>(2) Array of chat messages.</summary>
         public const byte Messages = 2;
+
         /// <summary>(3) A single chat message.</summary>
         public const byte Message = 3;
+
         /// <summary>(4) Array of names of the users who sent the array of chat messages.</summary>
         public const byte Senders = 4;
+
         /// <summary>(5) Name of a the user who sent a chat message.</summary>
         public const byte Sender = 5;
+
         /// <summary>(6) Not used.</summary>
         public const byte ChannelUserCount = 6;
+
         /// <summary>(225) Name of user to send a (private) message to.</summary><remarks>The code is used in LoadBalancing and copied over here.</remarks>
         public const byte UserId = 225;
+
         /// <summary>(8) Id of a message.</summary>
         public const byte MsgId = 8;
+
         /// <summary>(9) Not used.</summary>
         public const byte MsgIds = 9;
+
         /// <summary>(221) Secret token to identify an authorized user.</summary><remarks>The code is used in LoadBalancing and copied over here.</remarks>
         public const byte Secret = 221;
+
         /// <summary>(15) Subscribe operation result parameter. A bool[] with result per channel.</summary>
         public const byte SubscribeResults = 15;
 
         /// <summary>(10) Status</summary>
         public const byte Status = 10;
+
         /// <summary>(11) Friends</summary>
         public const byte Friends = 11;
+
         /// <summary>(12) SkipMessage is used in SetOnlineStatus and if true, the message is not being broadcast.</summary>
         public const byte SkipMessage = 12;
 
@@ -58,17 +71,22 @@ namespace Photon.Chat
         /// in event <see cref="ChatEventCode.PropertiesChanged"/> it's channel properties unless <see cref="UserId"/> parameter value is not null
         /// </remarks>
         public const byte Properties = 22;
+
         /// <summary>(23) Array of UserIds of users already subscribed to a channel.</summary>
         /// <remarks>Used in Subscribe event when PublishSubscribers is enabled.
         /// Does not include local user who just subscribed.
         /// Maximum length is (<see cref="ChatChannel.MaxSubscribers"/> - 1).</remarks>
         public const byte ChannelSubscribers = 23;
+
         /// <summary>(24) Optional data sent in ErrorInfo event from Chat WebHooks. </summary>
         public const byte DebugData = 24;
+
         /// <summary>(25) Code for values to be used for "Check And Swap" (CAS) when changing properties.</summary>
         public const byte ExpectedValues = 25;
+
         /// <summary>(26) Code for broadcast parameter of <see cref="ChatOperationCode.SetProperties"/> method.</summary>
         public const byte Broadcast = 26;
+
         /// <summary>
         /// WellKnown and custom user properties. 
         /// </summary>

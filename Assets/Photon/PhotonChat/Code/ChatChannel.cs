@@ -13,10 +13,10 @@ namespace Photon.Chat
     using System.Collections.Generic;
     using System.Text;
 
-    #if SUPPORTED_UNITY || NETFX_CORE
+#if SUPPORTED_UNITY || NETFX_CORE
     using Hashtable = ExitGames.Client.Photon.Hashtable;
     using SupportClass = ExitGames.Client.Photon.SupportClass;
-    #endif
+#endif
 
 
     /// <summary>
@@ -49,7 +49,10 @@ namespace Photon.Chat
         public bool IsPrivate { get; protected internal set; }
 
         /// <summary>Count of messages this client still buffers/knows for this channel.</summary>
-        public int MessageCount { get { return this.Messages.Count; } }
+        public int MessageCount
+        {
+            get { return this.Messages.Count; }
+        }
 
         /// <summary>
         /// ID of the last message received.
@@ -123,6 +126,7 @@ namespace Photon.Chat
             {
                 txt.AppendLine(string.Format("{0}: {1}", this.Senders[i], this.Messages[i]));
             }
+
             return txt.ToString();
         }
 
@@ -134,6 +138,7 @@ namespace Photon.Chat
                 {
                     this.properties = new Dictionary<object, object>(newProperties.Count);
                 }
+
                 foreach (var pair in newProperties)
                 {
                     if (pair.Value == null)
@@ -145,11 +150,13 @@ namespace Photon.Chat
                         this.properties[pair.Key] = pair.Value;
                     }
                 }
+
                 object temp;
                 if (this.properties.TryGetValue(ChannelWellKnownProperties.PublishSubscribers, out temp))
                 {
                     this.PublishSubscribers = (bool)temp;
                 }
+
                 if (this.properties.TryGetValue(ChannelWellKnownProperties.MaxSubscribers, out temp))
                 {
                     this.MaxSubscribers = (int)temp;
@@ -163,6 +170,7 @@ namespace Photon.Chat
             {
                 return false;
             }
+
             bool result = true;
             for (int i = 0; i < users.Length; i++)
             {
@@ -171,6 +179,7 @@ namespace Photon.Chat
                     result = false;
                 }
             }
+
             return result;
         }
 
@@ -185,11 +194,12 @@ namespace Photon.Chat
             {
                 this.usersProperties.Remove(userId);
             }
+
             return this.Subscribers.Remove(userId);
         }
 
 
-        #if CHAT_EXTENDED
+#if CHAT_EXTENDED
         internal void ReadUserProperties(string userId, Dictionary<object, object> changedProperties)
         {
             if (this.usersProperties == null)
@@ -250,6 +260,6 @@ namespace Photon.Chat
         {
             return this.TryGetUserProperty(userId, propertyKey, out propertyValue);
         }
-        #endif
+#endif
     }
 }

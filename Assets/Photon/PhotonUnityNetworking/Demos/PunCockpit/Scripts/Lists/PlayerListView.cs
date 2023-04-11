@@ -4,15 +4,13 @@
 // </copyright>
 // <author>developer@exitgames.com</author>
 // --------------------------------------------------------------------------------------------------------------------
- 
+
 
 using System.Collections;
 using System.Linq;
-
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
-
 using Photon.Realtime;
 
 namespace Photon.Pun.Demo.Cockpit
@@ -40,7 +38,6 @@ namespace Photon.Pun.Demo.Cockpit
 
         public override void OnEnable()
         {
-
             base.OnEnable();
 
             UpdateStatusText.text = string.Empty;
@@ -79,7 +76,8 @@ namespace Photon.Pun.Demo.Cockpit
             // we create the cell
             if (!playerCellList.ContainsKey(newPlayer.ActorNumber))
             {
-                playerCellList[newPlayer.ActorNumber] = Instantiate(CellPrototype.gameObject).GetComponent<PlayerListCell>();
+                playerCellList[newPlayer.ActorNumber] =
+                    Instantiate(CellPrototype.gameObject).GetComponent<PlayerListCell>();
                 playerCellList[newPlayer.ActorNumber].transform.SetParent(CellPrototype.transform.parent, false);
                 playerCellList[newPlayer.ActorNumber].gameObject.SetActive(true);
                 playerCellList[newPlayer.ActorNumber].AddToList(newPlayer, true);
@@ -128,7 +126,6 @@ namespace Photon.Pun.Demo.Cockpit
             }
             else
             {
-
                 playerCellList[otherPlayer.ActorNumber].RefreshInfo(null);
             }
 
@@ -156,8 +153,8 @@ namespace Photon.Pun.Demo.Cockpit
             {
                 PlayerCountsText.text = PhotonNetwork.CurrentRoom.PlayerCount.ToString("00");
             }
-
         }
+
         IEnumerator UpdateUIPing()
         {
             UpdateStatusText.text = "Updated";

@@ -17,9 +17,9 @@ namespace Photon.Pun
     using System.Collections.Generic;
     using Photon.Realtime;
 
-    #if UNITY_EDITOR
+#if UNITY_EDITOR
     using UnityEditor;
-    #endif
+#endif
 
     /// <summary>
     /// A PhotonView identifies an object across the network (viewID) and configures how the controlling client updates remote instances.
@@ -28,7 +28,7 @@ namespace Photon.Pun
     [AddComponentMenu("Photon Networking/Photon View")]
     public class PhotonView : MonoBehaviour
     {
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         [UnityEditor.InitializeOnLoadMethod]
         private static void SetPhotonViewExecutionOrder()
         {
@@ -39,41 +39,39 @@ namespace Photon.Pun
 
             if (photonViewExecutionOrder != MonoImporter.GetExecutionOrder(monoScript))
             {
-                MonoImporter.SetExecutionOrder(monoScript, photonViewExecutionOrder); // very early but allows other scripts to run even earlier...
+                MonoImporter.SetExecutionOrder(monoScript,
+                    photonViewExecutionOrder); // very early but allows other scripts to run even earlier...
             }
 
-            DestroyImmediate(go); 
+            DestroyImmediate(go);
         }
-        #endif
+#endif
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         [ContextMenu("Open PUN Wizard")]
         void OpenPunWizard()
         {
             EditorApplication.ExecuteMenuItem("Window/Photon Unity Networking/PUN Wizard");
         }
-        #endif
+#endif
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         // Suppressing compiler warning "this variable is never used". Only used in the CustomEditor, only in Editor
-        #pragma warning disable 0414
-        [SerializeField]
-        bool ObservedComponentsFoldoutOpen = true;
-        #pragma warning restore 0414
-        #endif
-        
-        #if UNITY_EDITOR
+#pragma warning disable 0414
+        [SerializeField] bool ObservedComponentsFoldoutOpen = true;
+#pragma warning restore 0414
+#endif
+
+#if UNITY_EDITOR
         /// called by Editor to reset the component
         private void Reset()
         {
             observableSearch = ObservableSearch.AutoFindAll;
         }
-        #endif
+#endif
 
 
-
-        [FormerlySerializedAs("group")]
-        public byte Group = 0;
+        [FormerlySerializedAs("group")] public byte Group = 0;
 
         // NOTE: this is now an integer because unity won't serialize short (needed for instantiation). we SEND only a short though!
         // NOTE: prefabs have a prefixField of -1. this is replaced with any currentLevelPrefix that's used at runtime. instantiated GOs get their prefix set pre-instantiation (so those are not -1 anymore)
@@ -92,9 +90,7 @@ namespace Photon.Pun
         }
 
         // this field is serialized by unity. that means it is copied when instantiating a persistent obj into the scene
-        [FormerlySerializedAs("prefixBackup")]
-        public int prefixField = -1;
-
+        [FormerlySerializedAs("prefixBackup")] public int prefixField = -1;
 
 
         /// <summary>
@@ -112,6 +108,7 @@ namespace Photon.Pun
         /// For internal use only, don't use
         /// </summary>
         protected internal List<object> lastOnSerializeDataSent = null;
+
         protected internal List<object> syncValues;
 
         /// <summary>
@@ -134,17 +131,20 @@ namespace Photon.Pun
         public OwnershipOption OwnershipTransfer = OwnershipOption.Fixed;
 
 
-        public enum ObservableSearch { Manual, AutoFindActive, AutoFindAll }
+        public enum ObservableSearch
+        {
+            Manual,
+            AutoFindActive,
+            AutoFindAll
+        }
 
         /// Default to manual so existing PVs in projects default to same as before. Reset() changes this to AutoAll for new implementations.
         public ObservableSearch observableSearch = ObservableSearch.Manual;
-        
+
         public List<Component> ObservedComponents;
 
 
-
         internal MonoBehaviour[] RpcMonoBehaviours;
-
 
 
         [Obsolete("Renamed. Use IsRoomView instead")]
@@ -152,7 +152,7 @@ namespace Photon.Pun
         {
             get { return this.IsRoomView; }
         }
-        
+
         /// <summary>True if the PhotonView was loaded with the scene (game object) or instantiated with InstantiateRoomObject.</summary>
         /// <remarks>
         /// Room objects are not owned by a particular player but belong to the scene. Thus they don't get destroyed when their
@@ -178,18 +178,19 @@ namespace Photon.Pun
         /// True if this is a scene photonview (null owner and ownerId == 0) on the Master client.
         /// </remarks>
         public bool IsMine { get; private set; }
+
         public bool AmController
         {
             get { return this.IsMine; }
         }
 
         public Player Controller { get; private set; }
-        
+
         public int CreatorActorNr { get; private set; }
 
         public bool AmOwner { get; private set; }
 
-        
+
         /// <summary>
         /// The owner of a PhotonView is the creator of an object by default Ownership can be transferred and the owner may not be in the room anymore. Objects in the scene don't have an owner.
         /// </summary>
@@ -203,9 +204,7 @@ namespace Photon.Pun
         public Player Owner { get; private set; }
 
 
-
-        [NonSerialized]
-        private int ownerActorNr;
+        [NonSerialized] private int ownerActorNr;
 
         public int OwnerActorNr
         {
@@ -219,10 +218,13 @@ namespace Photon.Pun
 
                 Player prevOwner = this.Owner;
 
-                this.Owner = PhotonNetwork.CurrentRoom == null ? null : PhotonNetwork.CurrentRoom.GetPlayer(value, true);
+                this.Owner = PhotonNetwork.CurrentRoom == null
+                    ? null
+                    : PhotonNetwork.CurrentRoom.GetPlayer(value, true);
                 this.ownerActorNr = this.Owner != null ? this.Owner.ActorNumber : value;
 
-                this.AmOwner = PhotonNetwork.LocalPlayer != null && this.ownerActorNr == PhotonNetwork.LocalPlayer.ActorNumber;
+                this.AmOwner = PhotonNetwork.LocalPlayer != null &&
+                               this.ownerActorNr == PhotonNetwork.LocalPlayer.ActorNumber;
 
                 this.UpdateCallbackLists();
                 if (!ReferenceEquals(this.OnOwnerChangeCallbacks, null))
@@ -235,9 +237,8 @@ namespace Photon.Pun
             }
         }
 
-        
-        [NonSerialized]
-        private int controllerActorNr;
+
+        [NonSerialized] private int controllerActorNr;
 
         public int ControllerActorNr
         {
@@ -246,14 +247,18 @@ namespace Photon.Pun
             {
                 Player prevController = this.Controller;
 
-                this.Controller = PhotonNetwork.CurrentRoom == null ? null : PhotonNetwork.CurrentRoom.GetPlayer(value, true);
+                this.Controller = PhotonNetwork.CurrentRoom == null
+                    ? null
+                    : PhotonNetwork.CurrentRoom.GetPlayer(value, true);
                 if (this.Controller != null && this.Controller.IsInactive)
                 {
                     this.Controller = PhotonNetwork.MasterClient;
                 }
+
                 this.controllerActorNr = this.Controller != null ? this.Controller.ActorNumber : value;
 
-                this.IsMine = PhotonNetwork.LocalPlayer != null && this.controllerActorNr == PhotonNetwork.LocalPlayer.ActorNumber;
+                this.IsMine = PhotonNetwork.LocalPlayer != null &&
+                              this.controllerActorNr == PhotonNetwork.LocalPlayer.ActorNumber;
 
                 if (!ReferenceEquals(this.Controller, prevController))
                 {
@@ -271,43 +276,41 @@ namespace Photon.Pun
 
 
         /// This field is the Scene ViewID (0 if not used). loaded with the scene, used in Awake().
-        [SerializeField]
-        [FormerlySerializedAs("viewIdField")]
-        [HideInInspector]
+        [SerializeField] [FormerlySerializedAs("viewIdField")] [HideInInspector]
         public int sceneViewId = 0; // TODO: in best case, this is not public
 
 
         /// This field is the "runtime" ViewID as backup for the property.
-        [NonSerialized]
-        private int viewIdField = 0;
-        
+        [NonSerialized] private int viewIdField = 0;
+
         /// <summary>
         /// The ID of the PhotonView. Identifies it in a networked game (per room).
         /// </summary>
         /// <remarks>See: [Network Instantiation](@ref instantiateManual)</remarks>
         public int ViewID
         {
-            get
-            {
-                return this.viewIdField;
-            }
+            get { return this.viewIdField; }
 
             set
             {
                 // TODO: Check if the isPlaying check is needed when the PhotonViewHandler is updated
                 if (value != 0 && this.viewIdField != 0)
                 {
-                    Debug.LogWarning("Changing a ViewID while it's in use is not possible (except setting it to 0 (not being used). Current ViewID: " + this.viewIdField);
+                    Debug.LogWarning(
+                        "Changing a ViewID while it's in use is not possible (except setting it to 0 (not being used). Current ViewID: " +
+                        this.viewIdField);
                     return;
                 }
-                
+
                 if (value == 0 && this.viewIdField != 0)
                 {
                     PhotonNetwork.LocalCleanPhotonView(this);
                 }
 
                 this.viewIdField = value;
-                this.CreatorActorNr = value / PhotonNetwork.MAX_VIEW_IDS;   // the creator can be derived from the viewId. this is also the initial owner and creator.
+                this.CreatorActorNr =
+                    value / PhotonNetwork
+                        .MAX_VIEW_IDS; // the creator can be derived from the viewId. this is also the initial owner and creator.
                 this.OwnerActorNr = this.CreatorActorNr;
                 this.ControllerActorNr = this.CreatorActorNr;
                 this.RebuildControllerCache();
@@ -322,16 +325,15 @@ namespace Photon.Pun
         }
 
         [FormerlySerializedAs("instantiationId")]
-        public int InstantiationId; // if the view was instantiated with a GO, this GO has a instantiationID (first view's viewID)
+        public int
+            InstantiationId; // if the view was instantiated with a GO, this GO has a instantiationID (first view's viewID)
 
-        [SerializeField]
-        [HideInInspector]
-        public bool isRuntimeInstantiated;
+        [SerializeField] [HideInInspector] public bool isRuntimeInstantiated;
 
 
         protected internal bool removedFromLocalViewList;
 
-        
+
         /// <summary>Will FindObservables() and assign the sceneViewId, if that is != 0. This initializes the PhotonView if loaded with the scene. Called once by Unity, when this instance is created.</summary>
         protected internal void Awake()
         {
@@ -339,7 +341,7 @@ namespace Photon.Pun
             {
                 return;
             }
-            
+
             if (this.sceneViewId != 0)
             {
                 // PhotonNetwork.Instantiate will set a ViewID != 0 before the object awakes. So only objects loaded with the scene ever use the sceneViewId (even if the obj got pooled)
@@ -364,7 +366,7 @@ namespace Photon.Pun
             this.lastOnSerializeDataSent = null;
         }
 
-        
+
         /// called by OnJoinedRoom, OnMasterClientSwitched, OnPlayerEnteredRoom and OnEvent for OwnershipUpdate
         /// OnPlayerLeftRoom will set a new controller directly, if the controller or owner left
         internal void RebuildControllerCache(bool ownerHasChanged = false)
@@ -401,9 +403,11 @@ namespace Photon.Pun
             {
                 bool wasInList = PhotonNetwork.LocalCleanPhotonView(this);
 
-                if (wasInList && this.InstantiationId > 0 && !PhotonHandler.AppQuits && PhotonNetwork.LogLevel >= PunLogLevel.Informational)
+                if (wasInList && this.InstantiationId > 0 && !PhotonHandler.AppQuits &&
+                    PhotonNetwork.LogLevel >= PunLogLevel.Informational)
                 {
-                    Debug.Log("PUN-instantiated '" + this.gameObject.name + "' got destroyed by engine. This is OK when loading levels. Otherwise use: PhotonNetwork.Destroy().");
+                    Debug.Log("PUN-instantiated '" + this.gameObject.name +
+                              "' got destroyed by engine. This is OK when loading levels. Otherwise use: PhotonNetwork.Destroy().");
                 }
             }
         }
@@ -429,7 +433,7 @@ namespace Photon.Pun
                 if (PhotonNetwork.LogLevel >= PunLogLevel.Informational)
                 {
                     Debug.LogWarning("Attempting to RequestOwnership of GameObject '" + name + "' viewId: " + ViewID +
-                        ", but PhotonView.OwnershipTransfer is set to Fixed.");
+                                     ", but PhotonView.OwnershipTransfer is set to Fixed.");
                 }
             }
         }
@@ -449,7 +453,7 @@ namespace Photon.Pun
                 if (PhotonNetwork.LogLevel >= PunLogLevel.Informational)
                 {
                     Debug.LogWarning("Attempting to TransferOwnership of GameObject '" + name + "' viewId: " + ViewID +
-                   ", but provided Player newOwner is null.");
+                                     ", but provided Player newOwner is null.");
                 }
             }
         }
@@ -462,7 +466,8 @@ namespace Photon.Pun
         /// </remarks>
         public void TransferOwnership(int newOwnerId)
         {
-            if (OwnershipTransfer == OwnershipOption.Takeover || (OwnershipTransfer == OwnershipOption.Request && this.AmController))
+            if (OwnershipTransfer == OwnershipOption.Takeover ||
+                (OwnershipTransfer == OwnershipOption.Request && this.AmController))
             {
                 PhotonNetwork.TransferOwnership(this.ViewID, newOwnerId);
             }
@@ -471,11 +476,13 @@ namespace Photon.Pun
                 if (PhotonNetwork.LogLevel >= PunLogLevel.Informational)
                 {
                     if (OwnershipTransfer == OwnershipOption.Fixed)
-                        Debug.LogWarning("Attempting to TransferOwnership of GameObject '" + name + "' viewId: " + ViewID +
-                            " without the authority to do so. TransferOwnership is not allowed if PhotonView.OwnershipTransfer is set to Fixed.");
+                        Debug.LogWarning("Attempting to TransferOwnership of GameObject '" + name + "' viewId: " +
+                                         ViewID +
+                                         " without the authority to do so. TransferOwnership is not allowed if PhotonView.OwnershipTransfer is set to Fixed.");
                     else if (OwnershipTransfer == OwnershipOption.Request)
-                        Debug.LogWarning("Attempting to TransferOwnership of GameObject '" + name + "' viewId: " + ViewID +
-                           " without the authority to do so. PhotonView.OwnershipTransfer is set to Request, so only the controller of this object can TransferOwnership.");
+                        Debug.LogWarning("Attempting to TransferOwnership of GameObject '" + name + "' viewId: " +
+                                         ViewID +
+                                         " without the authority to do so. PhotonView.OwnershipTransfer is set to Request, so only the controller of this object can TransferOwnership.");
                 }
             }
         }
@@ -506,7 +513,8 @@ namespace Photon.Pun
                 this.ObservedComponents.Clear();
             }
 
-            this.transform.GetNestedComponentsInChildren<Component, IPunObservable, PhotonView>(force || this.observableSearch == ObservableSearch.AutoFindAll, this.ObservedComponents);
+            this.transform.GetNestedComponentsInChildren<Component, IPunObservable, PhotonView>(
+                force || this.observableSearch == ObservableSearch.AutoFindAll, this.ObservedComponents);
         }
 
 
@@ -545,7 +553,9 @@ namespace Photon.Pun
             }
             else
             {
-                Debug.LogError("Observed scripts have to implement IPunObservable. " + component + " does not. It is Type: " + component.GetType(), component.gameObject);
+                Debug.LogError(
+                    "Observed scripts have to implement IPunObservable. " + component + " does not. It is Type: " +
+                    component.GetType(), component.gameObject);
             }
         }
 
@@ -558,7 +568,9 @@ namespace Photon.Pun
             }
             else
             {
-                Debug.LogError("Observed scripts have to implement IPunObservable. " + component + " does not. It is Type: " + component.GetType(), component.gameObject);
+                Debug.LogError(
+                    "Observed scripts have to implement IPunObservable. " + component + " does not. It is Type: " +
+                    component.GetType(), component.gameObject);
             }
         }
 
@@ -697,9 +709,8 @@ namespace Photon.Pun
             return PhotonNetwork.GetPhotonView(viewID);
         }
 
-        
-        #region Callback Interfaces
 
+        #region Callback Interfaces
 
         private struct CallbackTargetChange
         {
@@ -788,7 +799,8 @@ namespace Photon.Pun
             }
         }
 
-        private void TryRegisterCallback<T>(IPhotonViewCallback obj, ref List<T> list, bool add) where T : class, IPhotonViewCallback
+        private void TryRegisterCallback<T>(IPhotonViewCallback obj, ref List<T> list, bool add)
+            where T : class, IPhotonViewCallback
         {
             T iobj = obj as T;
             if (iobj != null)
@@ -814,13 +826,14 @@ namespace Photon.Pun
             }
         }
 
-
         #endregion Callback Interfaces
 
 
         public override string ToString()
         {
-            return string.Format("View {0}{3} on {1} {2}", this.ViewID, (this.gameObject != null) ? this.gameObject.name : "GO==null", (this.IsRoomView) ? "(scene)" : string.Empty, this.Prefix > 0 ? "lvl" + this.Prefix : "");
+            return string.Format("View {0}{3} on {1} {2}", this.ViewID,
+                (this.gameObject != null) ? this.gameObject.name : "GO==null",
+                (this.IsRoomView) ? "(scene)" : string.Empty, this.Prefix > 0 ? "lvl" + this.Prefix : "");
         }
     }
 }

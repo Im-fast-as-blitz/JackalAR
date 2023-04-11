@@ -6,10 +6,8 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 using System.Collections;
-
 using UnityEngine;
 using UnityEngine.UI;
-
 using Photon.Realtime;
 
 namespace Photon.Pun.Demo.Cockpit
@@ -25,27 +23,26 @@ namespace Photon.Pun.Demo.Cockpit
         public Text IpText;
         public Text PingText;
 
-		public LayoutElement LayoutElement;
+        public LayoutElement LayoutElement;
 
-		int _index;
+        int _index;
 
-		Region info;
+        Region info;
 
-		public void RefreshInfo(Region info)
+        public void RefreshInfo(Region info)
         {
             this.info = info;
-			CodeText.text = this.info.Code;
-			IpText.text = this.info.HostAndPort;
-			PingText.text = this.info.Ping +"ms";
+            CodeText.text = this.info.Code;
+            IpText.text = this.info.HostAndPort;
+            PingText.text = this.info.Ping + "ms";
         }
 
-		public void AddToList(Region info,int index)
+        public void AddToList(Region info, int index)
         {
             RefreshInfo(info);
-			_index = index;
+            _index = index;
 
             StartCoroutine("AnimateAddition");
-  
         }
 
         public void RemoveFromList()
@@ -55,13 +52,12 @@ namespace Photon.Pun.Demo.Cockpit
 
         IEnumerator AnimateAddition()
         {
-			LayoutElement.minHeight = 0f;
+            LayoutElement.minHeight = 0f;
 
-			yield return new WaitForSeconds(_index * 0.04f);
+            yield return new WaitForSeconds(_index * 0.04f);
 
             while (LayoutElement.minHeight != 30f)
             {
-
                 LayoutElement.minHeight = Mathf.MoveTowards(LayoutElement.minHeight, 30f, 2f);
                 yield return new WaitForEndOfFrame();
             }
@@ -74,8 +70,8 @@ namespace Photon.Pun.Demo.Cockpit
                 LayoutElement.minHeight = Mathf.MoveTowards(LayoutElement.minHeight, 0f, 2f);
                 yield return new WaitForEndOfFrame();
             }
+
             Destroy(this.gameObject);
         }
-
     }
 }

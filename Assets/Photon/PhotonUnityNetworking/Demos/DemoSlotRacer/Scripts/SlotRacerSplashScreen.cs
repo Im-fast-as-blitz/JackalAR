@@ -44,7 +44,7 @@ namespace Photon.Pun.Demo.SlotRacer
 
         public void Update()
         {
-            #if UNITY_EDITOR
+#if UNITY_EDITOR
             if (!Application.isPlaying)
             {
                 if (this.WarningText == null)
@@ -73,24 +73,26 @@ namespace Photon.Pun.Demo.SlotRacer
 
                 if (_found && !_enabled)
                 {
-                    this.WarningText.text = "<Color=Green>INFORMATION:</Color>\nThis demo can run with the PunCockpit Scene." +
-                                            "\nFor this, the Scene '" +
-                                            this.PunCockpit_scene +
-                                            "' needs to be enabled to the build settings." +
-                                            "\nElse, you'll get only a minimal Menu to connect";
+                    this.WarningText.text =
+                        "<Color=Green>INFORMATION:</Color>\nThis demo can run with the PunCockpit Scene." +
+                        "\nFor this, the Scene '" +
+                        this.PunCockpit_scene +
+                        "' needs to be enabled to the build settings." +
+                        "\nElse, you'll get only a minimal Menu to connect";
                     return;
                 }
 
                 if (!_found)
                 {
-                    this.WarningText.text = "<Color=Green>INFORMATION:</Color>\nThis demo can run with the PunCockpit Scene." +
-                                            "\n For this, the Scene '" +
-                                            this.PunCockpit_scene +
-                                            "' needs to be added to the build settings." +
-                                            "\nElse, you'll get only a minimal Menu to connect";
+                    this.WarningText.text =
+                        "<Color=Green>INFORMATION:</Color>\nThis demo can run with the PunCockpit Scene." +
+                        "\n For this, the Scene '" +
+                        this.PunCockpit_scene +
+                        "' needs to be added to the build settings." +
+                        "\nElse, you'll get only a minimal Menu to connect";
                 }
             }
-            #endif
+#endif
         }
     }
 }

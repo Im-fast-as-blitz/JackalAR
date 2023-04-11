@@ -13,6 +13,7 @@ public class MenuManager : MonoBehaviourPunCallbacks
 
     public InputField createInput;
     public InputField joinInput;
+
     public void CreateRoom()
     {
         RoomOptions roomOptions = new RoomOptions();
@@ -24,9 +25,9 @@ public class MenuManager : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.JoinRoom(joinInput.text);
     }
+
     public override void OnJoinedRoom()
     {
-        
         Debug.Log("Joined to room");
         if (PhotonNetwork.IsMasterClient)
         {
@@ -34,7 +35,6 @@ public class MenuManager : MonoBehaviourPunCallbacks
         }
         //SceneManager.LoadScene("GameAR");
         // SceneManager.LoadScene("Game");
-        
     }
 
     // Update is called once per frame

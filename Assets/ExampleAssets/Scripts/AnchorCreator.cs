@@ -15,8 +15,7 @@ using UnityEngine.XR.ARSubsystems;
 public class AnchorCreator : MonoBehaviour
 {
     // This is the prefab that will appear every time an anchor is created.
-    [SerializeField]
-    GameObject m_AnchorPrefab;
+    [SerializeField] GameObject m_AnchorPrefab;
 
     public GameObject AnchorPrefab
     {
@@ -31,6 +30,7 @@ public class AnchorCreator : MonoBehaviour
         {
             Destroy(anchor);
         }
+
         m_AnchorPoints.Clear();
     }
 

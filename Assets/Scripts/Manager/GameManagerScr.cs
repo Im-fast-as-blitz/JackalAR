@@ -46,7 +46,7 @@ public class GameManagerScr : MonoBehaviour
         CurrentGame.ShamanBtn = shamanBtn;
         CurrentGame.TakeCoinBtn = takeCoinBtn;
         CurrentGame.PutCoinBtn = putCoinBtn;
-        
+
         rpcConnector.SetGameObj(CurrentGame);
 
         PersonManagerScr.currGame = CurrentGame;
@@ -57,6 +57,7 @@ public class GameManagerScr : MonoBehaviour
             {
                 BuildPlayingField(new Vector3(0, 0, 0));
                 CreateTeam();
+                // rpcConnector.SyncCardsRpc();
             }
 
             _placedMap = true;
@@ -260,7 +261,7 @@ public class GameManagerScr : MonoBehaviour
 
     public void BuildPlayingField(Vector3 middleCardPosition)
     {
-        midCardPosition = middleCardPosition; 
+        midCardPosition = middleCardPosition;
         MeshRenderer rendererCardPrefab = cardPrefab.GetComponent<MeshRenderer>();
         CurrentGame.sizeCardPrefab = rendererCardPrefab.bounds.size;
 
@@ -294,132 +295,10 @@ public class GameManagerScr : MonoBehaviour
                         ownWaterCard.LoadShipLogo();
                     }
                 }
-                else if (ownCard is CannonCard)
-                {
-                    (ownCard as CannonCard).Rotation = (Rotation)Random.Range(0, 4);
-                }
-                else if (ownCard is ArrowCard)
-                {
-                    int arrowType = Random.Range(0, 7);
-                    if (arrowType == 0)
-                    {
-                        ownCard.Type = Card.CardType.ArrowStraight;
-                        ownCard.LogoPath = "Cards/Arrows/straight";
-                    }
-                    else if (arrowType == 1)
-                    {
-                        ownCard.Type = Card.CardType.ArrowDiagonal;
-                        ownCard.LogoPath = "Cards/Arrows/diagonal";
-                    }
-                    else if (arrowType == 2)
-                    {
-                        ownCard.Type = Card.CardType.ArrowStraight2;
-                        ownCard.LogoPath = "Cards/Arrows/straight2";
-                    }
-                    else if (arrowType == 3)
-                    {
-                        ownCard.Type = Card.CardType.ArrowDiagonal2;
-                        ownCard.LogoPath = "Cards/Arrows/diagonal2";
-                    }
-                    else if (arrowType == 4)
-                    {
-                        ownCard.Type = Card.CardType.Arrow3;
-                        ownCard.LogoPath = "Cards/Arrows/3";
-                    }
-                    else if (arrowType == 5)
-                    {
-                        ownCard.Type = Card.CardType.ArrowStraight4;
-                        ownCard.LogoPath = "Cards/Arrows/straight4";
-                    }
-                    else if (arrowType == 6)
-                    {
-                        ownCard.Type = Card.CardType.ArrowDiagonal4;
-                        ownCard.LogoPath = "Cards/Arrows/diagonal4";
-                    }
-
-                    if (ownCard.Type != Card.CardType.ArrowStraight4 && ownCard.Type != Card.CardType.ArrowDiagonal4)
-                    {
-                        (ownCard as ArrowCard).Rotation = (Rotation)Random.Range(0, 4);
-                    }
-                }
-                else if (ownCard is ChestCard)
-                {
-                    if (ChestCard.CardsCount < 5)
-                    {
-                        (ownCard as ChestCard).Coins = 1;
-                        CurrentGame.TotalCoins += 1;
-                    }
-                    else if (ChestCard.CardsCount < 10)
-                    {
-                        (ownCard as ChestCard).Coins = 2;
-                        CurrentGame.TotalCoins += 2;
-                    }
-                    else if (ChestCard.CardsCount < 13)
-                    {
-                        (ownCard as ChestCard).Coins = 3;
-                        CurrentGame.TotalCoins += 3;
-                    }
-                    else if (ChestCard.CardsCount < 15)
-                    {
-                        (ownCard as ChestCard).Coins = 4;
-                        CurrentGame.TotalCoins += 4;
-                    }
-                    else if (ChestCard.CardsCount < 16)
-                    {
-                        (ownCard as ChestCard).Coins = 5;
-                        CurrentGame.TotalCoins += 5;
-                    }
-                    else
-                    {
-                        int randomedCoins = Random.Range(1, 6);
-                        (ownCard as ChestCard).Coins = randomedCoins;
-                        CurrentGame.TotalCoins += randomedCoins;
-                    }
-
-                    ChestCard.CardsCount++;
-                }
-                else if (ownCard is TurntableCard)
-                {
-                    ++turntable_count;
-                    if (turntable_count <= 5)
-                    {
-                        (ownCard as TurntableCard).StepCount = 2;
-                        (ownCard as TurntableCard).StepPos.Add(new Vector3(0.03f, 0, 0.03f));
-                        (ownCard as TurntableCard).StepPos.Add(new Vector3(-0.03f, 0, -0.03f));
-                    }
-                    else if (turntable_count <= 9)
-                    {
-                        ownCard.LogoPath = "Cards/Turntables/3-steps";
-                        (ownCard as TurntableCard).StepCount = 3;
-                        (ownCard as TurntableCard).StepPos.Add(new Vector3(-0.03f, 0, 0.03f));
-                        (ownCard as TurntableCard).StepPos.Add(new Vector3(0.01f, 0, 0));
-                        (ownCard as TurntableCard).StepPos.Add(new Vector3(-0.03f, 0, -0.03f));
-                    }
-                    else if (turntable_count <= 11)
-                    {
-                        ownCard.LogoPath = "Cards/Turntables/4-steps";
-                        (ownCard as TurntableCard).StepCount = 4;
-                        (ownCard as TurntableCard).StepPos.Add(new Vector3(-0.03f, 0, 0.035f));
-                        (ownCard as TurntableCard).StepPos.Add(new Vector3(0.03f, 0, 0.015f));
-                        (ownCard as TurntableCard).StepPos.Add(new Vector3(-0.025f, 0, -0.02f));
-                        (ownCard as TurntableCard).StepPos.Add(new Vector3(+0.02f, 0, -0.035f));
-                    }
-                    else
-                    {
-                        ownCard.LogoPath = "Cards/Turntables/5-steps";
-                        (ownCard as TurntableCard).StepCount = 5;
-                        (ownCard as TurntableCard).StepPos.Add(new Vector3(-0.035f, 0, -0.03f));
-                        (ownCard as TurntableCard).StepPos.Add(new Vector3(0, 0, -0.03f));
-                        (ownCard as TurntableCard).StepPos.Add(new Vector3(0.03f, 0, -0.01f));
-                        (ownCard as TurntableCard).StepPos.Add(new Vector3(0.02f, 0, 0.03f));
-                        (ownCard as TurntableCard).StepPos.Add(new Vector3(-0.035f, 0, 0.03f));
-                    }
-                }
             }
         }
-
     }
-    
+
     // Generate persons on ships
     public void CreateTeam()
     {
@@ -427,7 +306,7 @@ public class GameManagerScr : MonoBehaviour
         float firstCardY = midCardPosition.y;
         float firstCardZ = midCardPosition.z - 6 * CurrentGame.sizeCardPrefab.z;
 
-        for (var currentTeam = CurrentGame.currentTeam; currentTeam < PhotonNetwork.PlayerList.Length; ++currentTeam)
+        for (var currentTeam = CurrentGame.currentTeam; currentTeam < PhotonNetwork.PlayerList.Length + 1; ++currentTeam)
         {
             const int numPersonsInTeam = 3;
             Person[] personsInTeam = new Person[numPersonsInTeam];

@@ -19,7 +19,9 @@ namespace Photon.Pun.Demo.Cockpit
         public InputField PropertyValueInput;
 
         [System.Serializable]
-        public class OnSubmitEvent : UnityEvent<string> { }
+        public class OnSubmitEvent : UnityEvent<string>
+        {
+        }
 
         public OnSubmitEvent OnSubmit;
 

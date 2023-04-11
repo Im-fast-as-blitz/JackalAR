@@ -31,10 +31,9 @@ namespace Photon.Pun
 
             if (mbTarget.photonView == null)
             {
-                EditorGUILayout.HelpBox("Unable to find a PhotonView on this GameObject or on any parent GameObject.", MessageType.Warning);
+                EditorGUILayout.HelpBox("Unable to find a PhotonView on this GameObject or on any parent GameObject.",
+                    MessageType.Warning);
             }
         }
-
-
     }
 }

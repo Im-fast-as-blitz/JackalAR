@@ -10,17 +10,16 @@ using UnityEngine.XR.ARFoundation;
 [RequireComponent(typeof(ARPlaneMeshVisualizer), typeof(MeshRenderer), typeof(ARPlane))]
 public class ARFeatheredPlaneMeshVisualizer : MonoBehaviour
 {
-    [Tooltip("The width of the texture feathering (in world units).")]
-    [SerializeField]
+    [Tooltip("The width of the texture feathering (in world units).")] [SerializeField]
     float m_FeatheringWidth = 0.2f;
 
     /// <summary>
     /// The width of the texture feathering (in world units).
     /// </summary>
     public float featheringWidth
-    { 
+    {
         get { return m_FeatheringWidth; }
-        set { m_FeatheringWidth = value; } 
+        set { m_FeatheringWidth = value; }
     }
 
     void Awake()
@@ -61,7 +60,10 @@ public class ARFeatheredPlaneMeshVisualizer : MonoBehaviour
 
         // Reuse the list of UVs
         s_FeatheringUVs.Clear();
-        if (s_FeatheringUVs.Capacity < vertexCount) { s_FeatheringUVs.Capacity = vertexCount; }
+        if (s_FeatheringUVs.Capacity < vertexCount)
+        {
+            s_FeatheringUVs.Capacity = vertexCount;
+        }
 
         mesh.GetVertices(s_Vertices);
 
@@ -83,7 +85,10 @@ public class ARFeatheredPlaneMeshVisualizer : MonoBehaviour
             // All the UV mappings will be different. In the shader we need to know the UV value we need to fade out by.
             // Choose the shortest UV to guarentee we fade out before the border.
             // This means the feathering widths will be slightly different, we again rely on a fairly uniform plane.
-            if (shortestUVMapping > uvMapping) { shortestUVMapping = uvMapping; }
+            if (shortestUVMapping > uvMapping)
+            {
+                shortestUVMapping = uvMapping;
+            }
 
             s_FeatheringUVs.Add(uv);
         }

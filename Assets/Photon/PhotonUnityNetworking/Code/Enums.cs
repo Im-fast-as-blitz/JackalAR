@@ -13,7 +13,13 @@ namespace Photon.Pun
 {
     /// <summary>Which PhotonNetwork method was called to connect (which influences the regions we want pinged).</summary>
     /// <remarks>PhotonNetwork.ConnectUsingSettings will call either ConnectToMaster, ConnectToRegion or ConnectToBest, depending on the settings.</remarks>
-    public enum ConnectMethod { NotCalled, ConnectToMaster, ConnectToRegion, ConnectToBest }
+    public enum ConnectMethod
+    {
+        NotCalled,
+        ConnectToMaster,
+        ConnectToRegion,
+        ConnectToBest
+    }
 
 
     /// <summary>Used to define the level of logging output created by the PUN classes. Either log errors, info (some more) or full.</summary>
@@ -66,7 +72,13 @@ namespace Photon.Pun
     }
 
 
-    public enum ViewSynchronization { Off, ReliableDeltaCompressed, Unreliable, UnreliableOnChange }
+    public enum ViewSynchronization
+    {
+        Off,
+        ReliableDeltaCompressed,
+        Unreliable,
+        UnreliableOnChange
+    }
 
 
     /// <summary>
@@ -81,10 +93,12 @@ namespace Photon.Pun
         /// Ownership is fixed. Instantiated objects stick with their creator, room objects always belong to the Master Client.
         /// </summary>
         Fixed,
+
         /// <summary>
         /// Ownership can be taken away from the current owner who can't object.
         /// </summary>
         Takeover,
+
         /// <summary>
         /// Ownership can be requested with PhotonView.RequestOwnership but the current owner has to agree to give up ownership.
         /// </summary>

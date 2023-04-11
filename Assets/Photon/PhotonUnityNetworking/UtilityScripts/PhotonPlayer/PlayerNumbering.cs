@@ -10,9 +10,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
-
 using UnityEngine;
-
 using Photon.Pun;
 using Photon.Realtime;
 using Hashtable = ExitGames.Client.Photon.Hashtable;
@@ -25,7 +23,7 @@ namespace Photon.Pun.UtilityScripts
     /// <remarks>
     /// indexing ranges from 0 to the maximum number of Players.
     /// indexing remains for the player while in room.
-	/// If a Player is numbered 2 and player numbered 1 leaves, numbered 1 become vacant and will assigned to the future player joining (the first available vacant number is assigned when joining)
+    /// If a Player is numbered 2 and player numbered 1 leaves, numbered 1 become vacant and will assigned to the future player joining (the first available vacant number is assigned when joining)
     /// </remarks>
     public class PlayerNumbering : MonoBehaviourPunCallbacks
     {
@@ -44,6 +42,7 @@ namespace Photon.Pun.UtilityScripts
         /// OnPlayerNumberingChanged delegate. Use
         /// </summary>
         public delegate void PlayerNumberingChanged();
+
         /// <summary>
         /// Called everytime the room Indexing was updated. Use this for discrete updates. Always better than brute force calls every frame.
         /// </summary>
@@ -58,7 +57,6 @@ namespace Photon.Pun.UtilityScripts
         /// </summary>
         public bool dontDestroyOnLoad = false;
 
-
         #endregion
 
 
@@ -66,7 +64,6 @@ namespace Photon.Pun.UtilityScripts
 
         public void Awake()
         {
-
             if (instance != null && instance != this && instance.gameObject != null)
             {
                 GameObject.DestroyImmediate(instance.gameObject);
@@ -74,7 +71,7 @@ namespace Photon.Pun.UtilityScripts
 
             instance = this;
             if (dontDestroyOnLoad)
-            { 
+            {
                 DontDestroyOnLoad(this.gameObject);
             }
 
@@ -123,7 +120,7 @@ namespace Photon.Pun.UtilityScripts
         /// <summary>
         /// Internal call Refresh the cached data and call the OnPlayerNumberingChanged delegate.
         /// </summary>
-       public void RefreshData()
+        public void RefreshData()
         {
             if (PhotonNetwork.CurrentRoom == null)
             {
@@ -137,6 +134,7 @@ namespace Photon.Pun.UtilityScripts
                 {
                     OnPlayerNumberingChanged();
                 }
+
                 return;
             }
 
@@ -147,19 +145,19 @@ namespace Photon.Pun.UtilityScripts
             string allPlayers = "all players: ";
             foreach (Player player in sorted)
             {
-                allPlayers += player.ActorNumber + "=pNr:"+player.GetPlayerNumber()+", ";
+                allPlayers += player.ActorNumber + "=pNr:" + player.GetPlayerNumber() + ", ";
 
                 int number = player.GetPlayerNumber();
 
                 // if it's this user, select a number and break
                 // else:
-                    // check if that user has a number
-                    // if not, break!
-                    // else remember used numbers
+                // check if that user has a number
+                // if not, break!
+                // else remember used numbers
 
                 if (player.IsLocal)
                 {
-					Debug.Log ("PhotonNetwork.CurrentRoom.PlayerCount = " + PhotonNetwork.CurrentRoom.PlayerCount);
+                    Debug.Log("PhotonNetwork.CurrentRoom.PlayerCount = " + PhotonNetwork.CurrentRoom.PlayerCount);
 
                     // select a number
                     for (int i = 0; i < PhotonNetwork.CurrentRoom.PlayerCount; i++)
@@ -170,6 +168,7 @@ namespace Photon.Pun.UtilityScripts
                             break;
                         }
                     }
+
                     // then break
                     break;
                 }
@@ -198,47 +197,51 @@ namespace Photon.Pun.UtilityScripts
     }
 
 
-
     /// <summary>Extension used for PlayerRoomIndexing and Player class.</summary>
     public static class PlayerNumberingExtensions
     {
         /// <summary>Extension for Player class to wrap up access to the player's custom property.
-		/// Make sure you use the delegate 'OnPlayerNumberingChanged' to knoiw when you can query the PlayerNumber. Numbering can changes over time or not be yet assigned during the initial phase ( when player creates a room for example)
-		/// </summary>
+        /// Make sure you use the delegate 'OnPlayerNumberingChanged' to knoiw when you can query the PlayerNumber. Numbering can changes over time or not be yet assigned during the initial phase ( when player creates a room for example)
+        /// </summary>
         /// <returns>persistent index in room. -1 for no indexing</returns>
         public static int GetPlayerNumber(this Player player)
         {
-			if (player == null) {
-				return -1;
-			}
+            if (player == null)
+            {
+                return -1;
+            }
 
             if (PhotonNetwork.OfflineMode)
             {
                 return 0;
             }
+
             if (!PhotonNetwork.IsConnectedAndReady)
             {
                 return -1;
             }
 
             object value;
-			if (player.CustomProperties.TryGetValue (PlayerNumbering.RoomPlayerIndexedProp, out value)) {
-				return (byte)value;
-			}
+            if (player.CustomProperties.TryGetValue(PlayerNumbering.RoomPlayerIndexedProp, out value))
+            {
+                return (byte)value;
+            }
+
             return -1;
         }
 
-		/// <summary>
-		/// Sets the player number.
-		/// It's not recommanded to manually interfere with the playerNumbering, but possible.
-		/// </summary>
-		/// <param name="player">Player.</param>
-		/// <param name="playerNumber">Player number.</param>
+        /// <summary>
+        /// Sets the player number.
+        /// It's not recommanded to manually interfere with the playerNumbering, but possible.
+        /// </summary>
+        /// <param name="player">Player.</param>
+        /// <param name="playerNumber">Player number.</param>
         public static void SetPlayerNumber(this Player player, int playerNumber)
         {
-			if (player == null) {
-				return;
-			}
+            if (player == null)
+            {
+                return;
+            }
 
             if (PhotonNetwork.OfflineMode)
             {
@@ -252,15 +255,17 @@ namespace Photon.Pun.UtilityScripts
 
             if (!PhotonNetwork.IsConnectedAndReady)
             {
-                Debug.LogWarning("SetPlayerNumber was called in state: " + PhotonNetwork.NetworkClientState + ". Not IsConnectedAndReady.");
+                Debug.LogWarning("SetPlayerNumber was called in state: " + PhotonNetwork.NetworkClientState +
+                                 ". Not IsConnectedAndReady.");
                 return;
             }
 
             int current = player.GetPlayerNumber();
             if (current != playerNumber)
             {
-				Debug.Log("PlayerNumbering: Set number "+playerNumber);
-                player.SetCustomProperties(new Hashtable() { { PlayerNumbering.RoomPlayerIndexedProp, (byte)playerNumber } });
+                Debug.Log("PlayerNumbering: Set number " + playerNumber);
+                player.SetCustomProperties(new Hashtable()
+                    { { PlayerNumbering.RoomPlayerIndexedProp, (byte)playerNumber } });
             }
         }
     }

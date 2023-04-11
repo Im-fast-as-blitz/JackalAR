@@ -23,7 +23,6 @@ namespace Photon.Pun.Demo.Cockpit
         // Use this for initialization
         void OnEnable()
         {
-
             _toggle = GetComponent<Toggle>();
 
             if (!registered)
@@ -44,7 +43,6 @@ namespace Photon.Pun.Demo.Cockpit
 
         void Update()
         {
-
             if (PhotonNetwork.CrcCheckEnabled != _toggle.isOn)
             {
                 _toggle.isOn = PhotonNetwork.CrcCheckEnabled;

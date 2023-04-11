@@ -8,17 +8,14 @@
 using System;
 using System.Collections;
 using System.Linq;
-
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 using System.Collections.Generic;
-
 using Photon.Realtime;
 
 namespace Photon.Pun.Demo.Cockpit
 {
-
     /// <summary>
     /// Friend list UI view.
     /// </summary>
@@ -43,12 +40,14 @@ namespace Photon.Pun.Demo.Cockpit
 
         public FriendListCell CellPrototype;
 
-		public Text ContentFeedback;
+        public Text ContentFeedback;
 
         public Text UpdateStatusText;
 
         [System.Serializable]
-        public class OnJoinRoomEvent : UnityEvent<string> { }
+        public class OnJoinRoomEvent : UnityEvent<string>
+        {
+        }
 
         public OnJoinRoomEvent OnJoinRoom;
 
@@ -60,7 +59,6 @@ namespace Photon.Pun.Demo.Cockpit
         void Awake()
         {
             CellPrototype.gameObject.SetActive(false);
-		
         }
 
         public override void OnEnable()
@@ -68,7 +66,8 @@ namespace Photon.Pun.Demo.Cockpit
             base.OnEnable();
 
             UpdateStatusText.text = string.Empty;
-			ContentFeedback.text = string.Empty;;
+            ContentFeedback.text = string.Empty;
+            ;
         }
 
 
@@ -78,7 +77,7 @@ namespace Photon.Pun.Demo.Cockpit
 
             List<string> _list = new List<string>();
             foreach (FriendDetail _friend in friendList)
-			{
+            {
                 if (_friend.UserId != PhotonNetwork.LocalPlayer.UserId)
                 {
                     FriendCellList[_friend.UserId] = Instantiate(CellPrototype);
@@ -97,23 +96,23 @@ namespace Photon.Pun.Demo.Cockpit
 
         public void FindFriends()
         {
-
             PhotonNetwork.FindFriends(FriendsLUT);
 
-			ContentFeedback.text = "Finding Friends...";
+            ContentFeedback.text = "Finding Friends...";
         }
 
         public override void OnFriendListUpdate(List<FriendInfo> friendList)
         {
             StartCoroutine("UpdateUIPing");
 
-			if (friendList.Count == 0)
-			{
-				ContentFeedback.text = "No Friends Found";
-			}else
-			{
-				ContentFeedback.text = string.Empty;
-			}
+            if (friendList.Count == 0)
+            {
+                ContentFeedback.text = "No Friends Found";
+            }
+            else
+            {
+                ContentFeedback.text = string.Empty;
+            }
 
 
             foreach (FriendInfo _info in friendList)
@@ -127,7 +126,7 @@ namespace Photon.Pun.Demo.Cockpit
 
         public void OnRoomListUpdateCallBack(List<RoomInfo> roomList)
         {
-			PhotonNetwork.FindFriends(FriendsLUT);
+            PhotonNetwork.FindFriends(FriendsLUT);
         }
 
         public void JoinFriendRoom(string RoomName)

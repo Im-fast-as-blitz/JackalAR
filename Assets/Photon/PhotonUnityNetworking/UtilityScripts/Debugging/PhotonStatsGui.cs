@@ -11,7 +11,6 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 using UnityEngine;
-
 using Photon.Pun;
 using Photon.Realtime;
 using ExitGames.Client.Photon;
@@ -68,7 +67,7 @@ namespace Photon.Pun.UtilityScripts
             if (Input.GetKeyDown(KeyCode.Tab) && Input.GetKey(KeyCode.LeftShift))
             {
                 this.statsWindowOn = !this.statsWindowOn;
-                this.statsOn = true;    // enable stats when showing the window
+                this.statsOn = true; // enable stats when showing the window
             }
         }
 
@@ -84,7 +83,8 @@ namespace Photon.Pun.UtilityScripts
                 return;
             }
 
-            this.statsRect = GUILayout.Window(this.WindowId, this.statsRect, this.TrafficStatsWindow, "Messages (shift+tab)");
+            this.statsRect = GUILayout.Window(this.WindowId, this.statsRect, this.TrafficStatsWindow,
+                "Messages (shift+tab)");
         }
 
         public void TrafficStatsWindow(int windowID)
@@ -103,9 +103,12 @@ namespace Photon.Pun.UtilityScripts
             this.trafficStatsOn = GUILayout.Toggle(this.trafficStatsOn, "traffic");
             GUILayout.EndHorizontal();
 
-            string total = string.Format("Out {0,4} | In {1,4} | Sum {2,4}", gls.TotalOutgoingMessageCount, gls.TotalIncomingMessageCount, gls.TotalMessageCount);
+            string total = string.Format("Out {0,4} | In {1,4} | Sum {2,4}", gls.TotalOutgoingMessageCount,
+                gls.TotalIncomingMessageCount, gls.TotalMessageCount);
             string elapsedTime = string.Format("{0}sec average:", elapsedMs);
-            string average = string.Format("Out {0,4} | In {1,4} | Sum {2,4}", gls.TotalOutgoingMessageCount / elapsedMs, gls.TotalIncomingMessageCount / elapsedMs, gls.TotalMessageCount / elapsedMs);
+            string average = string.Format("Out {0,4} | In {1,4} | Sum {2,4}",
+                gls.TotalOutgoingMessageCount / elapsedMs, gls.TotalIncomingMessageCount / elapsedMs,
+                gls.TotalMessageCount / elapsedMs);
             GUILayout.Label(total);
             GUILayout.Label(elapsedTime);
             GUILayout.Label(average);
@@ -119,6 +122,7 @@ namespace Photon.Pun.UtilityScripts
                     PhotonNetwork.NetworkingClient.LoadBalancingPeer.TrafficStatsReset();
                     PhotonNetwork.NetworkingClient.LoadBalancingPeer.TrafficStatsEnabled = true;
                 }
+
                 statsToLog = GUILayout.Button("To Log");
                 GUILayout.EndHorizontal();
             }
@@ -128,8 +132,10 @@ namespace Photon.Pun.UtilityScripts
             if (this.trafficStatsOn)
             {
                 GUILayout.Box("Traffic Stats");
-                trafficStatsIn = "Incoming: \n" + PhotonNetwork.NetworkingClient.LoadBalancingPeer.TrafficStatsIncoming.ToString();
-                trafficStatsOut = "Outgoing: \n" + PhotonNetwork.NetworkingClient.LoadBalancingPeer.TrafficStatsOutgoing.ToString();
+                trafficStatsIn = "Incoming: \n" +
+                                 PhotonNetwork.NetworkingClient.LoadBalancingPeer.TrafficStatsIncoming.ToString();
+                trafficStatsOut = "Outgoing: \n" +
+                                  PhotonNetwork.NetworkingClient.LoadBalancingPeer.TrafficStatsOutgoing.ToString();
                 GUILayout.Label(trafficStatsIn);
                 GUILayout.Label(trafficStatsOut);
             }
@@ -154,7 +160,8 @@ namespace Photon.Pun.UtilityScripts
 
             if (statsToLog)
             {
-                string complete = string.Format("{0}\n{1}\n{2}\n{3}\n{4}\n{5}", total, elapsedTime, average, trafficStatsIn, trafficStatsOut, healthStats);
+                string complete = string.Format("{0}\n{1}\n{2}\n{3}\n{4}\n{5}", total, elapsedTime, average,
+                    trafficStatsIn, trafficStatsOut, healthStats);
                 Debug.Log(complete);
             }
 

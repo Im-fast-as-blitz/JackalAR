@@ -10,9 +10,9 @@ using UnityEngine.UI;
 namespace Photon.Pun.Demo.Cockpit
 {
     /// <summary>
-	/// PhotonNetwork.CurrentRoom.MasterClientId UI property.
+    /// PhotonNetwork.CurrentRoom.MasterClientId UI property.
     /// </summary>
-	public class CurrentRoomMasterClientIdProperty : PropertyListenerBase
+    public class CurrentRoomMasterClientIdProperty : PropertyListenerBase
     {
         public Text Text;
 
@@ -24,7 +24,7 @@ namespace Photon.Pun.Demo.Cockpit
             {
                 if (PhotonNetwork.CurrentRoom.MasterClientId != _cache)
                 {
-					_cache = PhotonNetwork.CurrentRoom.MasterClientId;
+                    _cache = PhotonNetwork.CurrentRoom.MasterClientId;
                     Text.text = _cache.ToString();
                     this.OnValueChanged();
                 }

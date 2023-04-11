@@ -21,13 +21,14 @@ namespace Photon.Pun.Demo.Cockpit.Forms
         public InputField idInput;
 
         [System.Serializable]
-        public class OnSubmitEvent : UnityEvent<string> { }
+        public class OnSubmitEvent : UnityEvent<string>
+        {
+        }
 
         public OnSubmitEvent OnSubmit;
 
         public void Start()
         {
-
             string prefsName = PlayerPrefs.GetString(UserIdUiForm.UserIdPlayerPref);
             if (!string.IsNullOrEmpty(prefsName))
             {

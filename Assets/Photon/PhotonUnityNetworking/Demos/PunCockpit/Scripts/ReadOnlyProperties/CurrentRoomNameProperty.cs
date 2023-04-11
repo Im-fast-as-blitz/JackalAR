@@ -20,7 +20,6 @@ namespace Photon.Pun.Demo.Cockpit
 
         void Update()
         {
-
             if (PhotonNetwork.CurrentRoom != null)
             {
                 if ((PhotonNetwork.CurrentRoom.Name != _cache))

@@ -6,7 +6,6 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 using System.Collections;
-
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -22,6 +21,7 @@ namespace Photon.Pun.Demo.Cockpit
         private YieldInstruction fadeInstruction = new YieldInstruction();
 
         float Duration = 1f;
+
         public void OnValueChanged()
         {
             StartCoroutine(FadeOut(UpdateIndicator));

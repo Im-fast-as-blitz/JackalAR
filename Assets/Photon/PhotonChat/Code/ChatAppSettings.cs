@@ -15,9 +15,9 @@ namespace Photon.Chat
 {
     using System;
     using ExitGames.Client.Photon;
-    #if SUPPORTED_UNITY
+#if SUPPORTED_UNITY
     using UnityEngine.Serialization;
-    #endif
+#endif
 
     /// <summary>
     /// Settings for Photon application(s) and the server to connect to.
@@ -25,9 +25,9 @@ namespace Photon.Chat
     /// <remarks>
     /// This is Serializable for Unity, so it can be included in ScriptableObject instances.
     /// </remarks>
-    #if !NETFX_CORE || SUPPORTED_UNITY
+#if !NETFX_CORE || SUPPORTED_UNITY
     [Serializable]
-    #endif
+#endif
     public class ChatAppSettings
     {
         /// <summary>AppId for the Chat Api.</summary>
@@ -59,6 +59,9 @@ namespace Photon.Chat
         public DebugLevel NetworkLogging = DebugLevel.ERROR;
 
         /// <summary>If true, the default nameserver address for the Photon Cloud should be used.</summary>
-        public bool IsDefaultNameServer { get { return string.IsNullOrEmpty(this.Server); } }
+        public bool IsDefaultNameServer
+        {
+            get { return string.IsNullOrEmpty(this.Server); }
+        }
     }
 }

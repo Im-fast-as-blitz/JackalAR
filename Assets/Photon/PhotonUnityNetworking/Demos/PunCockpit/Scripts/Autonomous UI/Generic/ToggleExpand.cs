@@ -32,7 +32,6 @@ namespace Photon.Pun.Demo.Cockpit
             }
 
             HandleToggleOnValudChanged(Toggle.isOn);
-
         }
 
 
@@ -40,6 +39,5 @@ namespace Photon.Pun.Demo.Cockpit
         {
             Content.SetActive(value);
         }
-
     }
 }

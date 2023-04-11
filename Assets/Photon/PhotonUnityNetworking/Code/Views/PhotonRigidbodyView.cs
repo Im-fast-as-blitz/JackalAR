@@ -27,15 +27,11 @@ namespace Photon.Pun
 
         private Quaternion m_NetworkRotation;
 
-        [HideInInspector]
-        public bool m_SynchronizeVelocity = true;
-        [HideInInspector]
-        public bool m_SynchronizeAngularVelocity = false;
+        [HideInInspector] public bool m_SynchronizeVelocity = true;
+        [HideInInspector] public bool m_SynchronizeAngularVelocity = false;
 
-        [HideInInspector]
-        public bool m_TeleportEnabled = false;
-        [HideInInspector]
-        public float m_TeleportIfDistanceGreaterThan = 3.0f;
+        [HideInInspector] public bool m_TeleportEnabled = false;
+        [HideInInspector] public float m_TeleportIfDistanceGreaterThan = 3.0f;
 
         public void Awake()
         {
@@ -49,8 +45,10 @@ namespace Photon.Pun
         {
             if (!this.photonView.IsMine)
             {
-                this.m_Body.position = Vector3.MoveTowards(this.m_Body.position, this.m_NetworkPosition, this.m_Distance * (1.0f / PhotonNetwork.SerializationRate));
-                this.m_Body.rotation = Quaternion.RotateTowards(this.m_Body.rotation, this.m_NetworkRotation, this.m_Angle * (1.0f / PhotonNetwork.SerializationRate));
+                this.m_Body.position = Vector3.MoveTowards(this.m_Body.position, this.m_NetworkPosition,
+                    this.m_Distance * (1.0f / PhotonNetwork.SerializationRate));
+                this.m_Body.rotation = Quaternion.RotateTowards(this.m_Body.rotation, this.m_NetworkRotation,
+                    this.m_Angle * (1.0f / PhotonNetwork.SerializationRate));
             }
         }
 
@@ -78,12 +76,13 @@ namespace Photon.Pun
 
                 if (this.m_TeleportEnabled)
                 {
-                    if (Vector3.Distance(this.m_Body.position, this.m_NetworkPosition) > this.m_TeleportIfDistanceGreaterThan)
+                    if (Vector3.Distance(this.m_Body.position, this.m_NetworkPosition) >
+                        this.m_TeleportIfDistanceGreaterThan)
                     {
                         this.m_Body.position = this.m_NetworkPosition;
                     }
                 }
-                
+
                 if (this.m_SynchronizeVelocity || this.m_SynchronizeAngularVelocity)
                 {
                     float lag = Mathf.Abs((float)(PhotonNetwork.Time - info.SentServerTime));
@@ -101,7 +100,8 @@ namespace Photon.Pun
                     {
                         this.m_Body.angularVelocity = (Vector3)stream.ReceiveNext();
 
-                        this.m_NetworkRotation = Quaternion.Euler(this.m_Body.angularVelocity * lag) * this.m_NetworkRotation;
+                        this.m_NetworkRotation =
+                            Quaternion.Euler(this.m_Body.angularVelocity * lag) * this.m_NetworkRotation;
 
                         this.m_Angle = Quaternion.Angle(this.m_Body.rotation, this.m_NetworkRotation);
                     }

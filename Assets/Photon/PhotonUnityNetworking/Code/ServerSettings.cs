@@ -33,8 +33,7 @@ namespace Photon.Pun
         [Tooltip("Developer build override for Best Region.")]
         public string DevRegion;
 
-        [Tooltip("Log output by PUN.")]
-        public PunLogLevel PunLogging = PunLogLevel.ErrorsOnly;
+        [Tooltip("Log output by PUN.")] public PunLogLevel PunLogging = PunLogLevel.ErrorsOnly;
 
         [Tooltip("Logs additional info for debugging.")]
         public bool EnableSupportLogger;
@@ -46,13 +45,13 @@ namespace Photon.Pun
         public bool StartInOfflineMode;
 
         [Tooltip("RPC name list.\nUsed as shortcut when sending calls.")]
-        public List<string> RpcList = new List<string>();   // set by scripts and or via Inspector
+        public List<string> RpcList = new List<string>(); // set by scripts and or via Inspector
 
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         public bool DisableAutoOpenWizard;
         public bool ShowSettings;
         public bool DevRegionSetOnce;
-        #endif
+#endif
 
         /// <summary>Sets appid and region code in the AppSettings. Used in Editor.</summary>
         public void UseCloud(string cloudAppid, string code = "")
@@ -75,6 +74,7 @@ namespace Photon.Pun
             {
                 return false;
             }
+
             return true;
         }
 

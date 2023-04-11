@@ -102,8 +102,7 @@ namespace Photon.Chat
         void OnUserUnsubscribed(string channel, string user);
 
 
-        #if CHAT_EXTENDED
-        
+#if CHAT_EXTENDED
         /// <summary>
         /// Properties of a public channel has been changed
         /// </summary>
@@ -131,18 +130,17 @@ namespace Photon.Chat
         /// <param name="error">The text message of the error info</param>
         /// <param name="data">Optional error data</param>
         void OnErrorInfo(string channel, string error, object data);
-        
-        #endif
+
+#endif
 
 
-        #if SDK_V4
+#if SDK_V4
         /// <summary>
         /// Received a broadcast message
         /// </summary>
         /// <param name="channel">Name of the chat channel</param>
         /// <param name="message">Message data</param>
         void OnReceiveBroadcastMessage(string channel, byte[] message);
-        #endif
-
+#endif
     }
 }

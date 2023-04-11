@@ -23,7 +23,13 @@ public class Card
         Fortress = 13,
         Shaman = 14,
         Chest = 15,
-        Turntable = 16
+        Turntable = 16,
+        Turntable2 = 17,
+        Turntable3 = 18,
+        Turntable4 = 19,
+        Turntable5 = 20,
+        Arrow = 21,
+        
     }
 
     public GameObject OwnGO;
@@ -186,8 +192,7 @@ public class ArrowCard : Card
 
     public ArrowCard()
     {
-        LogoPath = "Cards/Arrows/straight";
-        Type = CardType.ArrowStraight;
+        Type = CardType.Arrow;
     }
 
     public override void OpenAction()
@@ -197,6 +202,69 @@ public class ArrowCard : Card
 
     public override void StepAction()
     {
+    }
+}
+
+public class ArrowStraight : ArrowCard
+{
+    public ArrowStraight()
+    {
+        LogoPath = "Cards/Arrows/straight";
+        Type = CardType.ArrowStraight;
+    }
+}
+
+public class ArrowStraight2 : ArrowCard
+{
+    public ArrowStraight2()
+    {
+        LogoPath = "Cards/Arrows/straight2";
+        Type = CardType.ArrowStraight2;
+    }
+}
+
+public class ArrowDiagonal : ArrowCard
+{
+    public ArrowDiagonal()
+    {
+        LogoPath = "Cards/Arrows/straight";
+        Type = CardType.ArrowDiagonal;
+    }
+}
+
+public class ArrowDiagonal2 : ArrowCard
+{
+    public ArrowDiagonal2()
+    {
+        Type = CardType.ArrowDiagonal2;
+        LogoPath = "Cards/Arrows/diagonal2";
+    }
+}
+
+public class Arrow3 : ArrowCard
+{
+    public Arrow3()
+    {
+        Type = CardType.Arrow3;
+        LogoPath = "Cards/Arrows/3";
+    }
+}
+
+public class ArrowStraight4 : ArrowCard
+{
+    public ArrowStraight4()
+    {
+        Type = CardType.ArrowStraight4;
+        LogoPath = "Cards/Arrows/straight4";
+    }
+}
+
+public class ArrowDiagonal4 : ArrowCard
+{
+    public ArrowDiagonal4()
+    {
+        Type = CardType.ArrowDiagonal4;
+        LogoPath = "Cards/Arrows/diagonal4";
     }
 }
 
@@ -224,7 +292,7 @@ public class OgreCard : Card
     }
 }
 
-public class FortressCard : Card 
+public class FortressCard : Card
 {
     public FortressCard()
     {
@@ -240,8 +308,8 @@ public class FortressCard : Card
     {
     }
 }
-    
-public class ShamanCard : Card 
+
+public class ShamanCard : Card
 {
     public ShamanCard()
     {
@@ -258,10 +326,10 @@ public class ShamanCard : Card
     }
 }
 
-public class ChestCard : Card 
+public class ChestCard : Card
 {
     public static int CardsCount = 0;
-    
+
     public ChestCard()
     {
         LogoPath = "Cards/chest";
@@ -280,35 +348,99 @@ public class ChestCard : Card
 
 public class TurntableCard : Card
 {
+    public static int turntableCount = 0;
+
     public short StepCount;
     public List<Vector3> StepPos = new List<Vector3>();
 
     public TurntableCard()
     {
-        LogoPath = "Cards/Turntables/2-steps";
         Type = CardType.Turntable;
+    }
+}
+
+public class TurntableCard2 : TurntableCard
+{
+    public TurntableCard2()
+    {
+        LogoPath = "Cards/Turntables/2-steps";
+        Type = CardType.Turntable2;
+
+        StepCount = 2;
+        StepPos.Add(new Vector3(0.03f, 0, 0.03f));
+        StepPos.Add(new Vector3(-0.03f, 0, -0.03f));
 
         for (int i = 3; i < 12; ++i)
         {
             Figures.Add(null);
         }
     }
+}
 
-    public override void OpenAction()
+public class TurntableCard3 : TurntableCard
+{
+    public TurntableCard3()
     {
-    }
+        LogoPath = "Cards/Turntables/3-steps";
+        Type = CardType.Turntable3;
 
-    public override void StepAction()
-    {
-        
+        StepCount = 3;
+        StepPos.Add(new Vector3(-0.03f, 0, 0.03f));
+        StepPos.Add(new Vector3(0.01f, 0, 0));
+        StepPos.Add(new Vector3(-0.03f, 0, -0.03f));
+        for (int i = 3; i < 12; ++i)
+        {
+            Figures.Add(null);
+        }
     }
 }
+
+public class TurntableCard4 : TurntableCard
+{
+    public TurntableCard4()
+    {
+        LogoPath = "Cards/Turntables/4-steps";
+        Type = CardType.Turntable4;
+
+        StepCount = 4;
+        StepPos.Add(new Vector3(-0.03f, 0, 0.035f));
+        StepPos.Add(new Vector3(0.03f, 0, 0.015f));
+        StepPos.Add(new Vector3(-0.025f, 0, -0.02f));
+        StepPos.Add(new Vector3(+0.02f, 0, -0.035f));
+
+        for (int i = 3; i < 12; ++i)
+        {
+            Figures.Add(null);
+        }
+    }
+}
+
+public class TurntableCard5 : TurntableCard
+{
+    public TurntableCard5()
+    {
+        LogoPath = "Cards/Turntables/5-steps";
+        Type = CardType.Turntable5;
+        
+        StepCount = 5;
+        StepPos.Add(new Vector3(-0.035f, 0, -0.03f));
+        StepPos.Add(new Vector3(0, 0, -0.03f));
+        StepPos.Add(new Vector3(0.03f, 0, -0.01f));
+        StepPos.Add(new Vector3(0.02f, 0, 0.03f));
+        StepPos.Add(new Vector3(-0.035f, 0, 0.03f));
+
+        for (int i = 3; i < 12; ++i)
+        {
+            Figures.Add(null);
+        }
+    }
+}
+
 
 public static class Cards
 {
     public static List<PairCardInt> AllCards = new List<PairCardInt>();
     public static Dictionary<Card.CardType, Card> createCardByType = new Dictionary<Card.CardType, Card>();
-
 }
 
 public class Ship
@@ -344,7 +476,6 @@ public class CardManagerScr : MonoBehaviour
 {
     public void Awake()
     {
-         
         // Total 169 cards (52 water cards + 117 other). Water must stay first
         Cards.AllCards.Add(new PairCardInt(new WaterCard(), 52));
         Cards.AllCards.Add(new PairCardInt(new EmptyCard(), 20));
@@ -359,9 +490,22 @@ public class CardManagerScr : MonoBehaviour
 
         foreach (var pairCardInt in Cards.AllCards)
         {
-            Cards.createCardByType.Add(pairCardInt.CardPair.Type, pairCardInt.CardPair); 
+            Cards.createCardByType.Add(pairCardInt.CardPair.Type, pairCardInt.CardPair);
         }
-        
+
+        Cards.createCardByType.Add(Card.CardType.Ship, new WaterCard());
+        Cards.createCardByType.Add(Card.CardType.ArrowStraight, new ArrowStraight());
+        Cards.createCardByType.Add(Card.CardType.Arrow3, new Arrow3());
+        Cards.createCardByType.Add(Card.CardType.ArrowDiagonal, new ArrowDiagonal());
+        Cards.createCardByType.Add(Card.CardType.ArrowDiagonal2, new ArrowDiagonal2());
+        Cards.createCardByType.Add(Card.CardType.ArrowDiagonal4, new ArrowDiagonal4());
+        Cards.createCardByType.Add(Card.CardType.ArrowStraight2, new ArrowStraight2());
+        Cards.createCardByType.Add(Card.CardType.ArrowStraight4, new ArrowStraight4());
+        Cards.createCardByType.Add(Card.CardType.Turntable2, new TurntableCard2());
+        Cards.createCardByType.Add(Card.CardType.Turntable3, new TurntableCard3());
+        Cards.createCardByType.Add(Card.CardType.Turntable4, new TurntableCard4());
+        Cards.createCardByType.Add(Card.CardType.Turntable5, new TurntableCard5());
+
         Ships.GenerateShips();
     }
 }

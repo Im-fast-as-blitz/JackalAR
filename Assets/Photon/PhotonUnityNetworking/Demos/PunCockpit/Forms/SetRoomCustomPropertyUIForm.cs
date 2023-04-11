@@ -6,7 +6,6 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 using System.Collections;
-
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
@@ -21,13 +20,14 @@ namespace Photon.Pun.Demo.Cockpit.Forms
         public InputField PropertyValueInput;
 
         [System.Serializable]
-        public class OnSubmitEvent : UnityEvent<string> { }
+        public class OnSubmitEvent : UnityEvent<string>
+        {
+        }
 
         public OnSubmitEvent OnSubmit;
 
         public void Start()
         {
-
         }
 
         // new UI will fire "EndEdit" event also when loosing focus. So check "enter" key and only then StartChat.

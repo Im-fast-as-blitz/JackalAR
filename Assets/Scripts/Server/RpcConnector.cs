@@ -8,26 +8,26 @@ public class RpcConnector : MonoBehaviourPun
 {
     public Game currGame;
     public GameManagerScr gameManagerScr;
-    
+
     public void SetGameObj(Game game)
     {
         Debug.Log(string.Format("SetGameObjCalled"));
         currGame = game;
     }
-    
+
     [PunRPC]
     void DebugRpc(int x, int y)
     {
         Debug.Log(string.Format("DebugRpcCalled"));
         currGame.PlayingField[x, y].Open();
     }
-    
+
     public void DebugRpc()
     {
         Debug.Log(string.Format("DebugFromPrcCalled"));
         photonView.RPC("DebugRpc", RpcTarget.AllBuffered, 2, 4);
     }
-    
+
     [PunRPC]
     void SyncCards(int[][] cardTypes)
     {
@@ -36,14 +36,16 @@ public class RpcConnector : MonoBehaviourPun
         {
             for (int j = 0; j < currGame.PlayingField.GetLength(1); ++j)
             {
+                Debug.Log((Card.CardType)cardTypes[i][j]);
                 currGame.PlayingField[i, j] = (Card)(Cards.createCardByType[(Card.CardType)cardTypes[i][j]].NewObj());
             }
         }
+
         currGame.PlaceShips();
         gameManagerScr.BuildPlayingField(new Vector3(0, 0, 0));
         CreateNewTeamRpc();
     }
-    
+
     public void SyncCardsRpc()
     {
         Debug.Log(string.Format("SyncCardsFromRpcCalled"));
@@ -53,20 +55,20 @@ public class RpcConnector : MonoBehaviourPun
             cardTypes[i] = new int[currGame.PlayingField.GetLength(1)];
             for (int j = 0; j < currGame.PlayingField.GetLength(1); ++j)
             {
-                cardTypes[i][j] = (int)currGame.PlayingField[i, j].Type;
+                cardTypes[i][j] = (int)(currGame.PlayingField[i, j].Type);
             }
         }
 
         photonView.RPC("SyncCards", RpcTarget.AllBuffered, cardTypes);
     }
-    
+
     [PunRPC]
     void OpenCard(int[] pos)
     {
         Debug.Log(string.Format("OpenCardCalled {0} {1}", pos[0], pos[1]));
         currGame.PlayingField[pos[0], pos[1]].Open();
     }
-   
+
     public void OpenCardRpc(IntVector2 Position)
     {
         int[] pos = new int[2];

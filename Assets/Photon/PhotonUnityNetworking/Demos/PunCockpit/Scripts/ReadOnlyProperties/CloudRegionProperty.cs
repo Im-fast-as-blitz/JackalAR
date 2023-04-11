@@ -12,7 +12,7 @@ namespace Photon.Pun.Demo.Cockpit
     /// <summary>
     /// PhotonNetwork.CloudRegion UI property.
     /// </summary>
-	public class CloudRegionProperty : PropertyListenerBase
+    public class CloudRegionProperty : PropertyListenerBase
     {
         public Text Text;
 
@@ -23,7 +23,7 @@ namespace Photon.Pun.Demo.Cockpit
             if (PhotonNetwork.CloudRegion != _cache)
             {
                 _cache = PhotonNetwork.CloudRegion;
-				this.OnValueChanged();
+                this.OnValueChanged();
                 if (string.IsNullOrEmpty(_cache))
                 {
                     Text.text = "n/a";

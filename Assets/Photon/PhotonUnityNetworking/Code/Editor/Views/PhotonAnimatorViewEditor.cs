@@ -30,7 +30,8 @@ namespace Photon.Pun
 
             if (this.m_Animator == null)
             {
-                EditorGUILayout.HelpBox("GameObject doesn't have an Animator component to synchronize", MessageType.Warning);
+                EditorGUILayout.HelpBox("GameObject doesn't have an Animator component to synchronize",
+                    MessageType.Warning);
                 return;
             }
 
@@ -45,7 +46,8 @@ namespace Photon.Pun
 
             if (this.GetParameterCount() == 0)
             {
-                EditorGUILayout.HelpBox("Animator doesn't have any parameters setup to synchronize", MessageType.Warning);
+                EditorGUILayout.HelpBox("Animator doesn't have any parameters setup to synchronize",
+                    MessageType.Warning);
             }
 
             this.serializedObject.ApplyModifiedProperties();
@@ -101,7 +103,8 @@ namespace Photon.Pun
         private void DrawWeightInspector()
         {
             SerializedProperty foldoutProperty = this.serializedObject.FindProperty("ShowLayerWeightsInspector");
-            foldoutProperty.boolValue = PhotonGUI.ContainerHeaderFoldout("Synchronize Layer Weights", foldoutProperty.boolValue);
+            foldoutProperty.boolValue =
+                PhotonGUI.ContainerHeaderFoldout("Synchronize Layer Weights", foldoutProperty.boolValue);
 
             if (foldoutProperty.boolValue == false)
             {
@@ -120,12 +123,15 @@ namespace Photon.Pun
 
                 PhotonAnimatorView.SynchronizeType syncType = this.m_Target.GetLayerSynchronizeType(i);
 
-                Rect elementRect = new Rect(containerRect.xMin, containerRect.yMin + i * lineHeight, containerRect.width, lineHeight);
+                Rect elementRect = new Rect(containerRect.xMin, containerRect.yMin + i * lineHeight,
+                    containerRect.width, lineHeight);
 
-                Rect labelRect = new Rect(elementRect.xMin + 5, elementRect.yMin + 2, EditorGUIUtility.labelWidth - 5, elementRect.height);
+                Rect labelRect = new Rect(elementRect.xMin + 5, elementRect.yMin + 2, EditorGUIUtility.labelWidth - 5,
+                    elementRect.height);
                 GUI.Label(labelRect, "Layer " + i);
 
-                Rect popupRect = new Rect(elementRect.xMin + EditorGUIUtility.labelWidth, elementRect.yMin + 2, elementRect.width - EditorGUIUtility.labelWidth - 5, EditorGUIUtility.singleLineHeight);
+                Rect popupRect = new Rect(elementRect.xMin + EditorGUIUtility.labelWidth, elementRect.yMin + 2,
+                    elementRect.width - EditorGUIUtility.labelWidth - 5, EditorGUIUtility.singleLineHeight);
                 syncType = (PhotonAnimatorView.SynchronizeType)EditorGUI.EnumPopup(popupRect, syncType);
 
                 if (i < this.GetLayerCount() - 1)
@@ -165,7 +171,8 @@ namespace Photon.Pun
                 string parameterName = syncedParams[i].Name;
                 if (this.DoesParameterExist(parameterName) == false)
                 {
-                    Debug.LogWarning("Parameter '" + this.m_Target.GetSynchronizedParameters()[i].Name + "' doesn't exist anymore. Removing it from the list of synchronized parameters");
+                    Debug.LogWarning("Parameter '" + this.m_Target.GetSynchronizedParameters()[i].Name +
+                                     "' doesn't exist anymore. Removing it from the list of synchronized parameters");
                     paramsToRemove.Add(parameterName);
                 }
             }
@@ -186,7 +193,8 @@ namespace Photon.Pun
             bool isUsingTriggers = false;
 
             SerializedProperty foldoutProperty = this.serializedObject.FindProperty("ShowParameterInspector");
-            foldoutProperty.boolValue = PhotonGUI.ContainerHeaderFoldout("Synchronize Parameters", foldoutProperty.boolValue);
+            foldoutProperty.boolValue =
+                PhotonGUI.ContainerHeaderFoldout("Synchronize Parameters", foldoutProperty.boolValue);
 
             if (foldoutProperty.boolValue == false)
             {
@@ -250,23 +258,28 @@ namespace Photon.Pun
 
                 if (this.m_Target.DoesParameterSynchronizeTypeExist(parameter.name) == false)
                 {
-                    this.m_Target.SetParameterSynchronized(parameter.name, (PhotonAnimatorView.ParameterType)parameter.type, PhotonAnimatorView.SynchronizeType.Disabled);
+                    this.m_Target.SetParameterSynchronized(parameter.name,
+                        (PhotonAnimatorView.ParameterType)parameter.type, PhotonAnimatorView.SynchronizeType.Disabled);
                 }
 
                 PhotonAnimatorView.SynchronizeType value = this.m_Target.GetParameterSynchronizeType(parameter.name);
 
                 // check if using trigger and actually synchronizing it
-                if (value != PhotonAnimatorView.SynchronizeType.Disabled && parameter.type == AnimatorControllerParameterType.Trigger)
+                if (value != PhotonAnimatorView.SynchronizeType.Disabled &&
+                    parameter.type == AnimatorControllerParameterType.Trigger)
                 {
                     isUsingTriggers = true;
                 }
 
-                Rect elementRect = new Rect(containerRect.xMin, containerRect.yMin + i * lineHeight, containerRect.width, lineHeight);
+                Rect elementRect = new Rect(containerRect.xMin, containerRect.yMin + i * lineHeight,
+                    containerRect.width, lineHeight);
 
-                Rect labelRect = new Rect(elementRect.xMin + 5, elementRect.yMin + 2, EditorGUIUtility.labelWidth - 5, elementRect.height);
+                Rect labelRect = new Rect(elementRect.xMin + 5, elementRect.yMin + 2, EditorGUIUtility.labelWidth - 5,
+                    elementRect.height);
                 GUI.Label(labelRect, parameter.name + " (" + defaultValue + ")");
 
-                Rect popupRect = new Rect(elementRect.xMin + EditorGUIUtility.labelWidth, elementRect.yMin + 2, elementRect.width - EditorGUIUtility.labelWidth - 5, EditorGUIUtility.singleLineHeight);
+                Rect popupRect = new Rect(elementRect.xMin + EditorGUIUtility.labelWidth, elementRect.yMin + 2,
+                    elementRect.width - EditorGUIUtility.labelWidth - 5, EditorGUIUtility.singleLineHeight);
                 value = (PhotonAnimatorView.SynchronizeType)EditorGUI.EnumPopup(popupRect, value);
 
                 if (i < this.GetParameterCount() - 1)
@@ -278,7 +291,8 @@ namespace Photon.Pun
                 if (value != this.m_Target.GetParameterSynchronizeType(parameter.name))
                 {
                     Undo.RecordObject(this.target, "Modify Synchronize Parameter " + parameter.name);
-                    this.m_Target.SetParameterSynchronized(parameter.name, (PhotonAnimatorView.ParameterType)parameter.type, value);
+                    this.m_Target.SetParameterSynchronized(parameter.name,
+                        (PhotonAnimatorView.ParameterType)parameter.type, value);
                 }
             }
 
@@ -286,9 +300,8 @@ namespace Photon.Pun
             if (isUsingTriggers)
             {
                 EditorGUILayout.HelpBox("When using triggers, make sure this component is last in the stack. " +
-                                "If you still experience issues, implement triggers as a regular RPC " +
-                                "or in custom IPunObservable component instead.", MessageType.Warning);
-               
+                                        "If you still experience issues, implement triggers as a regular RPC " +
+                                        "or in custom IPunObservable component instead.", MessageType.Warning);
             }
         }
     }

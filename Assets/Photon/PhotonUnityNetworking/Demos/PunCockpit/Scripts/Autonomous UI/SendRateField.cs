@@ -15,7 +15,6 @@ namespace Photon.Pun.Demo.Cockpit
     /// </summary>
     public class SendRateField : MonoBehaviour
     {
-
         public InputField PropertyValueInput;
 
         int _cache;
@@ -57,7 +56,6 @@ namespace Photon.Pun.Demo.Cockpit
             {
                 this.SubmitForm(value);
             }
-
         }
 
         public void SubmitForm(string value)

@@ -43,6 +43,7 @@ namespace Photon.Pun.UtilityScripts
                 DestroyImmediate(this.gameObject);
                 return;
             }
+
             if (DontDestroy)
             {
                 Instance = this;
@@ -61,14 +62,15 @@ namespace Photon.Pun.UtilityScripts
             {
                 Instance = null;
             }
-
         }
 
         float native_width = 800;
         float native_height = 480;
+
         void OnGUI()
         {
-            if (PhotonNetwork.NetworkingClient == null || PhotonNetwork.NetworkingClient.LoadBalancingPeer == null || PhotonNetwork.NetworkingClient.LoadBalancingPeer.TrafficStatsIncoming == null)
+            if (PhotonNetwork.NetworkingClient == null || PhotonNetwork.NetworkingClient.LoadBalancingPeer == null ||
+                PhotonNetwork.NetworkingClient.LoadBalancingPeer.TrafficStatsIncoming == null)
             {
                 return;
             }
@@ -76,7 +78,7 @@ namespace Photon.Pun.UtilityScripts
             //set up scaling
             float rx = Screen.width / native_width;
             float ry = Screen.height / native_height;
-            GUI.matrix = Matrix4x4.TRS (new Vector3(0, 0, 0), Quaternion.identity, new Vector3 (rx, ry, 1));
+            GUI.matrix = Matrix4x4.TRS(new Vector3(0, 0, 0), Quaternion.identity, new Vector3(rx, ry, 1));
 
             Rect GuiOffsetRuntime = new Rect(this.GuiOffset);
 
@@ -84,6 +86,7 @@ namespace Photon.Pun.UtilityScripts
             {
                 GuiOffsetRuntime.x = Screen.width - GuiOffsetRuntime.width;
             }
+
             GuiRect.xMin = GuiOffsetRuntime.x;
             GuiRect.yMin = GuiOffsetRuntime.y;
             GuiRect.xMax = GuiOffsetRuntime.x + GuiOffsetRuntime.width;
@@ -100,29 +103,36 @@ namespace Photon.Pun.UtilityScripts
             {
                 GUILayout.Label(PhotonNetwork.ServerAddress + " " + PhotonNetwork.Server);
             }
+
             if (DetailedConnection)
             {
                 GUILayout.Label(PhotonNetwork.NetworkClientState.ToString());
             }
+
             if (AppVersion)
             {
                 GUILayout.Label(PhotonNetwork.NetworkingClient.AppVersion);
             }
+
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
             if (UserId)
             {
-                GUILayout.Label("UID: " + ((PhotonNetwork.AuthValues != null) ? PhotonNetwork.AuthValues.UserId : "no UserId"));
+                GUILayout.Label("UID: " +
+                                ((PhotonNetwork.AuthValues != null) ? PhotonNetwork.AuthValues.UserId : "no UserId"));
                 GUILayout.Label("UserId:" + PhotonNetwork.LocalPlayer.UserId);
             }
+
             GUILayout.EndHorizontal();
 
             if (Room)
             {
                 if (PhotonNetwork.InRoom)
                 {
-                    GUILayout.Label(this.RoomProps ? PhotonNetwork.CurrentRoom.ToStringFull() : PhotonNetwork.CurrentRoom.ToString());
+                    GUILayout.Label(this.RoomProps
+                        ? PhotonNetwork.CurrentRoom.ToStringFull()
+                        : PhotonNetwork.CurrentRoom.ToString());
                 }
                 else
                 {
@@ -132,8 +142,11 @@ namespace Photon.Pun.UtilityScripts
 
             if (EventsIn)
             {
-                int fragments = PhotonNetwork.NetworkingClient.LoadBalancingPeer.TrafficStatsIncoming.FragmentCommandCount;
-                GUILayout.Label("Events Received: "+PhotonNetwork.NetworkingClient.LoadBalancingPeer.TrafficStatsGameLevel.EventCount + " Fragments: "+fragments);
+                int fragments = PhotonNetwork.NetworkingClient.LoadBalancingPeer.TrafficStatsIncoming
+                    .FragmentCommandCount;
+                GUILayout.Label("Events Received: " +
+                                PhotonNetwork.NetworkingClient.LoadBalancingPeer.TrafficStatsGameLevel.EventCount +
+                                " Fragments: " + fragments);
             }
 
 
@@ -141,6 +154,7 @@ namespace Photon.Pun.UtilityScripts
             {
                 GUILayout.Label(PlayerToString(PhotonNetwork.LocalPlayer));
             }
+
             if (Others)
             {
                 foreach (Player player in PhotonNetwork.PlayerListOthers)
@@ -148,16 +162,20 @@ namespace Photon.Pun.UtilityScripts
                     GUILayout.Label(PlayerToString(player));
                 }
             }
+
             if (ExpectedUsers)
             {
                 if (PhotonNetwork.InRoom)
                 {
-                    int countExpected = (PhotonNetwork.CurrentRoom.ExpectedUsers != null) ? PhotonNetwork.CurrentRoom.ExpectedUsers.Length : 0;
+                    int countExpected = (PhotonNetwork.CurrentRoom.ExpectedUsers != null)
+                        ? PhotonNetwork.CurrentRoom.ExpectedUsers.Length
+                        : 0;
 
                     GUILayout.Label("Expected: " + countExpected + " " +
-                                   ((PhotonNetwork.CurrentRoom.ExpectedUsers != null) ? string.Join(",", PhotonNetwork.CurrentRoom.ExpectedUsers) : "")
-                                    );
-
+                                    ((PhotonNetwork.CurrentRoom.ExpectedUsers != null)
+                                        ? string.Join(",", PhotonNetwork.CurrentRoom.ExpectedUsers)
+                                        : "")
+                    );
                 }
             }
 
@@ -168,28 +186,35 @@ namespace Photon.Pun.UtilityScripts
                 {
                     PhotonNetwork.ConnectUsingSettings();
                 }
+
                 GUILayout.BeginHorizontal();
                 if (PhotonNetwork.IsConnected && GUILayout.Button("Disconnect"))
                 {
                     PhotonNetwork.Disconnect();
                 }
+
                 if (PhotonNetwork.IsConnected && GUILayout.Button("Close Socket"))
                 {
                     PhotonNetwork.NetworkingClient.LoadBalancingPeer.StopThread();
                 }
+
                 GUILayout.EndHorizontal();
                 if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && GUILayout.Button("Leave"))
                 {
                     PhotonNetwork.LeaveRoom();
                 }
-                if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerTtl>0 && GUILayout.Button("Leave(abandon)"))
+
+                if (PhotonNetwork.IsConnected && PhotonNetwork.InRoom && PhotonNetwork.CurrentRoom.PlayerTtl > 0 &&
+                    GUILayout.Button("Leave(abandon)"))
                 {
                     PhotonNetwork.LeaveRoom(false);
                 }
+
                 if (PhotonNetwork.IsConnected && !PhotonNetwork.InRoom && GUILayout.Button("Join Random"))
                 {
                     PhotonNetwork.JoinRandomRoom();
                 }
+
                 if (PhotonNetwork.IsConnected && !PhotonNetwork.InRoom && GUILayout.Button("Create Room"))
                 {
                     PhotonNetwork.CreateRoom(null);
@@ -206,7 +231,12 @@ namespace Photon.Pun.UtilityScripts
                 Debug.LogError("nwp is null");
                 return "";
             }
-            return string.Format("#{0:00} '{1}'{5} {4}{2} {3} {6}", player.ActorNumber + "/userId:<" + player.UserId + ">", player.NickName, player.IsMasterClient ? "(master)" : "", this.PlayerProps ? player.CustomProperties.ToStringFull() : "", (PhotonNetwork.LocalPlayer.ActorNumber == player.ActorNumber) ? "(you)" : "", player.UserId, player.IsInactive ? " / Is Inactive" : "");
+
+            return string.Format("#{0:00} '{1}'{5} {4}{2} {3} {6}",
+                player.ActorNumber + "/userId:<" + player.UserId + ">", player.NickName,
+                player.IsMasterClient ? "(master)" : "", this.PlayerProps ? player.CustomProperties.ToStringFull() : "",
+                (PhotonNetwork.LocalPlayer.ActorNumber == player.ActorNumber) ? "(you)" : "", player.UserId,
+                player.IsInactive ? " / Is Inactive" : "");
         }
     }
 }

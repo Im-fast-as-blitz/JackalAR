@@ -6,12 +6,10 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 using UnityEngine.UI;
-
 using System.Linq;
 
 namespace Photon.Pun.Demo.Cockpit
 {
-
     /// <summary>
     /// PhotonNetwork.CurrentRoom.PropertiesListedInLobby UI property.
     /// </summary>
@@ -25,10 +23,8 @@ namespace Photon.Pun.Demo.Cockpit
         {
             if (PhotonNetwork.CurrentRoom != null)
             {
-
                 if (_cache == null || !PhotonNetwork.CurrentRoom.PropertiesListedInLobby.SequenceEqual(_cache))
                 {
-
                     _cache = PhotonNetwork.CurrentRoom.PropertiesListedInLobby.Clone() as string[];
                     Text.text = string.Join("\n", PhotonNetwork.CurrentRoom.PropertiesListedInLobby);
                     this.OnValueChanged();
