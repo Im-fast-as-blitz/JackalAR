@@ -20,6 +20,12 @@ public class Person : MonoBehaviour
     public bool _isAlive = true;
     public bool isWithCoin = false;
 
+    public HashSet<Card.CardType> turnTables = new HashSet<Card.CardType>()
+    {
+        Card.CardType.Turntable , Card.CardType.Turntable2, Card.CardType.Turntable3, 
+        Card.CardType.Turntable4, Card.CardType.Turntable5
+    };
+
     //Return to the ship
     void ReturnToShip()
     {
@@ -114,7 +120,7 @@ public class Person : MonoBehaviour
 
             GameObject result = null;
             int depth = CellDepth;
-            if (prevCard.Type == Card.CardType.Turntable)
+            if (turnTables.Contains(prevCard.Type))
             {
                 if (CellDepth < (prevCard as TurntableCard).StepCount)
                 {
@@ -141,7 +147,7 @@ public class Person : MonoBehaviour
 
             if (result)
             {
-                if (prevCard.Type == Card.CardType.Turntable && CellDepth < (prevCard as TurntableCard).StepCount)
+                if (turnTables.Contains(prevCard.Type) && CellDepth < (prevCard as TurntableCard).StepCount)
                 {
                     result.transform.GetChild(0).gameObject.SetActive(true);
                     result.transform.GetChild(0).GetComponent<TextMeshPro>().text = (CellDepth + 1).ToString();
@@ -248,7 +254,7 @@ public class Person : MonoBehaviour
             }
             else if (prevCard.Figures[i])
             {
-                if (prevCard.Type == Card.CardType.Turntable)
+                if (turnTables.Contains(prevCard.Type))
                 {
                     if (CellDepth == prevCard.Figures[i].CellDepth)
                     {
@@ -304,14 +310,14 @@ public class Person : MonoBehaviour
         }
 
         //Change person's pos (in game and in scene)
-        if (prevCard.Type == Card.CardType.Turntable && CellDepth < (prevCard as TurntableCard).StepCount)
+        if (turnTables.Contains(prevCard.Type) && CellDepth < (prevCard as TurntableCard).StepCount)
         {
             ++CellDepth;
             newPos = prevCard.OwnGO.transform.position;
         }
         else
         {
-            if (prevCard.Type == Card.CardType.Turntable)
+            if (turnTables.Contains(prevCard.Type))
             {
                 CellDepth = 1;
             }
@@ -362,7 +368,7 @@ public class Person : MonoBehaviour
             Death();
             return;
         }
-        else if (curCard.Type == Card.CardType.Turntable)
+        else if (turnTables.Contains(prevCard.Type))
         {
             transform.position = newPos + (curCard as TurntableCard).StepPos[CellDepth - 1];
         }
@@ -380,10 +386,10 @@ public class Person : MonoBehaviour
                         curCard.Figures[i].Death();
                         curCard.Figures[i] = null;
                     }
-                    else if (curCard.Type != Card.CardType.Turntable || (curCard.Type == Card.CardType.Turntable &&
-                                                                         CellDepth == curCard.Figures[i].CellDepth))
+                    else if (!turnTables.Contains(prevCard.Type) || (turnTables.Contains(prevCard.Type) &&
+                                                                     CellDepth == curCard.Figures[i].CellDepth))
                     {
-                        if (curCard.Type == Card.CardType.Turntable)
+                        if (turnTables.Contains(prevCard.Type))
                         {
                             curCard.Figures[i].transform.GetChild(0).gameObject.SetActive(false);
                         }
@@ -395,7 +401,7 @@ public class Person : MonoBehaviour
                 }
                 else
                 {
-                    if (curCard.Type == Card.CardType.Turntable)
+                    if (turnTables.Contains(prevCard.Type))
                     {
                         if (CellDepth == curCard.Figures[i].CellDepth)
                         {

@@ -356,6 +356,11 @@ public class TurntableCard : Card
     public TurntableCard()
     {
         Type = CardType.Turntable;
+        
+        for (int i = 3; i < 12; ++i)
+        {
+            Figures.Add(null);
+        }
     }
 }
 
@@ -370,10 +375,6 @@ public class TurntableCard2 : TurntableCard
         StepPos.Add(new Vector3(0.03f, 0, 0.03f));
         StepPos.Add(new Vector3(-0.03f, 0, -0.03f));
 
-        for (int i = 3; i < 12; ++i)
-        {
-            Figures.Add(null);
-        }
     }
 }
 
@@ -388,10 +389,7 @@ public class TurntableCard3 : TurntableCard
         StepPos.Add(new Vector3(-0.03f, 0, 0.03f));
         StepPos.Add(new Vector3(0.01f, 0, 0));
         StepPos.Add(new Vector3(-0.03f, 0, -0.03f));
-        for (int i = 3; i < 12; ++i)
-        {
-            Figures.Add(null);
-        }
+        
     }
 }
 
@@ -408,10 +406,6 @@ public class TurntableCard4 : TurntableCard
         StepPos.Add(new Vector3(-0.025f, 0, -0.02f));
         StepPos.Add(new Vector3(+0.02f, 0, -0.035f));
 
-        for (int i = 3; i < 12; ++i)
-        {
-            Figures.Add(null);
-        }
     }
 }
 
@@ -429,10 +423,6 @@ public class TurntableCard5 : TurntableCard
         StepPos.Add(new Vector3(0.02f, 0, 0.03f));
         StepPos.Add(new Vector3(-0.035f, 0, 0.03f));
 
-        for (int i = 3; i < 12; ++i)
-        {
-            Figures.Add(null);
-        }
     }
 }
 
@@ -494,8 +484,8 @@ public class CardManagerScr : MonoBehaviour
         }
 
         Cards.createCardByType.Add(Card.CardType.Ship, new WaterCard());
-        Cards.createCardByType.Add(Card.CardType.ArrowStraight, new ArrowStraight());
         Cards.createCardByType.Add(Card.CardType.Arrow3, new Arrow3());
+        Cards.createCardByType.Add(Card.CardType.ArrowStraight, new ArrowStraight());
         Cards.createCardByType.Add(Card.CardType.ArrowDiagonal, new ArrowDiagonal());
         Cards.createCardByType.Add(Card.CardType.ArrowDiagonal2, new ArrowDiagonal2());
         Cards.createCardByType.Add(Card.CardType.ArrowDiagonal4, new ArrowDiagonal4());
