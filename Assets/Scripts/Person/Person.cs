@@ -267,7 +267,7 @@ public class Person : MonoBehaviour
         if (isMainMove) {
             rpcConnector.MovePersonRpc(newPos, team, personNumber);
         }
-        currGame.ChangeTeam();
+        Debug.Log("Moved"); 
         DestroyCircles();
 
         //Remove person from prev card
@@ -360,6 +360,10 @@ public class Person : MonoBehaviour
         }
 
         Card curCard = currGame.PlayingField[Position.x, Position.z];
+        if (curCard.Type != CardType.Ice)
+        {
+            currGame.ChangeTeam();
+        }
         if (prevCard.Type == CardType.Ship && curCard.Type == CardType.Water)
         {
             (prevCard as WaterCard).MoveShip(Position.x, Position.z, currGame);
@@ -371,6 +375,8 @@ public class Person : MonoBehaviour
                 }
             }
         }
+
+        
 
         if (isWithCoin)
         {

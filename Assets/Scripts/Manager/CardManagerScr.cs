@@ -442,8 +442,8 @@ public class CardManagerScr : MonoBehaviour
         Cards.AllCards.Add(new PairCardInt(new FortressCard(), 5));
         Cards.AllCards.Add(new PairCardInt(new TurntableCard(), 15));
         Cards.AllCards.Add(new PairCardInt(new ChestCard(), 11));
-        Cards.AllCards.Add(new PairCardInt(new IceCard(), 10));
-        Cards.AllCards.Add(new PairCardInt(new CrocodileCard(), 40));
+        Cards.AllCards.Add(new PairCardInt(new IceCard(), 40));
+        Cards.AllCards.Add(new PairCardInt(new CrocodileCard(), 10));
 
         foreach (var pairCardInt in Cards.AllCards)
         {
