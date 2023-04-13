@@ -25,13 +25,15 @@ public class GameManagerScr : MonoBehaviour
     [SerializeField] public RpcConnector rpcConnector;
     public bool isGameAR = false;
     public bool isDebug = false;
+    // Change only in single playet mode
+    public int numTeams = 1; 
 
     private ARRaycastManager _arRaycastManagerScript;
     private bool _placedMap = false;
     private Person _personScr;
     private LayerMask _layerMask;
 
-    private Teams _currTeam = Teams.White;
+    // private Teams _currTeam = Teams.White;
     private Person _currPerson = null;
 
     private Vector3 midCardPosition;
@@ -57,7 +59,7 @@ public class GameManagerScr : MonoBehaviour
             {
                 BuildPlayingField(new Vector3(0, 0, 0));
                 CreateTeam();
-                rpcConnector.SyncCardsRpc();
+                rpcConnector.SyncCardsRpc(CurrentGame.rotMassSize);
             }
 
             _placedMap = true;
@@ -103,17 +105,7 @@ public class GameManagerScr : MonoBehaviour
         }
     }
 
-    void ChangeTeam()
-    {
-        if (_currTeam == Teams.White)
-        {
-            _currTeam = Teams.Red;
-        }
-        else
-        {
-            _currTeam = Teams.White;
-        }
-    }
+    
 
     void DetachedMovePerson()
     {
@@ -138,7 +130,7 @@ public class GameManagerScr : MonoBehaviour
                 if (hitObject.collider.CompareTag("Person"))
                 {
                     Person currentPerson = hitObject.collider.gameObject.GetComponent<Person>();
-                    if (currentPerson.team == _currTeam)
+                    if (currentPerson.team == CurrentGame.curTeam)
                     {
                         if (!_personScr)
                         {
@@ -169,7 +161,6 @@ public class GameManagerScr : MonoBehaviour
                     _personScr.gameObject.layer = LayerMask.NameToLayer("Person");
                     _layerMask = 1 << LayerMask.NameToLayer("Person");
                     _personScr = null;
-                    ChangeTeam();
                 }
             }
         }
@@ -178,7 +169,7 @@ public class GameManagerScr : MonoBehaviour
     public void RevivePerson()
     {
         Person zombie = null;
-        foreach (var per in CurrentGame.Persons[_currTeam])
+        foreach (var per in CurrentGame.Persons[CurrentGame.curTeam])
         {
             if (!per._isAlive)
             {
@@ -189,7 +180,7 @@ public class GameManagerScr : MonoBehaviour
 
         Person prev_pers = null;
         int teammates_count = 0;
-        foreach (var per in CurrentGame.Persons[_currTeam])
+        foreach (var per in CurrentGame.Persons[CurrentGame.curTeam])
         {
             if (CurrentGame.PlayingField[per.Position.x, per.Position.z].Type == Card.CardType.Shaman)
             {
@@ -202,7 +193,7 @@ public class GameManagerScr : MonoBehaviour
                     zombie._isAlive = true;
 
                     Vector3 beautiPos;
-                    if (_currTeam == Teams.White || _currTeam == Teams.Yellow)
+                    if (CurrentGame.curTeam == Teams.White || CurrentGame.curTeam == Teams.Yellow)
                     {
                         beautiPos = new Vector3(0.025f, 0, 0);
                     }
@@ -212,22 +203,22 @@ public class GameManagerScr : MonoBehaviour
                     }
 
                     zombie.transform.position = per.gameObject.transform.position +
-                                                new Vector3(CurrentGame.TeemRotation[(int)_currTeam, 1].x * beautiPos.x,
-                                                    0, beautiPos.z * CurrentGame.TeemRotation[(int)_currTeam, 1].z);
+                                                new Vector3(CurrentGame.TeemRotation[(int)CurrentGame.curTeam, 1].x * beautiPos.x,
+                                                    0, beautiPos.z * CurrentGame.TeemRotation[(int)CurrentGame.curTeam, 1].z);
                     ;
-                    per.transform.position += new Vector3(CurrentGame.TeemRotation[(int)_currTeam, 2].x * beautiPos.x,
-                        0, beautiPos.z * CurrentGame.TeemRotation[(int)_currTeam, 2].z);
+                    per.transform.position += new Vector3(CurrentGame.TeemRotation[(int)CurrentGame.curTeam, 2].x * beautiPos.x,
+                        0, beautiPos.z * CurrentGame.TeemRotation[(int)CurrentGame.curTeam, 2].z);
                 }
                 else
                 {
                     prev_pers.transform.position = per.transform.position +
-                                                   new Vector3(CurrentGame.TeemRotation[(int)_currTeam, 2].x * 0.025f,
-                                                       0, 0.025f * CurrentGame.TeemRotation[(int)_currTeam, 2].z);
+                                                   new Vector3(CurrentGame.TeemRotation[(int)CurrentGame.curTeam, 2].x * 0.025f,
+                                                       0, 0.025f * CurrentGame.TeemRotation[(int)CurrentGame.curTeam, 2].z);
                     transform.position = per.transform.position +
-                                         new Vector3(CurrentGame.TeemRotation[(int)_currTeam, 0].x * 0.025f, 0,
-                                             0.025f * CurrentGame.TeemRotation[(int)_currTeam, 0].z);
-                    per.transform.position += new Vector3(CurrentGame.TeemRotation[(int)_currTeam, 1].x * 0.025f, 0,
-                        0.025f * CurrentGame.TeemRotation[(int)_currTeam, 1].z);
+                                         new Vector3(CurrentGame.TeemRotation[(int)CurrentGame.curTeam, 0].x * 0.025f, 0,
+                                             0.025f * CurrentGame.TeemRotation[(int)CurrentGame.curTeam, 0].z);
+                    per.transform.position += new Vector3(CurrentGame.TeemRotation[(int)CurrentGame.curTeam, 1].x * 0.025f, 0,
+                        0.025f * CurrentGame.TeemRotation[(int)CurrentGame.curTeam, 1].z);
                 }
             }
         }
@@ -236,7 +227,7 @@ public class GameManagerScr : MonoBehaviour
         _personScr.gameObject.layer = LayerMask.NameToLayer("Person");
         _layerMask = 1 << LayerMask.NameToLayer("Person");
         _personScr = null;
-        ChangeTeam();
+        CurrentGame.ChangeTeam();
     }
 
     public void TakeCoin()
@@ -307,7 +298,7 @@ public class GameManagerScr : MonoBehaviour
         float firstCardZ = midCardPosition.z - 6 * CurrentGame.sizeCardPrefab.z;
 
         Debug.Log(PhotonNetwork.PlayerList.Length);
-        for (var currentTeam = CurrentGame.currentTeam; currentTeam < PhotonNetwork.PlayerList.Length; ++currentTeam)
+        for (var currentTeam = CurrentGame.currentNumTeam; currentTeam < PhotonNetwork.PlayerList.Length + numTeams - 1; ++currentTeam)
         {
             const int numPersonsInTeam = 3;
             Person[] personsInTeam = new Person[numPersonsInTeam];
@@ -324,10 +315,13 @@ public class GameManagerScr : MonoBehaviour
                 GameObject personGO = Instantiate(placedObjectPrefab, persPosition, Quaternion.identity);
                 personGO.SetActive(true);
                 Person pers = personGO.GetComponent<Person>();
+                
                 pers.currGame = CurrentGame;
                 pers.rpcConnector = rpcConnector;
                 pers.team = (Teams)currentTeam;
                 pers.Position = new IntVector2(shipPosition);
+                pers.personNumber = player;
+                
                 // Add person to card's list of persons
                 CurrentGame.PlayingField[shipPosition.x, shipPosition.z].Figures[player] = pers;
 
@@ -337,6 +331,6 @@ public class GameManagerScr : MonoBehaviour
             CurrentGame.Persons.Add((Teams)currentTeam, personsInTeam);
         }
 
-        CurrentGame.currentTeam = PhotonNetwork.PlayerList.Length;
+        CurrentGame.currentNumTeam = PhotonNetwork.PlayerList.Length;
     }
 }

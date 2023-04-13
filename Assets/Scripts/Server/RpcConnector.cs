@@ -6,7 +6,7 @@ using Photon.Pun;
 
 public class RpcConnector : MonoBehaviourPun
 {
-    public Game currGame;
+    private Game currGame;
     public GameManagerScr gameManagerScr;
 
     public void SetGameObj(Game game)
@@ -29,53 +29,73 @@ public class RpcConnector : MonoBehaviourPun
     }
 
     [PunRPC]
-    void SyncCards(int[][] cardTypes)
+    void SyncCards(IReadOnlyList<int[]> cardTypes, IReadOnlyList<int> rotMass)
     {
         Debug.Log(string.Format("SyncCardsCalled"));
-        for (int i = 0; i < currGame.PlayingField.GetLength(0); ++i)
+        int rotInd = 0;
+        for (var i = 0; i < currGame.PlayingField.GetLength(0); ++i)
         {
-            for (int j = 0; j < currGame.PlayingField.GetLength(1); ++j)
+            for (var j = 0; j < currGame.PlayingField.GetLength(1); ++j)
             {
-                currGame.PlayingField[i, j] = (Card)(Cards.createCardByType[(Card.CardType)cardTypes[i][j]].NewObj());
+                currGame.PlayingField[i, j] = (Card)Cards.createCardByType[(Card.CardType)cardTypes[i][j]].NewObj();
+                var curCard = currGame.PlayingField[i, j];
+                var curType = curCard.Type;
+                if (curCard is ArrowCard arrowCard && curType != Card.CardType.ArrowStraight4 && curType != Card.CardType.ArrowDiagonal4)
+                {
+                    arrowCard.Rotation = (Rotation)rotMass[rotInd++];
+                } else if (curCard is CannonCard card)
+                {
+                    card.Rotation = (Rotation)rotMass[rotInd++];
+                }
             }
         }
 
-        gameManagerScr.BuildPlayingField(new Vector3(0, 0, 0));
         currGame.PlaceShips();
+        gameManagerScr.BuildPlayingField(new Vector3(0, 0, 0));
         CreateNewTeamRpc();
     }
 
-    public void SyncCardsRpc()
+    public void SyncCardsRpc(int massSize)
     {
         Debug.Log(string.Format("SyncCardsFromRpcCalled"));
-        int[][] cardTypes = new int[currGame.PlayingField.GetLength(0)][];
-        for (int i = 0; i < currGame.PlayingField.GetLength(0); ++i)
+        var cardTypes = new int[currGame.PlayingField.GetLength(0)][];
+        var rotMass = new int[massSize];
+        var rotIndex = 0;
+        for (var i = 0; i < currGame.PlayingField.GetLength(0); ++i)
         {
-            cardTypes[i] = new int[currGame.PlayingField.GetLength(1)];
-            for (int j = 0; j < currGame.PlayingField.GetLength(1); ++j)
+            cardTypes[i] = new int[massSize];
+            for (var j = 0; j < currGame.PlayingField.GetLength(1); ++j)
             {
-                cardTypes[i][j] = (int)(currGame.PlayingField[i, j].Type);
+                var curCard = currGame.PlayingField[i, j];
+                var curType = curCard.Type;
+                cardTypes[i][j] = (int)currGame.PlayingField[i, j].Type;
+                if (curCard is ArrowCard card && curType != Card.CardType.ArrowStraight4 && curType != Card.CardType.ArrowDiagonal4)
+                {
+                    rotMass[rotIndex++] = (int)card.Rotation;
+                } else if (curCard is CannonCard cannonCard)
+                {
+                    rotMass[rotIndex++] = (int)cannonCard.Rotation;
+                }
             }
         }
-
-        photonView.RPC("SyncCards", RpcTarget.OthersBuffered, cardTypes);
+        photonView.RPC("SyncCards", RpcTarget.OthersBuffered, cardTypes, rotMass);
     }
 
-    [PunRPC]
-    void OpenCard(int[] pos)
-    {
-        Debug.Log(string.Format("OpenCardCalled {0} {1}", pos[0], pos[1]));
-        currGame.PlayingField[pos[0], pos[1]].Open();
-    }
-
-    public void OpenCardRpc(IntVector2 Position)
-    {
-        int[] pos = new int[2];
-        pos[0] = Position.x;
-        pos[1] = Position.z;
-        Debug.Log(string.Format("OpenCardFromRpcCalled {0} {1}", pos[0], pos[1]));
-        photonView.RPC("OpenCard", RpcTarget.AllBuffered, pos);
-    }
+    // [PunRPC]
+    // void OpenCard(IReadOnlyList<int> pos)
+    // {
+    //     Debug.Log($"OpenCardCalled {pos[0]} {pos[1]}");
+    //     currGame.PlayingField[pos[0], pos[1]].Open();
+    // }
+    //
+    // public void OpenCardRpc(IntVector2 position)
+    // {
+    //     int[] pos = new int[2];
+    //     pos[0] = position.x;
+    //     pos[1] = position.z;
+    //     Debug.Log($"OpenCardFromRpcCalled {pos[0]} {pos[1]}");
+    //     photonView.RPC("OpenCard", RpcTarget.AllBuffered, pos);
+    // }
 
     [PunRPC]
     void CreateNewTeam()
@@ -86,5 +106,18 @@ public class RpcConnector : MonoBehaviourPun
     public void CreateNewTeamRpc()
     {
         photonView.RPC("CreateNewTeam", RpcTarget.AllBuffered);
+    }
+    
+    [PunRPC]
+    void MovePerson(float x, float y, float z, int team, int personNum)
+    {
+        Debug.Log(string.Format("MovePersonCalled"));
+        currGame.Persons[(Teams)team][personNum].Move(new Vector3(x, y, z), false);
+    }
+    
+    public void MovePersonRpc(Vector3 pos, Teams team, int personNum)
+    {
+        Debug.Log(string.Format("RpcMovePersonCalled"));
+        photonView.RPC("MovePerson", RpcTarget.OthersBuffered, pos.x, pos.y, pos.z, (int)team, personNum);
     }
 }

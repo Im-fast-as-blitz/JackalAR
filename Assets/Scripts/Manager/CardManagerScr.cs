@@ -180,11 +180,8 @@ public class CannonCard : Card
     {
         OwnGO.transform.eulerAngles = new Vector3(0, 90 * (int)Rotation, 0);
     }
-
-    public override void StepAction()
-    {
-    }
 }
+
 
 public class ArrowCard : Card
 {
@@ -227,7 +224,7 @@ public class ArrowDiagonal : ArrowCard
 {
     public ArrowDiagonal()
     {
-        LogoPath = "Cards/Arrows/straight";
+        LogoPath = "Cards/Arrows/diagonal";
         Type = CardType.ArrowDiagonal;
     }
 }

@@ -15,10 +15,12 @@ public class Game
     public Card[,] PlayingField = new Card[PlayingFieldFirstDim, PlayingFieldSecondDim];
     public GameObject[,] GOCards = new GameObject[PlayingFieldFirstDim, PlayingFieldSecondDim];
     public Dictionary<Teams, Person[]> Persons = new Dictionary<Teams, Person[]>();
-    public int currentTeam = 0;
+    public int currentNumTeam = 0;
+    public Teams curTeam = Teams.White;
     public int NumTeams = 2;
     public Vector3 sizeCardPrefab = new Vector3(0, 0, 0);
     public Button ShamanBtn;
+    public int rotMassSize = 0; 
 
     public Vector3[,] TeemRotation = new Vector3[4, 3];
 
@@ -39,8 +41,13 @@ public class Game
             PlaceShips();
         }
     }
+    
+    public void ChangeTeam()
+    {
+        curTeam = curTeam == Teams.White ? Teams.Red : Teams.White;
+    }
 
-    private void RandmomCard(ref Card ownCard)
+    private void RandomCard(ref Card ownCard)
     {
         if (ownCard is ArrowCard)
         {
@@ -96,6 +103,7 @@ public class Game
         if (arrowCard.Type != Card.CardType.ArrowStraight4 && arrowCard.Type != Card.CardType.ArrowDiagonal4)
         {
             arrowCard.Rotation = (Rotation)Random.Range(0, 4);
+            ++rotMassSize;
         }
 
         return arrowCard;
@@ -163,6 +171,7 @@ public class Game
     private void RandomCannonCard(ref Card cannonCard)
     {
         (cannonCard as CannonCard).Rotation = (Rotation)Random.Range(0, 4);
+        ++rotMassSize;
     }
 
     private void SelectTeemRotation()
@@ -241,7 +250,7 @@ public class Game
                 PlayingField[i, j] = cardsWithoutWater[tempArrayInd];
                 tempArrayInd++;
 
-                RandmomCard(ref PlayingField[i, j]);
+                RandomCard(ref PlayingField[i, j]);
             }
         }
     }

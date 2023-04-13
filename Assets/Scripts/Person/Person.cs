@@ -16,8 +16,9 @@ public class Person : MonoBehaviour
     
     public short CellDepth = 1;
     public Game currGame;
-
+    
     public Teams team = Teams.White;
+    public int personNumber;
 
     public bool _isAlive = true;
     public bool isWithCoin = false;
@@ -240,8 +241,13 @@ public class Person : MonoBehaviour
         }
     }
 
-    public void Move(Vector3 newPos)
+    public void Move(Vector3 newPos, bool isMainMove = true)
     {
+        
+        if (isMainMove) {
+            rpcConnector.MovePersonRpc(newPos, team, personNumber);
+        }
+        currGame.ChangeTeam();
         DestroyCircles();
 
         //Remove person from prev card
@@ -479,8 +485,8 @@ public class Person : MonoBehaviour
 
         if (!curCard.IsOpen)
         {
-            rpcConnector.OpenCardRpc(Position);
-            // curCard.Open();
+            // rpcConnector.OpenCardRpc(Position);
+            curCard.Open();
         }
         else
         {
