@@ -22,14 +22,16 @@ public class Person : MonoBehaviour
 
     public bool _isAlive = true;
     public bool isWithCoin = false;
+    public Card previousCard = null;
+    public IntVector2 previousPosition;
 
-    public HashSet<Card.CardType> turnTables = new HashSet<Card.CardType>()
+    public HashSet<CardType> turnTables = new HashSet<CardType>()
     {
-        Card.CardType.Turntable , Card.CardType.Turntable2, Card.CardType.Turntable3, 
-        Card.CardType.Turntable4, Card.CardType.Turntable5
+        CardType.Turntable , CardType.Turntable2, CardType.Turntable3, 
+        CardType.Turntable4, CardType.Turntable5
     };
 
-    //Return to the ship
+    // Return to the ship
     void ReturnToShip()
     {
         Position = new IntVector2(Ships.AllShips[team].Position);
@@ -109,7 +111,7 @@ public class Person : MonoBehaviour
         return false;
     }
 
-    //Create curr circle to move
+    // Create curr circle to move
     private void CreateMovement(IntVector2 addPos, PersonManagerScr.PossibilityToWalk possByType,
         PersonManagerScr.PossibilityToWalk possByRotation, PersonManagerScr.PossibilityToWalk possByCoin)
     {
@@ -138,7 +140,7 @@ public class Person : MonoBehaviour
 
             if (EnemyOnCard(newPos, depth))
             {
-                if (currCard.Type != Card.CardType.Fortress && currCard.Type != Card.CardType.Shaman)
+                if (currCard.Type != CardType.Fortress && currCard.Type != CardType.Shaman)
                 {
                     result = Instantiate(attackCircle, currCard.OwnGO.transform.position, Quaternion.identity);
                 }
@@ -168,7 +170,7 @@ public class Person : MonoBehaviour
         PersonManagerScr.PossibilityToWalk possByType = PersonManagerScr.PossibilityToWalkByType[currentCard.Type];
         List<IntVector2> directions = PersonManagerScr.DirectionsToWalkByType[currentCard.Type];
         PersonManagerScr.PossibilityToWalk possByRotation = PersonManagerScr.RotationDefault;
-        if (currentCard is CannonCard)
+        if (currentCard.Type == CardType.Cannon)
         {
             possByRotation =
                 PersonManagerScr.PossibilityToWalkByRotation[(int)currentCard.Type,
@@ -179,6 +181,24 @@ public class Person : MonoBehaviour
             possByRotation =
                 PersonManagerScr.PossibilityToWalkByRotation[(int)currentCard.Type,
                     (int)(currentCard as ArrowCard).Rotation];
+        }
+        else if (currentCard.Type == CardType.Ice)
+        {
+            if (previousCard.Type == CardType.Horse || previousCard.Type == CardType.Helicopter)
+            {
+                possByType = PersonManagerScr.PossibilityToWalkByType[previousCard.Type];
+                directions = PersonManagerScr.DirectionsToWalkByType[previousCard.Type];
+            }
+            else
+            {
+                directions = new List<IntVector2>();
+                directions.Add(new IntVector2(Position.x - previousPosition.x, Position.z - previousPosition.z));
+            }
+        }
+        else if (currentCard.Type == CardType.Crocodile)
+        {
+            directions = new List<IntVector2>();
+            directions.Add(new IntVector2(previousPosition.x - Position.x, previousPosition.z - Position.z));
         }
 
         PersonManagerScr.PossibilityToWalk possByCoin = PersonManagerScr.WithoutCoin;
@@ -193,7 +213,7 @@ public class Person : MonoBehaviour
             CreateMovement(direction, possByType, possByRotation, possByCoin);
         }
 
-        if (currentCard.Type == Card.CardType.Shaman)
+        if (currentCard.Type == CardType.Shaman)
         {
             foreach (var per in currGame.Persons[team])
             {
@@ -222,7 +242,7 @@ public class Person : MonoBehaviour
 
         _moveCircles.Clear();
 
-        if (currGame.PlayingField[Position.x, Position.z].Type == Card.CardType.Shaman)
+        if (currGame.PlayingField[Position.x, Position.z].Type == CardType.Shaman)
         {
             currGame.ShamanBtn.gameObject.SetActive(false);
         }
@@ -253,6 +273,9 @@ public class Person : MonoBehaviour
         //Remove person from prev card
 
         Card prevCard = currGame.PlayingField[Position.x, Position.z];
+
+        previousCard = prevCard;
+        previousPosition = new IntVector2(Position.x, Position.z);
 
         for (short i = 0, teammates_count = 0, prev_pers = 0; i < prevCard.Figures.Count; ++i)
         {
@@ -337,7 +360,7 @@ public class Person : MonoBehaviour
         }
 
         Card curCard = currGame.PlayingField[Position.x, Position.z];
-        if (prevCard.Type == Card.CardType.Ship && curCard.Type == Card.CardType.Water)
+        if (prevCard.Type == CardType.Ship && curCard.Type == CardType.Water)
         {
             (prevCard as WaterCard).MoveShip(Position.x, Position.z, currGame);
             for (int i = 0; i < curCard.Figures.Count; ++i)
@@ -352,11 +375,11 @@ public class Person : MonoBehaviour
         if (isWithCoin)
         {
             isWithCoin = false;
-            if (curCard is WaterCard || curCard.Type == Card.CardType.Ogre)
+            if (curCard is WaterCard || curCard.Type == CardType.Ogre)
             {
                 currGame.TotalCoins--;
             }
-            else if (curCard.Type == Card.CardType.Ship)
+            else if (curCard.Type == CardType.Ship)
             {
                 currGame.TotalCoins--;
                 if ((curCard as WaterCard).OwnShip.team == team)
@@ -371,7 +394,7 @@ public class Person : MonoBehaviour
         }
 
         //Look at new card
-        if (curCard.Type == Card.CardType.Ship && (curCard as WaterCard).OwnShip.team != team)
+        if (curCard.Type == CardType.Ship && (curCard as WaterCard).OwnShip.team != team)
         {
             Death();
             return;
@@ -388,8 +411,8 @@ public class Person : MonoBehaviour
             {
                 if (curCard.Figures[i].team != team)
                 {
-                    if ((curCard.Type == Card.CardType.Ship && (curCard as WaterCard).OwnShip.team == team) ||
-                        curCard.Type == Card.CardType.Water)
+                    if ((curCard.Type == CardType.Ship && (curCard as WaterCard).OwnShip.team == team) ||
+                        curCard.Type == CardType.Water)
                     {
                         curCard.Figures[i].Death();
                         curCard.Figures[i] = null;

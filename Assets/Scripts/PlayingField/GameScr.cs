@@ -100,7 +100,7 @@ public class Game
             arrowCard = new ArrowDiagonal4();
         }
 
-        if (arrowCard.Type != Card.CardType.ArrowStraight4 && arrowCard.Type != Card.CardType.ArrowDiagonal4)
+        if (arrowCard.Type != CardType.ArrowStraight4 && arrowCard.Type != CardType.ArrowDiagonal4)
         {
             arrowCard.Rotation = (Rotation)Random.Range(0, 4);
             ++rotMassSize;
@@ -266,7 +266,7 @@ public class Game
             }
 
             waterCard.OwnShip = pair.Value;
-            waterCard.Type = Card.CardType.Ship;
+            waterCard.Type = CardType.Ship;
         }
     }
 }

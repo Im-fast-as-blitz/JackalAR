@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Card
-{
     public enum CardType
     {
         Undefined = -1,
@@ -29,9 +27,13 @@ public class Card
         Turntable4 = 19,
         Turntable5 = 20,
         Arrow = 21,
-        
+        Ice = 22,
+        Crocodile = 23,
+        Helicopter = 24,
     }
 
+public class Card
+{
     public GameObject OwnGO;
     public string LogoPath;
     public List<Person> Figures = new List<Person>() { null, null, null };
@@ -80,16 +82,22 @@ public class EmptyCard : Card
         LogoPath = "Cards/empty";
         Type = CardType.Empty;
     }
-
-    public override void OpenAction()
-    {
-    }
-
-    public override void StepAction()
-    {
-    }
 }
 
+public class Ship
+{
+    public Teams team;
+    public string LogoPath;
+    public List<Person> Figures = new List<Person>();
+    public IntVector2 Position;
+
+    public Ship(Teams shipTeam, string logoPath, IntVector2 position)
+    {
+        team = shipTeam;
+        LogoPath = logoPath;
+        Position = position;
+    }
+}
 public class WaterCard : Card
 {
     public Ship OwnShip = null;
@@ -130,14 +138,6 @@ public class WaterCard : Card
         UpdateLogo();
         waterCardToMove.LoadShipLogo();
     }
-
-    public override void OpenAction()
-    {
-    }
-
-    public override void StepAction()
-    {
-    }
 }
 
 public class HorseCard : Card
@@ -146,14 +146,6 @@ public class HorseCard : Card
     {
         LogoPath = "Cards/horse";
         Type = CardType.Horse;
-    }
-
-    public override void OpenAction()
-    {
-    }
-
-    public override void StepAction()
-    {
     }
 }
 
@@ -195,10 +187,6 @@ public class ArrowCard : Card
     public override void OpenAction()
     {
         OwnGO.transform.eulerAngles = new Vector3(0, 90 * (int)Rotation, 0);
-    }
-
-    public override void StepAction()
-    {
     }
 }
 
@@ -273,10 +261,6 @@ public class OgreCard : Card
         Type = CardType.Ogre;
     }
 
-    public override void OpenAction()
-    {
-    }
-
     public override void StepAction()
     {
         if (!Figures[0])
@@ -296,14 +280,6 @@ public class FortressCard : Card
         LogoPath = "Cards/fortress";
         Type = CardType.Fortress;
     }
-
-    public override void OpenAction()
-    {
-    }
-
-    public override void StepAction()
-    {
-    }
 }
 
 public class ShamanCard : Card
@@ -312,14 +288,6 @@ public class ShamanCard : Card
     {
         LogoPath = "Cards/shaman";
         Type = CardType.Shaman;
-    }
-
-    public override void OpenAction()
-    {
-    }
-
-    public override void StepAction()
-    {
     }
 }
 
@@ -336,10 +304,6 @@ public class ChestCard : Card
     public override void OpenAction()
     {
         // Generate coins
-    }
-
-    public override void StepAction()
-    {
     }
 }
 
@@ -386,7 +350,24 @@ public class TurntableCard3 : TurntableCard
         StepPos.Add(new Vector3(-0.03f, 0, 0.03f));
         StepPos.Add(new Vector3(0.01f, 0, 0));
         StepPos.Add(new Vector3(-0.03f, 0, -0.03f));
-        
+    }
+}
+
+public class IceCard : Card
+{
+    public IceCard()
+    {
+        LogoPath = "Cards/ice";
+        Type = CardType.Ice;
+    }
+}
+
+public class CrocodileCard : Card
+{
+    public CrocodileCard()
+    {
+        LogoPath = "Cards/crocodile";
+        Type = CardType.Crocodile;
     }
 }
 
@@ -427,23 +408,10 @@ public class TurntableCard5 : TurntableCard
 public static class Cards
 {
     public static List<PairCardInt> AllCards = new List<PairCardInt>();
-    public static Dictionary<Card.CardType, Card> createCardByType = new Dictionary<Card.CardType, Card>();
+    public static Dictionary<CardType, Card> createCardByType = new Dictionary<CardType, Card>();
 }
 
-public class Ship
-{
-    public Teams team;
-    public string LogoPath;
-    public List<Person> Figures = new List<Person>();
-    public IntVector2 Position;
 
-    public Ship(Teams shipTeam, string logoPath, IntVector2 position)
-    {
-        team = shipTeam;
-        LogoPath = logoPath;
-        Position = position;
-    }
-}
 
 public static class Ships
 {
@@ -467,31 +435,35 @@ public class CardManagerScr : MonoBehaviour
         Cards.AllCards.Add(new PairCardInt(new WaterCard(), 52));
         Cards.AllCards.Add(new PairCardInt(new EmptyCard(), 20));
         Cards.AllCards.Add(new PairCardInt(new HorseCard(), 10));
-        Cards.AllCards.Add(new PairCardInt(new CannonCard(), 10));
+        Cards.AllCards.Add(new PairCardInt(new CannonCard(), 5));
         Cards.AllCards.Add(new PairCardInt(new OgreCard(), 1));
-        Cards.AllCards.Add(new PairCardInt(new ArrowCard(), 15));
-        Cards.AllCards.Add(new PairCardInt(new ShamanCard(), 10));
-        Cards.AllCards.Add(new PairCardInt(new FortressCard(), 10));
-        Cards.AllCards.Add(new PairCardInt(new TurntableCard(), 16));
-        Cards.AllCards.Add(new PairCardInt(new ChestCard(), 35));
+        Cards.AllCards.Add(new PairCardInt(new ArrowCard(), 5));
+        Cards.AllCards.Add(new PairCardInt(new ShamanCard(), 5));
+        Cards.AllCards.Add(new PairCardInt(new FortressCard(), 5));
+        Cards.AllCards.Add(new PairCardInt(new TurntableCard(), 15));
+        Cards.AllCards.Add(new PairCardInt(new ChestCard(), 11));
+        Cards.AllCards.Add(new PairCardInt(new IceCard(), 10));
+        Cards.AllCards.Add(new PairCardInt(new CrocodileCard(), 40));
 
         foreach (var pairCardInt in Cards.AllCards)
         {
             Cards.createCardByType.Add(pairCardInt.CardPair.Type, pairCardInt.CardPair);
         }
 
-        Cards.createCardByType.Add(Card.CardType.Ship, new WaterCard());
-        Cards.createCardByType.Add(Card.CardType.Arrow3, new Arrow3());
-        Cards.createCardByType.Add(Card.CardType.ArrowStraight, new ArrowStraight());
-        Cards.createCardByType.Add(Card.CardType.ArrowDiagonal, new ArrowDiagonal());
-        Cards.createCardByType.Add(Card.CardType.ArrowDiagonal2, new ArrowDiagonal2());
-        Cards.createCardByType.Add(Card.CardType.ArrowDiagonal4, new ArrowDiagonal4());
-        Cards.createCardByType.Add(Card.CardType.ArrowStraight2, new ArrowStraight2());
-        Cards.createCardByType.Add(Card.CardType.ArrowStraight4, new ArrowStraight4());
-        Cards.createCardByType.Add(Card.CardType.Turntable2, new TurntableCard2());
-        Cards.createCardByType.Add(Card.CardType.Turntable3, new TurntableCard3());
-        Cards.createCardByType.Add(Card.CardType.Turntable4, new TurntableCard4());
-        Cards.createCardByType.Add(Card.CardType.Turntable5, new TurntableCard5());
+        Cards.createCardByType.Add(CardType.Ship, new WaterCard());
+        Cards.createCardByType.Add(CardType.Arrow3, new Arrow3());
+        Cards.createCardByType.Add(CardType.ArrowStraight, new ArrowStraight());
+        Cards.createCardByType.Add(CardType.ArrowDiagonal, new ArrowDiagonal());
+        Cards.createCardByType.Add(CardType.ArrowDiagonal2, new ArrowDiagonal2());
+        Cards.createCardByType.Add(CardType.ArrowDiagonal4, new ArrowDiagonal4());
+        Cards.createCardByType.Add(CardType.ArrowStraight2, new ArrowStraight2());
+        Cards.createCardByType.Add(CardType.ArrowStraight4, new ArrowStraight4());
+        Cards.createCardByType.Add(CardType.Turntable2, new TurntableCard2());
+        Cards.createCardByType.Add(CardType.Turntable3, new TurntableCard3());
+        Cards.createCardByType.Add(CardType.Turntable4, new TurntableCard4());
+        Cards.createCardByType.Add(CardType.Turntable5, new TurntableCard5());
+
+
 
         Ships.GenerateShips();
     }

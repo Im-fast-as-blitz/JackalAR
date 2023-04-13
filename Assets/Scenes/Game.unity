@@ -846,7 +846,7 @@ MonoBehaviour:
   rpcConnector: {fileID: 911730210}
   isGameAR: 0
   isDebug: 1
-  numTeams: 1
+  numTeams: 2
 --- !u!4 &777055588
 Transform:
   m_ObjectHideFlags: 0
