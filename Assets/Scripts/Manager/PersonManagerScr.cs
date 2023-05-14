@@ -282,6 +282,9 @@ public class PersonManagerScr : MonoBehaviour
         // Helicopter
         PossibilityToWalkByType.Add(CardType.Helicopter, OnEmptyCard);
         DirectionsToWalkByType.Add(CardType.Helicopter, HelicopterDirections);
+        // Balloon
+        PossibilityToWalkByType.Add(CardType.Balloon, OnEmptyCard);
+        DirectionsToWalkByType.Add(CardType.Balloon, new List<IntVector2>());
     }
 
     public static List<IntVector2> DefaultDirections = new List<IntVector2>();

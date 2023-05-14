@@ -30,6 +30,7 @@ public enum CardType
     Ice = 22,
     Crocodile = 23,
     Helicopter = 24,
+    Balloon = 25
 }
 
 public class Card
@@ -412,6 +413,15 @@ public class HelicopterCard : Card
     }
 }
 
+public class BalloonCard : Card
+{
+    public BalloonCard()
+    {
+        LogoPath = "Cards/balloon";
+        Type = CardType.Balloon;
+    }
+}
+
 public static class Cards
 {
     public static List<PairCardInt> AllCards = new List<PairCardInt>();
@@ -450,7 +460,8 @@ public class CardManagerScr : MonoBehaviour
         Cards.AllCards.Add(new PairCardInt(new ChestCard(), 8));
         Cards.AllCards.Add(new PairCardInt(new IceCard(), 20));
         Cards.AllCards.Add(new PairCardInt(new CrocodileCard(), 5));
-        Cards.AllCards.Add(new PairCardInt(new HelicopterCard(), 40));
+        Cards.AllCards.Add(new PairCardInt(new HelicopterCard(), 20));
+        Cards.AllCards.Add(new PairCardInt(new BalloonCard(), 20));
 
         foreach (var pairCardInt in Cards.AllCards)
         {

@@ -13,10 +13,10 @@ public class Person : MonoBehaviour
 
     [NonSerialized] public IntVector2 Position;
     [NonSerialized] public RpcConnector rpcConnector;
-    
+
     public short CellDepth = 1;
     public Game currGame;
-    
+
     public Teams team = Teams.White;
     public int personNumber;
 
@@ -27,7 +27,7 @@ public class Person : MonoBehaviour
 
     public HashSet<CardType> turnTables = new HashSet<CardType>()
     {
-        CardType.Turntable , CardType.Turntable2, CardType.Turntable3, 
+        CardType.Turntable, CardType.Turntable2, CardType.Turntable3,
         CardType.Turntable4, CardType.Turntable5
     };
 
@@ -184,7 +184,8 @@ public class Person : MonoBehaviour
         }
         else if (currentCard.Type == CardType.Ice)
         {
-            if (prevNotIceCard.Type == CardType.Horse || (prevNotIceCard.Type == CardType.Helicopter && (prevNotIceCard as HelicopterCard).IsUsed == 1))
+            if (prevNotIceCard.Type == CardType.Horse || (prevNotIceCard.Type == CardType.Helicopter &&
+                                                          (prevNotIceCard as HelicopterCard).IsUsed == 1))
             {
                 possByType = PersonManagerScr.PossibilityToWalkByType[prevNotIceCard.Type];
                 directions = PersonManagerScr.DirectionsToWalkByType[prevNotIceCard.Type];
@@ -203,6 +204,12 @@ public class Person : MonoBehaviour
         else if (currentCard.Type == CardType.Helicopter && (currentCard as HelicopterCard).IsUsed > 0)
         {
             directions = PersonManagerScr.DefaultDirections;
+        }
+        else if (currentCard.Type == CardType.Balloon)
+        {
+            directions.Clear();
+            directions.Add(new IntVector2(Ships.AllShips[team].Position.x - Position.x,
+                Ships.AllShips[team].Position.z - Position.z));
         }
 
         PersonManagerScr.PossibilityToWalk possByCoin = PersonManagerScr.WithoutCoin;
@@ -267,11 +274,12 @@ public class Person : MonoBehaviour
 
     public void Move(Vector3 newPos, bool isMainMove = true)
     {
-        
-        if (isMainMove) {
+        if (isMainMove)
+        {
             rpcConnector.MovePersonRpc(newPos, team, personNumber);
         }
-        Debug.Log("Moved"); 
+
+        Debug.Log("Moved");
         DestroyCircles();
 
         //Remove person from prev card
@@ -287,6 +295,7 @@ public class Person : MonoBehaviour
         {
             prevNotIceCard = prevCard;
         }
+
         previousPosition = new IntVector2(Position.x, Position.z);
 
         for (short i = 0, teammates_count = 0, prev_pers = 0; i < prevCard.Figures.Count; ++i)
@@ -376,6 +385,7 @@ public class Person : MonoBehaviour
         {
             currGame.ChangeTeam();
         }
+
         if (prevCard.Type == CardType.Ship && curCard.Type == CardType.Water)
         {
             (prevCard as WaterCard).MoveShip(Position.x, Position.z, currGame);
@@ -388,7 +398,6 @@ public class Person : MonoBehaviour
             }
         }
 
-        
 
         if (isWithCoin)
         {
@@ -436,7 +445,7 @@ public class Person : MonoBehaviour
                         curCard.Figures[i] = null;
                     }
                     else if (!turnTables.Contains(curCard.Type) || (turnTables.Contains(curCard.Type) &&
-                                                                     CellDepth == curCard.Figures[i].CellDepth))
+                                                                    CellDepth == curCard.Figures[i].CellDepth))
                     {
                         if (turnTables.Contains(curCard.Type))
                         {
