@@ -170,6 +170,18 @@ public class PersonManagerScr : MonoBehaviour
             CannonDirections.Add(new IntVector2(i, 0));
         }
 
+        for (int i = -12; i < 13; ++i)
+        {
+            for (int j = -12; j < 13; ++j)
+            {
+                if (i == 0 && j == 0)
+                {
+                    continue;
+                }
+                HelicopterDirections.Add(new IntVector2(i, j));
+            }
+        }
+
         DefaultDirections.AddRange(CrossDirections);
         DefaultDirections.AddRange(DiagonalDirections);
 
@@ -244,29 +256,32 @@ public class PersonManagerScr : MonoBehaviour
         PossibilityToWalkByType.Add(CardType.Shaman, OnEmptyCard);
         DirectionsToWalkByType.Add(CardType.Shaman, DefaultDirections);
         // Chest
+        PossibilityToWalkByType.Add(CardType.Chest, OnEmptyCard);
+        DirectionsToWalkByType.Add(CardType.Chest, DefaultDirections);
         // Turntable
         PossibilityToWalkByType.Add(CardType.Turntable, OnEmptyCard);
         DirectionsToWalkByType.Add(CardType.Turntable, DefaultDirections);
-        
+
         PossibilityToWalkByType.Add(CardType.Turntable2, OnEmptyCard);
         DirectionsToWalkByType.Add(CardType.Turntable2, DefaultDirections);
-        
+
         PossibilityToWalkByType.Add(CardType.Turntable3, OnEmptyCard);
         DirectionsToWalkByType.Add(CardType.Turntable3, DefaultDirections);
-        
+
         PossibilityToWalkByType.Add(CardType.Turntable4, OnEmptyCard);
         DirectionsToWalkByType.Add(CardType.Turntable4, DefaultDirections);
-        
+
         PossibilityToWalkByType.Add(CardType.Turntable5, OnEmptyCard);
         DirectionsToWalkByType.Add(CardType.Turntable5, DefaultDirections);
-        PossibilityToWalkByType.Add(CardType.Chest, OnEmptyCard);
-        DirectionsToWalkByType.Add(CardType.Chest, DefaultDirections);
         // Ice
         PossibilityToWalkByType.Add(CardType.Ice, OnArrowCard);
         DirectionsToWalkByType.Add(CardType.Ice, new List<IntVector2>());
         // Crocodile
         PossibilityToWalkByType.Add(CardType.Crocodile, OnArrowCard);
         DirectionsToWalkByType.Add(CardType.Crocodile, new List<IntVector2>());
+        // Helicopter
+        PossibilityToWalkByType.Add(CardType.Helicopter, OnEmptyCard);
+        DirectionsToWalkByType.Add(CardType.Helicopter, HelicopterDirections);
     }
 
     public static List<IntVector2> DefaultDirections = new List<IntVector2>();
@@ -274,4 +289,5 @@ public class PersonManagerScr : MonoBehaviour
     public static List<IntVector2> DiagonalDirections = new List<IntVector2>();
     public static List<IntVector2> HorseDirections = new List<IntVector2>();
     public static List<IntVector2> CannonDirections = new List<IntVector2>();
+    public static List<IntVector2> HelicopterDirections = new List<IntVector2>();
 }

@@ -2,35 +2,35 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-    public enum CardType
-    {
-        Undefined = -1,
-        Empty = 0,
-        Water = 1,
-        Ship = 2,
-        Horse = 3,
-        Cannon = 4,
-        Ogre = 5,
-        ArrowStraight = 6,
-        ArrowStraight2 = 7,
-        ArrowDiagonal = 8,
-        ArrowDiagonal2 = 9,
-        Arrow3 = 10,
-        ArrowStraight4 = 11,
-        ArrowDiagonal4 = 12,
-        Fortress = 13,
-        Shaman = 14,
-        Chest = 15,
-        Turntable = 16,
-        Turntable2 = 17,
-        Turntable3 = 18,
-        Turntable4 = 19,
-        Turntable5 = 20,
-        Arrow = 21,
-        Ice = 22,
-        Crocodile = 23,
-        Helicopter = 24,
-    }
+public enum CardType
+{
+    Undefined = -1,
+    Empty = 0,
+    Water = 1,
+    Ship = 2,
+    Horse = 3,
+    Cannon = 4,
+    Ogre = 5,
+    ArrowStraight = 6,
+    ArrowStraight2 = 7,
+    ArrowDiagonal = 8,
+    ArrowDiagonal2 = 9,
+    Arrow3 = 10,
+    ArrowStraight4 = 11,
+    ArrowDiagonal4 = 12,
+    Fortress = 13,
+    Shaman = 14,
+    Chest = 15,
+    Turntable = 16,
+    Turntable2 = 17,
+    Turntable3 = 18,
+    Turntable4 = 19,
+    Turntable5 = 20,
+    Arrow = 21,
+    Ice = 22,
+    Crocodile = 23,
+    Helicopter = 24,
+}
 
 public class Card
 {
@@ -98,6 +98,7 @@ public class Ship
         Position = position;
     }
 }
+
 public class WaterCard : Card
 {
     public Ship OwnShip = null;
@@ -317,7 +318,7 @@ public class TurntableCard : Card
     public TurntableCard()
     {
         Type = CardType.Turntable;
-        
+
         for (int i = 3; i < 12; ++i)
         {
             Figures.Add(null);
@@ -335,7 +336,6 @@ public class TurntableCard2 : TurntableCard
         StepCount = 2;
         StepPos.Add(new Vector3(0.03f, 0, 0.03f));
         StepPos.Add(new Vector3(-0.03f, 0, -0.03f));
-
     }
 }
 
@@ -383,7 +383,6 @@ public class TurntableCard4 : TurntableCard
         StepPos.Add(new Vector3(0.03f, 0, 0.015f));
         StepPos.Add(new Vector3(-0.025f, 0, -0.02f));
         StepPos.Add(new Vector3(+0.02f, 0, -0.035f));
-
     }
 }
 
@@ -393,24 +392,31 @@ public class TurntableCard5 : TurntableCard
     {
         LogoPath = "Cards/Turntables/5-steps";
         Type = CardType.Turntable5;
-        
+
         StepCount = 5;
         StepPos.Add(new Vector3(-0.035f, 0, -0.03f));
         StepPos.Add(new Vector3(0, 0, -0.03f));
         StepPos.Add(new Vector3(0.03f, 0, -0.01f));
         StepPos.Add(new Vector3(0.02f, 0, 0.03f));
         StepPos.Add(new Vector3(-0.035f, 0, 0.03f));
-
     }
 }
 
+public class HelicopterCard : Card
+{
+    public int IsUsed = 0;
+    public HelicopterCard()
+    {
+        LogoPath = "Cards/helicopter";
+        Type = CardType.Helicopter;
+    }
+}
 
 public static class Cards
 {
     public static List<PairCardInt> AllCards = new List<PairCardInt>();
     public static Dictionary<CardType, Card> createCardByType = new Dictionary<CardType, Card>();
 }
-
 
 
 public static class Ships
@@ -435,15 +441,16 @@ public class CardManagerScr : MonoBehaviour
         Cards.AllCards.Add(new PairCardInt(new WaterCard(), 52));
         Cards.AllCards.Add(new PairCardInt(new EmptyCard(), 20));
         Cards.AllCards.Add(new PairCardInt(new HorseCard(), 10));
-        Cards.AllCards.Add(new PairCardInt(new CannonCard(), 5));
+        Cards.AllCards.Add(new PairCardInt(new CannonCard(), 3));
         Cards.AllCards.Add(new PairCardInt(new OgreCard(), 1));
         Cards.AllCards.Add(new PairCardInt(new ArrowCard(), 5));
         Cards.AllCards.Add(new PairCardInt(new ShamanCard(), 5));
         Cards.AllCards.Add(new PairCardInt(new FortressCard(), 5));
-        Cards.AllCards.Add(new PairCardInt(new TurntableCard(), 15));
-        Cards.AllCards.Add(new PairCardInt(new ChestCard(), 11));
-        Cards.AllCards.Add(new PairCardInt(new IceCard(), 40));
-        Cards.AllCards.Add(new PairCardInt(new CrocodileCard(), 10));
+        Cards.AllCards.Add(new PairCardInt(new TurntableCard(), 5));
+        Cards.AllCards.Add(new PairCardInt(new ChestCard(), 8));
+        Cards.AllCards.Add(new PairCardInt(new IceCard(), 20));
+        Cards.AllCards.Add(new PairCardInt(new CrocodileCard(), 5));
+        Cards.AllCards.Add(new PairCardInt(new HelicopterCard(), 40));
 
         foreach (var pairCardInt in Cards.AllCards)
         {
@@ -462,8 +469,6 @@ public class CardManagerScr : MonoBehaviour
         Cards.createCardByType.Add(CardType.Turntable3, new TurntableCard3());
         Cards.createCardByType.Add(CardType.Turntable4, new TurntableCard4());
         Cards.createCardByType.Add(CardType.Turntable5, new TurntableCard5());
-
-
 
         Ships.GenerateShips();
     }

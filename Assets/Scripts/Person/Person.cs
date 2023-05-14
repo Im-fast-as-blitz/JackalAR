@@ -22,7 +22,7 @@ public class Person : MonoBehaviour
 
     public bool _isAlive = true;
     public bool isWithCoin = false;
-    public Card previousCard = null;
+    public Card prevNotIceCard = null;
     public IntVector2 previousPosition;
 
     public HashSet<CardType> turnTables = new HashSet<CardType>()
@@ -184,10 +184,10 @@ public class Person : MonoBehaviour
         }
         else if (currentCard.Type == CardType.Ice)
         {
-            if (previousCard.Type == CardType.Horse || previousCard.Type == CardType.Helicopter)
+            if (prevNotIceCard.Type == CardType.Horse || (prevNotIceCard.Type == CardType.Helicopter && (prevNotIceCard as HelicopterCard).IsUsed == 1))
             {
-                possByType = PersonManagerScr.PossibilityToWalkByType[previousCard.Type];
-                directions = PersonManagerScr.DirectionsToWalkByType[previousCard.Type];
+                possByType = PersonManagerScr.PossibilityToWalkByType[prevNotIceCard.Type];
+                directions = PersonManagerScr.DirectionsToWalkByType[prevNotIceCard.Type];
             }
             else
             {
@@ -199,6 +199,10 @@ public class Person : MonoBehaviour
         {
             directions = new List<IntVector2>();
             directions.Add(new IntVector2(previousPosition.x - Position.x, previousPosition.z - Position.z));
+        }
+        else if (currentCard.Type == CardType.Helicopter && (currentCard as HelicopterCard).IsUsed > 0)
+        {
+            directions = PersonManagerScr.DefaultDirections;
         }
 
         PersonManagerScr.PossibilityToWalk possByCoin = PersonManagerScr.WithoutCoin;
@@ -274,7 +278,15 @@ public class Person : MonoBehaviour
 
         Card prevCard = currGame.PlayingField[Position.x, Position.z];
 
-        previousCard = prevCard;
+        if (prevCard.Type == CardType.Helicopter)
+        {
+            (prevCard as HelicopterCard).IsUsed++;
+        }
+
+        if (prevCard.Type != CardType.Ice)
+        {
+            prevNotIceCard = prevCard;
+        }
         previousPosition = new IntVector2(Position.x, Position.z);
 
         for (short i = 0, teammates_count = 0, prev_pers = 0; i < prevCard.Figures.Count; ++i)
