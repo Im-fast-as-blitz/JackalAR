@@ -30,7 +30,8 @@ public enum CardType
     Ice = 22,
     Crocodile = 23,
     Helicopter = 24,
-    Balloon = 25
+    Balloon = 25,
+    Trap = 26
 }
 
 public class Card
@@ -422,6 +423,15 @@ public class BalloonCard : Card
     }
 }
 
+public class TrapCard : Card
+{
+    public TrapCard()
+    {
+        LogoPath = "Cards/trap";
+        Type = CardType.Trap;
+    }
+}
+
 public static class Cards
 {
     public static List<PairCardInt> AllCards = new List<PairCardInt>();
@@ -451,17 +461,18 @@ public class CardManagerScr : MonoBehaviour
         Cards.AllCards.Add(new PairCardInt(new WaterCard(), 52));
         Cards.AllCards.Add(new PairCardInt(new EmptyCard(), 20));
         Cards.AllCards.Add(new PairCardInt(new HorseCard(), 10));
-        Cards.AllCards.Add(new PairCardInt(new CannonCard(), 3));
+        Cards.AllCards.Add(new PairCardInt(new CannonCard(), 1));
         Cards.AllCards.Add(new PairCardInt(new OgreCard(), 1));
         Cards.AllCards.Add(new PairCardInt(new ArrowCard(), 5));
         Cards.AllCards.Add(new PairCardInt(new ShamanCard(), 5));
         Cards.AllCards.Add(new PairCardInt(new FortressCard(), 5));
         Cards.AllCards.Add(new PairCardInt(new TurntableCard(), 5));
-        Cards.AllCards.Add(new PairCardInt(new ChestCard(), 8));
-        Cards.AllCards.Add(new PairCardInt(new IceCard(), 20));
-        Cards.AllCards.Add(new PairCardInt(new CrocodileCard(), 5));
-        Cards.AllCards.Add(new PairCardInt(new HelicopterCard(), 20));
-        Cards.AllCards.Add(new PairCardInt(new BalloonCard(), 20));
+        Cards.AllCards.Add(new PairCardInt(new ChestCard(), 10));
+        Cards.AllCards.Add(new PairCardInt(new IceCard(), 10));
+        Cards.AllCards.Add(new PairCardInt(new CrocodileCard(), 2));
+        Cards.AllCards.Add(new PairCardInt(new HelicopterCard(), 43));
+        Cards.AllCards.Add(new PairCardInt(new BalloonCard(), 10));
+        Cards.AllCards.Add(new PairCardInt(new TrapCard(), 10));
 
         foreach (var pairCardInt in Cards.AllCards)
         {
