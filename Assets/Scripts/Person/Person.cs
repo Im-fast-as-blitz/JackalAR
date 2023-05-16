@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class Person : MonoBehaviour
 {
@@ -21,6 +22,7 @@ public class Person : MonoBehaviour
     public int personNumber;
 
     public bool _isAlive = true;
+    public short drunkCount = 0;
     public bool isWithCoin = false;
     public Card prevNotIceCard = null;
     public IntVector2 previousPosition;
@@ -298,8 +300,6 @@ public class Person : MonoBehaviour
         {
             rpcConnector.MovePersonRpc(newPos, team, personNumber);
         }
-
-        Debug.Log("Moved");
         DestroyCircles();
 
         //Remove person from prev card
@@ -573,10 +573,6 @@ public class Person : MonoBehaviour
         {
             // rpcConnector.OpenCardRpc(Position);
             curCard.Open();
-        }
-        else
-        {
-            curCard.StepAction();
         }
 
         curCard.StepAction();

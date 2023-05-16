@@ -31,7 +31,8 @@ public enum CardType
     Crocodile = 23,
     Helicopter = 24,
     Balloon = 25,
-    Trap = 26
+    Trap = 26,
+    Rum = 27,
 }
 
 public class Card
@@ -355,24 +356,6 @@ public class TurntableCard3 : TurntableCard
     }
 }
 
-public class IceCard : Card
-{
-    public IceCard()
-    {
-        LogoPath = "Cards/ice";
-        Type = CardType.Ice;
-    }
-}
-
-public class CrocodileCard : Card
-{
-    public CrocodileCard()
-    {
-        LogoPath = "Cards/crocodile";
-        Type = CardType.Crocodile;
-    }
-}
-
 public class TurntableCard4 : TurntableCard
 {
     public TurntableCard4()
@@ -432,6 +415,52 @@ public class TrapCard : Card
     }
 }
 
+public class IceCard : Card
+{
+    public IceCard()
+    {
+        LogoPath = "Cards/ice";
+        Type = CardType.Ice;
+    }
+}
+
+public class CrocodileCard : Card
+{
+    public CrocodileCard()
+    {
+        LogoPath = "Cards/crocodile";
+        Type = CardType.Crocodile;
+    }
+}
+
+public class RumCard : Card
+{
+    public RumCard()
+    {
+        LogoPath = "Cards/rum";
+        Type = CardType.Rum;
+    }
+
+    public override void StepAction()
+    {
+        foreach (var per in Figures)
+        {
+            if (per && per.drunkCount == 0)
+            {
+                int currMask = 1 << (int)per.team;
+                if ((per.currGame.drunkTeams & currMask) == 0)
+                {
+                    per.currGame.drunkTeams += currMask;
+                }
+                per.gameObject.layer = LayerMask.NameToLayer("Drunk");
+                per.drunkCount = 2;
+                break;
+            }
+        }
+    }
+}
+
+
 public static class Cards
 {
     public static List<PairCardInt> AllCards = new List<PairCardInt>();
@@ -470,9 +499,10 @@ public class CardManagerScr : MonoBehaviour
         Cards.AllCards.Add(new PairCardInt(new ChestCard(), 10));
         Cards.AllCards.Add(new PairCardInt(new IceCard(), 10));
         Cards.AllCards.Add(new PairCardInt(new CrocodileCard(), 2));
-        Cards.AllCards.Add(new PairCardInt(new HelicopterCard(), 43));
+        Cards.AllCards.Add(new PairCardInt(new HelicopterCard(), 23));
         Cards.AllCards.Add(new PairCardInt(new BalloonCard(), 10));
         Cards.AllCards.Add(new PairCardInt(new TrapCard(), 10));
+        Cards.AllCards.Add(new PairCardInt(new RumCard(), 20));
 
         foreach (var pairCardInt in Cards.AllCards)
         {

@@ -27,7 +27,7 @@ public class GameManagerScr : MonoBehaviour
     public bool isGameAR = false;
     public bool isDebug = false;
     // Change only in single playet mode
-    public int numTeams = 1; 
+    public int numTeams = 1;
 
     private ARRaycastManager _arRaycastManagerScript;
     private bool _placedMap = false;
@@ -108,8 +108,46 @@ public class GameManagerScr : MonoBehaviour
         }
     }
 
-    
 
+
+    void EndRound()
+    {
+        if (LayerMask.LayerToName(_personScr.gameObject.layer) == "Circles")
+        {
+            _personScr.gameObject.layer = LayerMask.NameToLayer("Person");
+        }
+        _layerMask = 1 << LayerMask.NameToLayer("Person");
+
+        // find drunk persons
+        int teamMask = 1 << (int)_personScr.team;
+        if ((CurrentGame.drunkTeams & teamMask) != 0)
+        {
+            bool flag = true;
+            foreach (var per in CurrentGame.Persons[_personScr.team])
+            {
+                if (per.drunkCount > 0)
+                {
+                    if (--per.drunkCount == 0)
+                    {
+                        per.gameObject.layer = LayerMask.NameToLayer("Person");
+                    }
+                    else
+                    {
+                        flag = false;
+                    }
+                }
+            }
+
+            if (flag)
+            {
+                CurrentGame.drunkTeams -= teamMask;
+            }
+        }
+        
+        
+        _personScr = null;
+    }
+    
     void DetachedMovePerson()
     {
         if ((Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began) ||
@@ -163,9 +201,7 @@ public class GameManagerScr : MonoBehaviour
                 else if (hitObject.collider.CompareTag("Movement"))
                 {
                     _personScr.Move(hitObject.collider.gameObject.transform.position);
-                    _personScr.gameObject.layer = LayerMask.NameToLayer("Person");
-                    _layerMask = 1 << LayerMask.NameToLayer("Person");
-                    _personScr = null;
+                    EndRound();
                 }
             }
         }
@@ -229,9 +265,7 @@ public class GameManagerScr : MonoBehaviour
         }
 
         _personScr.DestroyCircles();
-        _personScr.gameObject.layer = LayerMask.NameToLayer("Person");
-        _layerMask = 1 << LayerMask.NameToLayer("Person");
-        _personScr = null;
+        EndRound();
         CurrentGame.ChangeTeam();
     }
 

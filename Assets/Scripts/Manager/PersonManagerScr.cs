@@ -288,6 +288,9 @@ public class PersonManagerScr : MonoBehaviour
         // Trap
         PossibilityToWalkByType.Add(CardType.Trap, OnEmptyCard);
         DirectionsToWalkByType.Add(CardType.Trap, DefaultDirections);
+        //Rum
+        PossibilityToWalkByType.Add(CardType.Rum, OnEmptyCard);
+        DirectionsToWalkByType.Add(CardType.Rum, DefaultDirections);
     }
 
     public static List<IntVector2> DefaultDirections = new List<IntVector2>();
