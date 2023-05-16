@@ -468,10 +468,10 @@ public class CardManagerScr : MonoBehaviour
         Cards.AllCards.Add(new PairCardInt(new FortressCard(), 5));
         Cards.AllCards.Add(new PairCardInt(new TurntableCard(), 5));
         Cards.AllCards.Add(new PairCardInt(new ChestCard(), 10));
-        Cards.AllCards.Add(new PairCardInt(new IceCard(), 20));
+        Cards.AllCards.Add(new PairCardInt(new IceCard(), 10));
         Cards.AllCards.Add(new PairCardInt(new CrocodileCard(), 2));
-        Cards.AllCards.Add(new PairCardInt(new HelicopterCard(), 23));
-        Cards.AllCards.Add(new PairCardInt(new BalloonCard(), 20));
+        Cards.AllCards.Add(new PairCardInt(new HelicopterCard(), 43));
+        Cards.AllCards.Add(new PairCardInt(new BalloonCard(), 10));
         Cards.AllCards.Add(new PairCardInt(new TrapCard(), 10));
 
         foreach (var pairCardInt in Cards.AllCards)

@@ -92,10 +92,8 @@ public class Person : MonoBehaviour
         }
     }
 
-    //Death
     public void Death()
     {
-        //ReturnToShip();
         _isAlive = false;
         transform.gameObject.SetActive(false);
     }
@@ -162,7 +160,7 @@ public class Person : MonoBehaviour
 
                 _moveCircles.Add(result);
             }
-            
+
             return true;
         }
 
@@ -181,7 +179,7 @@ public class Person : MonoBehaviour
         {
             isInTrap = false;
         }
-        
+
         if (currentCard.Type == CardType.Cannon)
         {
             possByRotation =
@@ -243,7 +241,11 @@ public class Person : MonoBehaviour
             }
         }
 
-        if (currentCard.Type == CardType.Shaman)
+        if (cellsCreated == 0)
+        {
+            currGame.SuicideBtn.gameObject.SetActive(true);
+        }
+        else if (currentCard.Type == CardType.Shaman)
         {
             foreach (var per in currGame.Persons[team])
             {
@@ -254,8 +256,7 @@ public class Person : MonoBehaviour
                 }
             }
         }
-
-        if (currentCard.Coins > 0 && IsSetActiveTakeCoin)
+        else if (currentCard.Coins > 0 && IsSetActiveTakeCoin)
         {
             currGame.TakeCoinBtn.gameObject.SetActive(true);
         }
@@ -579,10 +580,5 @@ public class Person : MonoBehaviour
         }
 
         curCard.StepAction();
-    }
-
-    private void Suicide()
-    {
-        
     }
 }

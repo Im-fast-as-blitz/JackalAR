@@ -29,6 +29,7 @@ public class Game
     public int TotalCoins = 0;
     public int[] CoinsInTeam = new int[4];
 
+    public Button SuicideBtn;
 
     public Teams CurrTeam;
 

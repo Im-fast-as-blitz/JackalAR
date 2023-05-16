@@ -22,6 +22,7 @@ public class GameManagerScr : MonoBehaviour
     [SerializeField] private Button shamanBtn;
     [SerializeField] private Button takeCoinBtn;
     [SerializeField] private Button putCoinBtn;
+    [SerializeField] private Button suicideBtn;
     [SerializeField] public RpcConnector rpcConnector;
     public bool isGameAR = false;
     public bool isDebug = false;
@@ -50,6 +51,7 @@ public class GameManagerScr : MonoBehaviour
         CurrentGame.ShamanBtn = shamanBtn;
         CurrentGame.TakeCoinBtn = takeCoinBtn;
         CurrentGame.PutCoinBtn = putCoinBtn;
+        CurrentGame.SuicideBtn = suicideBtn;
 
         rpcConnector.SetGameObj(CurrentGame);
 
@@ -149,6 +151,8 @@ public class GameManagerScr : MonoBehaviour
                                 _personScr.isWithCoin = false;
                                 CurrentGame.PlayingField[_personScr.Position.x, _personScr.Position.z].Coins++;
                             }
+                            
+                            suicideBtn.gameObject.SetActive(false);
 
                             _personScr.DestroyCircles();
                             _personScr.gameObject.layer = LayerMask.NameToLayer("Person");
@@ -250,6 +254,22 @@ public class GameManagerScr : MonoBehaviour
         CurrentGame.TakeCoinBtn.gameObject.SetActive(true);
         _personScr.DestroyCircles(false);
         _personScr.GenerateMovements(false);
+    }
+
+    public void Suicide()
+    {
+        _personScr.Death();
+        for (int i = 0; i < 3; i++)
+        {
+            if (CurrentGame.PlayingField[_personScr.Position.x, _personScr.Position.z].Figures[i] == _personScr)
+            {
+                CurrentGame.PlayingField[_personScr.Position.x, _personScr.Position.z].Figures[i] = null;
+            }
+        }
+        _personScr.gameObject.layer = LayerMask.NameToLayer("Person");
+        _layerMask = 1 << LayerMask.NameToLayer("Person");
+        _personScr = null;
+        CurrentGame.SuicideBtn.gameObject.SetActive(false);
     }
 
     public void BuildPlayingField(Vector3 middleCardPosition)
