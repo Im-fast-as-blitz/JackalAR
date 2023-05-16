@@ -25,6 +25,8 @@ public class Person : MonoBehaviour
     public Card prevNotIceCard = null;
     public IntVector2 previousPosition;
 
+    public bool isInTrap = false;
+
     public HashSet<CardType> turnTables = new HashSet<CardType>()
     {
         CardType.Turntable, CardType.Turntable2, CardType.Turntable3,
@@ -112,7 +114,7 @@ public class Person : MonoBehaviour
     }
 
     // Create curr circle to move
-    private void CreateMovement(IntVector2 addPos, PersonManagerScr.PossibilityToWalk possByType,
+    private bool CreateMovement(IntVector2 addPos, PersonManagerScr.PossibilityToWalk possByType,
         PersonManagerScr.PossibilityToWalk possByRotation, PersonManagerScr.PossibilityToWalk possByCoin)
     {
         IntVector2 newPos = Position + addPos;
@@ -160,7 +162,11 @@ public class Person : MonoBehaviour
 
                 _moveCircles.Add(result);
             }
+            
+            return true;
         }
+
+        return false;
     }
 
     //Create all circles to move
@@ -170,6 +176,12 @@ public class Person : MonoBehaviour
         PersonManagerScr.PossibilityToWalk possByType = PersonManagerScr.PossibilityToWalkByType[currentCard.Type];
         List<IntVector2> directions = PersonManagerScr.DirectionsToWalkByType[currentCard.Type];
         PersonManagerScr.PossibilityToWalk possByRotation = PersonManagerScr.RotationDefault;
+
+        if (currentCard.Type != CardType.Trap) // na vsyakiy sluchay))
+        {
+            isInTrap = false;
+        }
+        
         if (currentCard.Type == CardType.Cannon)
         {
             possByRotation =
@@ -211,6 +223,10 @@ public class Person : MonoBehaviour
             directions.Add(new IntVector2(Ships.AllShips[team].Position.x - Position.x,
                 Ships.AllShips[team].Position.z - Position.z));
         }
+        else if (isInTrap)
+        {
+            directions = new List<IntVector2>();
+        }
 
         PersonManagerScr.PossibilityToWalk possByCoin = PersonManagerScr.WithoutCoin;
         if (isWithCoin)
@@ -218,10 +234,13 @@ public class Person : MonoBehaviour
             possByCoin = PersonManagerScr.WithCoin;
         }
 
-
+        int cellsCreated = 0;
         foreach (var direction in directions)
         {
-            CreateMovement(direction, possByType, possByRotation, possByCoin);
+            if (CreateMovement(direction, possByType, possByRotation, possByCoin))
+            {
+                cellsCreated++;
+            }
         }
 
         if (currentCard.Type == CardType.Shaman)
@@ -381,6 +400,7 @@ public class Person : MonoBehaviour
         }
 
         Card curCard = currGame.PlayingField[Position.x, Position.z];
+
         if (curCard.Type != CardType.Ice)
         {
             currGame.ChangeTeam();
@@ -398,6 +418,21 @@ public class Person : MonoBehaviour
             }
         }
 
+        if (curCard.Type == CardType.Trap)
+        {
+            isInTrap = true;
+            foreach (var pers in curCard.Figures)
+            {
+                if (pers != null)
+                {
+                    pers.isInTrap = false;
+                    if (pers.team == team)
+                    {
+                        isInTrap = false;
+                    }
+                }
+            }
+        }
 
         if (isWithCoin)
         {
@@ -544,5 +579,10 @@ public class Person : MonoBehaviour
         }
 
         curCard.StepAction();
+    }
+
+    private void Suicide()
+    {
+        
     }
 }

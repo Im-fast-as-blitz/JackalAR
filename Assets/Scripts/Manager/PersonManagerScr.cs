@@ -285,6 +285,9 @@ public class PersonManagerScr : MonoBehaviour
         // Balloon
         PossibilityToWalkByType.Add(CardType.Balloon, OnEmptyCard);
         DirectionsToWalkByType.Add(CardType.Balloon, new List<IntVector2>());
+        // Trap
+        PossibilityToWalkByType.Add(CardType.Trap, OnEmptyCard);
+        DirectionsToWalkByType.Add(CardType.Trap, DefaultDirections);
     }
 
     public static List<IntVector2> DefaultDirections = new List<IntVector2>();
