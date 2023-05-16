@@ -267,6 +267,9 @@ public class PersonManagerScr : MonoBehaviour
         // Crocodile
         PossibilityToWalkByType.Add(CardType.Crocodile, OnArrowCard);
         DirectionsToWalkByType.Add(CardType.Crocodile, new List<IntVector2>());
+        //Rum
+        PossibilityToWalkByType.Add(CardType.Rum, OnEmptyCard);
+        DirectionsToWalkByType.Add(CardType.Rum, DefaultDirections);
     }
 
     public static List<IntVector2> DefaultDirections = new List<IntVector2>();
