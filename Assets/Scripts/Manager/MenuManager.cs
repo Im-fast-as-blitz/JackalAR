@@ -37,5 +37,18 @@ public class MenuManager : MonoBehaviourPunCallbacks
         // SceneManager.LoadScene("Game");
     }
 
-    // Update is called once per frame
+    public void BackToMainMenu()
+    {
+        SceneManager.LoadScene("Menu");
+    }
+
+    public void ToSettingsPanel()
+    {
+        SceneManager.LoadScene("Settings");
+    }
+
+    public void ToRulesPanel()
+    {
+        SceneManager.LoadScene("Rules");
+    }
 }
