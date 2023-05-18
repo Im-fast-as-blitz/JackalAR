@@ -13,6 +13,8 @@ public class MenuManager : MonoBehaviourPunCallbacks
 
     public InputField createInput;
     public InputField joinInput;
+    public GameObject pausePanel;
+    public GameObject pauseBtn;
 
     public void CreateRoom()
     {
@@ -60,5 +62,32 @@ public class MenuManager : MonoBehaviourPunCallbacks
     public void ToRulesPanel()
     {
         SceneManager.LoadScene("Rules");
+    }
+
+    public void OpenPausePanel()
+    {
+        pauseBtn.SetActive(false);
+        pausePanel.SetActive(true);
+        var soundSystem = GameObject.Find("SoundSystem");
+        if (soundSystem)
+        {
+            soundSystem.GetComponent<SoundManager>().canChange = true;
+        }
+    }
+
+    public void ClosePausePanel()
+    {
+        var soundSystem = GameObject.Find("SoundSystem");
+        if (soundSystem)
+        {
+            soundSystem.GetComponent<SoundManager>().canChange = false;
+        }
+        pauseBtn.SetActive(true);
+        pausePanel.SetActive(false);
+    }
+
+    public void ExitGame()
+    {
+        Debug.Log("Exit");
     }
 }
