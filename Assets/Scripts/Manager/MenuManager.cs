@@ -39,12 +39,22 @@ public class MenuManager : MonoBehaviourPunCallbacks
 
     public void BackToMainMenu()
     {
+        var soundSystem = GameObject.Find("SoundSystem");
+        if (soundSystem)
+        {
+            soundSystem.GetComponent<SoundManager>().canChange = false;
+        }
         SceneManager.LoadScene("Menu");
     }
 
     public void ToSettingsPanel()
     {
         SceneManager.LoadScene("Settings");
+        var soundSystem = GameObject.Find("SoundSystem");
+        if (soundSystem)
+        {
+            soundSystem.GetComponent<SoundManager>().canChange = true;
+        }
     }
 
     public void ToRulesPanel()
