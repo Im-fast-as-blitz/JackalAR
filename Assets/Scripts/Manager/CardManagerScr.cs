@@ -1,6 +1,14 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using TMPro;
+using UnityEditor;
+using UnityEngine;
+using UnityEngine.Serialization;
+
 
 public enum CardType
 {
@@ -307,7 +315,8 @@ public class ChestCard : Card
 
     public override void OpenAction()
     {
-        // Generate coins
+        GameObject CoinGO = Resources.Load("Prefabs/coin", typeof(GameObject)) as GameObject;
+        GameManagerScr.Instantiate(CoinGO, OwnGO.transform.position, Quaternion.Euler(0, 180, 0));
     }
 }
 
@@ -390,6 +399,7 @@ public class TurntableCard5 : TurntableCard
 public class HelicopterCard : Card
 {
     public int IsUsed = 0;
+
     public HelicopterCard()
     {
         LogoPath = "Cards/helicopter";
@@ -452,6 +462,7 @@ public class RumCard : Card
                 {
                     per.currGame.drunkTeams += currMask;
                 }
+
                 per.gameObject.layer = LayerMask.NameToLayer("Drunk");
                 per.drunkCount = 2;
                 break;
@@ -490,19 +501,19 @@ public class CardManagerScr : MonoBehaviour
         Cards.AllCards.Add(new PairCardInt(new WaterCard(), 52));
         Cards.AllCards.Add(new PairCardInt(new EmptyCard(), 20));
         Cards.AllCards.Add(new PairCardInt(new HorseCard(), 10));
-        Cards.AllCards.Add(new PairCardInt(new CannonCard(), 1));
+        Cards.AllCards.Add(new PairCardInt(new CannonCard(), 11));
         Cards.AllCards.Add(new PairCardInt(new OgreCard(), 1));
-        Cards.AllCards.Add(new PairCardInt(new ArrowCard(), 5));
+        Cards.AllCards.Add(new PairCardInt(new ArrowCard(), 15));
         Cards.AllCards.Add(new PairCardInt(new ShamanCard(), 5));
         Cards.AllCards.Add(new PairCardInt(new FortressCard(), 5));
         Cards.AllCards.Add(new PairCardInt(new TurntableCard(), 5));
-        Cards.AllCards.Add(new PairCardInt(new ChestCard(), 10));
-        Cards.AllCards.Add(new PairCardInt(new IceCard(), 10));
+        Cards.AllCards.Add(new PairCardInt(new ChestCard(), 45));
+        Cards.AllCards.Add(new PairCardInt(new IceCard(), 5));
         Cards.AllCards.Add(new PairCardInt(new CrocodileCard(), 2));
-        Cards.AllCards.Add(new PairCardInt(new HelicopterCard(), 23));
-        Cards.AllCards.Add(new PairCardInt(new BalloonCard(), 10));
-        Cards.AllCards.Add(new PairCardInt(new TrapCard(), 10));
-        Cards.AllCards.Add(new PairCardInt(new RumCard(), 20));
+        Cards.AllCards.Add(new PairCardInt(new HelicopterCard(), 8));
+        Cards.AllCards.Add(new PairCardInt(new BalloonCard(), 5));
+        Cards.AllCards.Add(new PairCardInt(new TrapCard(), 5));
+        Cards.AllCards.Add(new PairCardInt(new RumCard(), 5));
 
         foreach (var pairCardInt in Cards.AllCards)
         {

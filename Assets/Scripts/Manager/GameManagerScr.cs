@@ -325,8 +325,10 @@ public class GameManagerScr : MonoBehaviour
                 float newY = firstCardPosition.y;
                 float newZ = firstCardPosition.z + j * CurrentGame.sizeCardPrefab.z;
                 Vector3 newPosition = new Vector3(newX, newY, newZ);
-
-                GameObject cardGO = Instantiate(cardPrefab, newPosition, Quaternion.identity);
+                
+                
+                
+                GameObject cardGO = Instantiate(cardPrefab, newPosition, Quaternion.Euler(0, 180, 0));
 
                 CurrentGame.GOCards[i, j] = cardGO;
                 ownCard.OwnGO = cardGO;

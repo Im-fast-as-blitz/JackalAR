@@ -27,7 +27,7 @@ public class Person : MonoBehaviour
     public Card prevNotIceCard = null;
     public IntVector2 previousPosition;
 
-    public bool isInTrap = false;
+    [NonSerialized] public bool isInTrap = false;
 
     public HashSet<CardType> turnTables = new HashSet<CardType>()
     {
@@ -144,12 +144,12 @@ public class Person : MonoBehaviour
             {
                 if (currCard.Type != CardType.Fortress && currCard.Type != CardType.Shaman)
                 {
-                    result = Instantiate(attackCircle, currCard.OwnGO.transform.position, Quaternion.identity);
+                    result = Instantiate(attackCircle, currCard.OwnGO.transform.position, Quaternion.Euler(0, 180, 0));
                 }
             }
             else
             {
-                result = Instantiate(moveCircle, currCard.OwnGO.transform.position, new Quaternion(0, 0, 0, 0));
+                result = Instantiate(moveCircle, currCard.OwnGO.transform.position, Quaternion.Euler(0, 180, 0));
             }
 
             if (result)

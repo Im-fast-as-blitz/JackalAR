@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641275, b: 0.5748172, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.5748172, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -914,7 +914,18 @@ MonoBehaviour:
   placedObjectPrefab: {fileID: 1405789545}
   arCamera: {fileID: 931570075}
   startText: {fileID: 1038866961}
+  shamanBtn: {fileID: 8476125434305399287, guid: 013190949a107451eabcd54fd7e087b5,
+    type: 3}
+  takeCoinBtn: {fileID: 8476125434305399287, guid: 69dd9216feb3fec418396a9fd7ddde35,
+    type: 3}
+  putCoinBtn: {fileID: 8476125434305399287, guid: 52ea1e8df12f717488a01569fae4ca8b,
+    type: 3}
+  suicideBtn: {fileID: 8476125434305399287, guid: 59a880162a05cc84182c07bf319936ee,
+    type: 3}
+  rpcConnector: {fileID: 0}
   isGameAR: 1
+  isDebug: 0
+  numTeams: 1
 --- !u!4 &1401574889
 Transform:
   m_ObjectHideFlags: 0
@@ -950,6 +961,12 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2076928821482232395, guid: 71704de763bd841949f3ae45c287d8db,
+        type: 3}
+      propertyPath: moveCircle
+      value: 
+      objectReference: {fileID: 861046135716733024, guid: daf12093dee3e5543afc4b6cad5f5fd5,
+        type: 3}
     - target: {fileID: 3222703447991866609, guid: 71704de763bd841949f3ae45c287d8db,
         type: 3}
       propertyPath: m_RootOrder
