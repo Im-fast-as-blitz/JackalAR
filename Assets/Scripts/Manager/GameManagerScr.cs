@@ -286,6 +286,7 @@ public class GameManagerScr : MonoBehaviour
 
     public void TakeCoin()
     {
+        DecCoins();
         rpcConnector.TakeCoinPersonRpc(_personScr);
         CurrentGame.TakeCoinBtn.gameObject.SetActive(false);
         CurrentGame.PutCoinBtn.gameObject.SetActive(true);
@@ -295,7 +296,8 @@ public class GameManagerScr : MonoBehaviour
 
     public void PutCoin()
     {
-        //IncCoins();
+        //Don't add IncCoins and DicCoins in RPC
+        IncCoins();
         rpcConnector.PutCoinPersonRpc(_personScr);
         CurrentGame.PutCoinBtn.gameObject.SetActive(false);
         CurrentGame.TakeCoinBtn.gameObject.SetActive(true);

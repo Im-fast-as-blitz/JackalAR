@@ -128,7 +128,7 @@ public class RpcConnector : MonoBehaviourPun
     void TakeCoinPerson(int team, int personNum)
     {
         Debug.Log(string.Format("TakeCoinPersonCalled"));
-        currGame.Persons[(Teams)team][personNum].TakeCoinPersonByPerson();
+        currGame.Persons[(Teams)team][personNum].TakeCoinByPerson();
     }
     
     public void TakeCoinPersonRpc(Person person)

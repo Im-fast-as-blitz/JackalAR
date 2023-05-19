@@ -661,9 +661,8 @@ public class Person : MonoBehaviour
         currGame.IsGameEnded = true;
         currGame.EndGameTitle.SetActive(true);
     }
-}
     
-    public void TakeCoinPersonByPerson()
+    public void TakeCoinByPerson()
     {
         isWithCoin = true;
         currGame.PlayingField[Position.x, Position.z].Coins--;
