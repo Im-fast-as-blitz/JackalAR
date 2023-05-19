@@ -30,6 +30,7 @@ public class Game
     public int TotalCoins = 0;
     public int[] CoinsInTeam = new int[4];
     public int drunkTeams = 0;
+    public bool IsGameEnded = false;
 
     public Button SuicideBtn;
 

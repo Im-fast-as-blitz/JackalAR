@@ -93,8 +93,11 @@ public class MenuManager : MonoBehaviourPunCallbacks
         }
         pauseBtn.SetActive(true);
         pausePanel.SetActive(false);
-        
-        _gameManager.endGameTitle.SetActive(true);
+
+        if (_gameManager.CurrentGame.IsGameEnded)
+        {
+            _gameManager.endGameTitle.SetActive(true);
+        }
     }
 
     public void ExitGame()

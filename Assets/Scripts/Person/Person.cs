@@ -643,6 +643,7 @@ public class Person : MonoBehaviour
             teamContent.transform.GetChild(4).GetComponent<Text>().text = currGame.CoinsInTeam[currTeam].ToString();
         }
 
+        currGame.IsGameEnded = true;
         currGame.EndGameTitle.SetActive(true);
     }
 }
