@@ -24,6 +24,7 @@ public class Game
 
     public Vector3[,] TeemRotation = new Vector3[4, 3];
 
+    public GameObject EndGameTitle;
     public Button TakeCoinBtn;
     public Button PutCoinBtn;
     public int TotalCoins = 0;

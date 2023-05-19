@@ -25,6 +25,7 @@ public class GameManagerScr : MonoBehaviour
     [SerializeField] private Button putCoinBtn;
     [SerializeField] private Button suicideBtn;
     [SerializeField] public RpcConnector rpcConnector;
+    [SerializeField] public GameObject endGameTitle;
     public bool isGameAR = false;
 
     public bool isDebug = false;
@@ -51,11 +52,13 @@ public class GameManagerScr : MonoBehaviour
         _layerMask = 1 << LayerMask.NameToLayer("Person");
 
         CurrentGame = new Game(PhotonNetwork.IsMasterClient);
+        CurrentGame.NumTeams = numTeams;
 
         CurrentGame.ShamanBtn = shamanBtn;
         CurrentGame.TakeCoinBtn = takeCoinBtn;
         CurrentGame.PutCoinBtn = putCoinBtn;
         CurrentGame.SuicideBtn = suicideBtn;
+        CurrentGame.EndGameTitle = endGameTitle;
 
         rpcConnector.SetGameObj(CurrentGame);
 

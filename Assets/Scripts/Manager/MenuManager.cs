@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using Photon.Pun;
 using Photon.Realtime;
+using UnityEditor;
 using UnityEngine.UI;
 
 public class MenuManager : MonoBehaviourPunCallbacks
@@ -15,7 +16,13 @@ public class MenuManager : MonoBehaviourPunCallbacks
     public InputField joinInput;
     public GameObject pausePanel;
     public GameObject pauseBtn;
+    private GameManagerScr _gameManager;
 
+    public void Start()
+    {
+        _gameManager = GetComponent<GameManagerScr>();
+    }
+    
     public void CreateRoom()
     {
         RoomOptions roomOptions = new RoomOptions();
@@ -73,6 +80,8 @@ public class MenuManager : MonoBehaviourPunCallbacks
         {
             soundSystem.GetComponent<SoundManager>().canChange = true;
         }
+        
+        _gameManager.endGameTitle.SetActive(false);
     }
 
     public void ClosePausePanel()
@@ -84,6 +93,8 @@ public class MenuManager : MonoBehaviourPunCallbacks
         }
         pauseBtn.SetActive(true);
         pausePanel.SetActive(false);
+        
+        _gameManager.endGameTitle.SetActive(true);
     }
 
     public void ExitGame()

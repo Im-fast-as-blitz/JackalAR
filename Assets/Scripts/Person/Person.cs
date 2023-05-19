@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Serialization;
+using UnityEngine.UI;
 
 public class Person : MonoBehaviour
 {
@@ -300,6 +302,7 @@ public class Person : MonoBehaviour
         {
             rpcConnector.MovePersonRpc(newPos, team, personNumber);
         }
+
         DestroyCircles();
 
         //Remove person from prev card
@@ -438,32 +441,7 @@ public class Person : MonoBehaviour
         if (isWithCoin)
         {
             isWithCoin = false;
-            if (curCard is WaterCard || curCard.Type == CardType.Ogre)
-            {
-                currGame.TotalCoins--;
-            }
-            else if (curCard.Type == CardType.Ship)
-            {
-                currGame.TotalCoins--;
-                if ((curCard as WaterCard).OwnShip.team == team)
-                {
-                    currGame.CoinsInTeam[(int)team]++;
-                }
-            }
-            else
-            {
-                curCard.Coins++;
-                if (curCard.Coins == 1)
-                {
-                    GameObject coinGO = Resources.Load("Prefabs/coin", typeof(GameObject)) as GameObject;
-                    curCard.CoinGO = Instantiate(coinGO, curCard.OwnGO.transform.position, Quaternion.Euler(0, 180, 0));
-                    curCard.CoinGO.transform.GetChild(0).GetComponent<TextMeshPro>().text = "1";
-                }
-                else
-                {
-                    curCard.CoinGO.transform.GetChild(0).GetComponent<TextMeshPro>().text = curCard.Coins.ToString();
-                }
-            }
+            PutCoinToCard(ref curCard);
         }
 
         //Look at new card
@@ -586,5 +564,85 @@ public class Person : MonoBehaviour
         }
 
         curCard.StepAction();
+    }
+
+    private void PutCoinToCard(ref Card curCard)
+    {
+        if (curCard.Type == CardType.Ship && (curCard as WaterCard).OwnShip.team == team)
+        {
+            currGame.TotalCoins--;
+            currGame.CoinsInTeam[(int)team]++;
+        }
+        else if (curCard is WaterCard || curCard.Type == CardType.Ogre)
+        {
+            currGame.TotalCoins--;
+        }
+        else
+        {
+            curCard.Coins++;
+            if (curCard.Coins == 1)
+            {
+                GameObject coinGO = Resources.Load("Prefabs/coin", typeof(GameObject)) as GameObject;
+                curCard.CoinGO = Instantiate(coinGO, curCard.OwnGO.transform.position, Quaternion.Euler(0, 180, 0));
+                curCard.CoinGO.transform.GetChild(0).GetComponent<TextMeshPro>().text = "1";
+            }
+            else
+            {
+                curCard.CoinGO.transform.GetChild(0).GetComponent<TextMeshPro>().text = curCard.Coins.ToString();
+            }
+        }
+
+        if (currGame.TotalCoins == 0)
+        {
+            EndGame();
+        }
+    }
+
+    public void EndGame()
+    {
+        for (int currTeam = 0; currTeam < currGame.Persons.Count; ++currTeam)
+        {
+            for (int persNum = 0; persNum < 3; ++persNum)
+            {
+                Person currPerson = currGame.Persons[(Teams)currTeam][persNum];
+                if (currPerson)
+                {
+                    currPerson.gameObject.layer = LayerMask.NameToLayer("Drunk");
+                }
+            }
+        }
+
+        GameObject content = currGame.EndGameTitle.transform.GetChild(1).gameObject;
+        for (int teamToDelete = currGame.NumTeams; teamToDelete < 4; teamToDelete++)
+        {
+            content.transform.GetChild(teamToDelete).gameObject.SetActive(false);
+        }
+
+        List<KeyValuePair<int, int>> teamsCoins = new List<KeyValuePair<int, int>>();
+        for (int currTeam = 0; currTeam < currGame.NumTeams; currTeam++)
+        {
+            teamsCoins.Add(new KeyValuePair<int, int>(currTeam, currGame.CoinsInTeam[currTeam]));
+        }
+
+        List<String> teamNames = Enum.GetNames(typeof(Teams)).ToList();
+        for (int place = 0; place < currGame.NumTeams; place++)
+        {
+            int maxIter = 0;
+            for (int i = 0; i < teamsCoins.Count; i++)
+            {
+                if (teamsCoins[i].Value > teamsCoins[maxIter].Value)
+                {
+                    maxIter = i;
+                }
+            }
+            int currTeam = teamsCoins[maxIter].Key;
+            teamsCoins.RemoveAt(maxIter);
+            
+            GameObject teamContent = content.transform.GetChild(place).gameObject;
+            teamContent.transform.GetChild(1).GetComponent<Text>().text = teamNames[currTeam];
+            teamContent.transform.GetChild(4).GetComponent<Text>().text = currGame.CoinsInTeam[currTeam].ToString();
+        }
+
+        currGame.EndGameTitle.SetActive(true);
     }
 }
