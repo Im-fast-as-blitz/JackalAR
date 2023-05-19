@@ -11,6 +11,7 @@ public class RulesManager : MonoBehaviour
     public GameObject cards;
     public GameObject rulesInfo;
     public GameObject cardsInfo;
+    public Scrollbar scrollbar;
 
     private void Open(bool flag)
     {
@@ -20,6 +21,7 @@ public class RulesManager : MonoBehaviour
         cards.SetActive(!flag);
         rulesInfo.SetActive(flag);
         cardsInfo.SetActive(!flag);
+        scrollbar.value = 1;
     }
     
     public void OpenRules()
