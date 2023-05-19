@@ -35,8 +35,8 @@ public class GameManagerScr : MonoBehaviour
 
     private ARRaycastManager _arRaycastManagerScript;
     private bool _placedMap = false;
-    private Person _personScr;
-    private LayerMask _layerMask;
+    public Person _personScr;
+    public LayerMask _layerMask;
 
     // private Person _currPerson = null;
     private Person _currPerson = null;
@@ -116,7 +116,8 @@ public class GameManagerScr : MonoBehaviour
     }
 
 
-    void EndRound()
+
+    public void EndRound()
     {
         if (LayerMask.LayerToName(_personScr.gameObject.layer) == "Circles")
         {
@@ -150,8 +151,6 @@ public class GameManagerScr : MonoBehaviour
                 CurrentGame.drunkTeams -= teamMask;
             }
         }
-
-
         _personScr = null;
     }
 
@@ -180,6 +179,11 @@ public class GameManagerScr : MonoBehaviour
                     Person currentPerson = hitObject.collider.gameObject.GetComponent<Person>();
                     if (currentPerson.team == CurrentGame.curTeam)
                     {
+                        if (CurrentGame.ShouldMove && currentPerson != CurrentGame.ShouldMove)
+                        {
+                            return;
+                        }
+                        
                         if (!_personScr)
                         {
                             _personScr = currentPerson;
@@ -207,13 +211,17 @@ public class GameManagerScr : MonoBehaviour
                 }
                 else if (hitObject.collider.CompareTag("Movement"))
                 {
-                    _personScr.Move(hitObject.collider.gameObject.transform.position);
-                    EndRound();
+                    rpcConnector.MovePersonRpc(hitObject.collider.gameObject.transform.position, _personScr.team, _personScr.personNumber);
                 }
             }
         }
     }
 
+    public void CalledRevivePerson()
+    {
+        rpcConnector.RevivePersonRpc();
+    }
+    
     public void RevivePerson()
     {
         Person zombie = null;
@@ -278,8 +286,7 @@ public class GameManagerScr : MonoBehaviour
 
     public void TakeCoin()
     {
-        _personScr.isWithCoin = true;
-        DecCoins();
+        rpcConnector.TakeCoinPersonRpc(_personScr);
         CurrentGame.TakeCoinBtn.gameObject.SetActive(false);
         CurrentGame.PutCoinBtn.gameObject.SetActive(true);
         _personScr.DestroyCircles(false);
@@ -288,30 +295,20 @@ public class GameManagerScr : MonoBehaviour
 
     public void PutCoin()
     {
-        _personScr.isWithCoin = false;
-        Card currCard = CurrentGame.PlayingField[_personScr.Position.x, _personScr.Position.z];
-        IncCoins();
+        //IncCoins();
+        rpcConnector.PutCoinPersonRpc(_personScr);
         CurrentGame.PutCoinBtn.gameObject.SetActive(false);
         CurrentGame.TakeCoinBtn.gameObject.SetActive(true);
         _personScr.DestroyCircles(false);
         _personScr.GenerateMovements(false);
     }
 
-    public void Suicide()
+    public void Suicide(bool isMainCalled = true)
     {
-        _personScr.Death();
-        for (int i = 0; i < 3; i++)
+        if (isMainCalled)
         {
-            if (CurrentGame.PlayingField[_personScr.Position.x, _personScr.Position.z].Figures[i] == _personScr)
-            {
-                CurrentGame.PlayingField[_personScr.Position.x, _personScr.Position.z].Figures[i] = null;
-            }
+            rpcConnector.SuicidePersonRpc(_personScr);
         }
-
-        _personScr.gameObject.layer = LayerMask.NameToLayer("Person");
-        _layerMask = 1 << LayerMask.NameToLayer("Person");
-        _personScr = null;
-        CurrentGame.SuicideBtn.gameObject.SetActive(false);
     }
 
     public void BuildPlayingField(Vector3 middleCardPosition)

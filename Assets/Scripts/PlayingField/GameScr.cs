@@ -33,8 +33,7 @@ public class Game
     public bool IsGameEnded = false;
 
     public Button SuicideBtn;
-
-    public Teams CurrTeam;
+    public Person ShouldMove = null;
 
     public Game(bool isMaster)
     {

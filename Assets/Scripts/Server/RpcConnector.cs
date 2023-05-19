@@ -37,7 +37,7 @@ public class RpcConnector : MonoBehaviourPun
         {
             for (var j = 0; j < currGame.PlayingField.GetLength(1); ++j)
             {
-                currGame.PlayingField[i, j] = (Card)Cards.createCardByType[(CardType)cardTypes[i][j]].NewObj();
+                currGame.PlayingField[i, j] = (Card)Cards.CreateCardByType[(CardType)cardTypes[i][j]].NewObj();
                 var curCard = currGame.PlayingField[i, j];
                 var curType = curCard.Type;
                 if (curCard is ArrowCard arrowCard && curType != CardType.ArrowStraight4 && curType != CardType.ArrowDiagonal4)
@@ -97,12 +97,69 @@ public class RpcConnector : MonoBehaviourPun
     void MovePerson(float x, float y, float z, int team, int personNum)
     {
         Debug.Log(string.Format("MovePersonCalled"));
-        currGame.Persons[(Teams)team][personNum].Move(new Vector3(x, y, z), false);
+        currGame.Persons[(Teams)team][personNum].Move(new Vector3(x, y, z));
     }
     
     public void MovePersonRpc(Vector3 pos, Teams team, int personNum)
     {
         Debug.Log(string.Format("RpcMovePersonCalled"));
-        photonView.RPC("MovePerson", RpcTarget.OthersBuffered, pos.x, pos.y, pos.z, (int)team, personNum);
+        photonView.RPC("MovePerson", RpcTarget.AllBuffered, pos.x, pos.y, pos.z, (int)team, personNum);
+        gameManagerScr.EndRound();
+    }
+    
+    [PunRPC]
+    void SuicedPerson(int team, int personNum)
+    {
+        Debug.Log(string.Format("SuicedPersonCalled"));
+        currGame.Persons[(Teams)team][personNum].SuicidePerson();
+        gameManagerScr._layerMask = 1 << LayerMask.NameToLayer("Person");
+        gameManagerScr._personScr = null;
+        currGame.SuicideBtn.gameObject.SetActive(false);
+    }
+    
+    public void SuicidePersonRpc(Person person)
+    {
+        Debug.Log(string.Format("RpcSuicedPersonCalled"));
+        photonView.RPC("SuicedPerson", RpcTarget.AllBuffered, (int)person.team, person.personNumber);
+    }
+    
+    
+    [PunRPC]
+    void TakeCoinPerson(int team, int personNum)
+    {
+        Debug.Log(string.Format("TakeCoinPersonCalled"));
+        currGame.Persons[(Teams)team][personNum].TakeCoinPersonByPerson();
+    }
+    
+    public void TakeCoinPersonRpc(Person person)
+    {
+        Debug.Log(string.Format("RpcTakeCoinPersonCalled"));
+        photonView.RPC("TakeCoinPerson", RpcTarget.AllBuffered, (int)person.team, person.personNumber);
+    }
+    
+    [PunRPC]
+    void PutCoinPerson(int team, int personNum)
+    {
+        Debug.Log(string.Format("PutCoinPersonCalled"));
+        currGame.Persons[(Teams)team][personNum].PutCoinPersonByPerson();
+    }
+    
+    public void PutCoinPersonRpc(Person person)
+    {
+        Debug.Log(string.Format("RpcTakeCoinPersonCalled"));
+        photonView.RPC("PutCoinPerson", RpcTarget.AllBuffered, (int)person.team, person.personNumber);
+    }
+    
+    [PunRPC]
+    void ReviveRpcPerson()
+    {
+        Debug.Log(string.Format("ReviveRpcPersonCalled"));
+        gameManagerScr.RevivePerson();
+    }
+    
+    public void RevivePersonRpc()
+    {
+        Debug.Log(string.Format("RpcRevivePersonCalled"));
+        photonView.RPC("ReviveRpcPerson", RpcTarget.AllBuffered);
     }
 }
