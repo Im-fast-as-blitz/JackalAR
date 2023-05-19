@@ -453,6 +453,16 @@ public class Person : MonoBehaviour
             else
             {
                 curCard.Coins++;
+                if (curCard.Coins == 1)
+                {
+                    GameObject coinGO = Resources.Load("Prefabs/coin", typeof(GameObject)) as GameObject;
+                    curCard.CoinGO = Instantiate(coinGO, curCard.OwnGO.transform.position, Quaternion.Euler(0, 180, 0));
+                    curCard.CoinGO.transform.GetChild(0).GetComponent<TextMeshPro>().text = "1";
+                }
+                else
+                {
+                    curCard.CoinGO.transform.GetChild(0).GetComponent<TextMeshPro>().text = curCard.Coins.ToString();
+                }
             }
         }
 

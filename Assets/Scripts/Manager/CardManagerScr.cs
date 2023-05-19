@@ -51,6 +51,7 @@ public class Card
     public bool IsOpen = false;
     public CardType Type = CardType.Undefined;
     public int Coins = 0;
+    public GameObject CoinGO = null;
 
     public void UpdateLogo()
     {
@@ -315,8 +316,9 @@ public class ChestCard : Card
 
     public override void OpenAction()
     {
-        GameObject CoinGO = Resources.Load("Prefabs/coin", typeof(GameObject)) as GameObject;
-        GameManagerScr.Instantiate(CoinGO, OwnGO.transform.position, Quaternion.Euler(0, 180, 0));
+        GameObject loadedCoinGO = Resources.Load("Prefabs/coin", typeof(GameObject)) as GameObject;
+        CoinGO = GameManagerScr.Instantiate(loadedCoinGO, OwnGO.transform.position, Quaternion.Euler(0, 180, 0));
+        CoinGO.transform.GetChild(0).GetComponent<TextMeshPro>().text = Coins.ToString();
     }
 }
 

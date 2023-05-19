@@ -7,6 +7,7 @@ using UnityEngine.XR.ARSubsystems;
 using Random = UnityEngine.Random;
 using Vector3 = UnityEngine.Vector3;
 using Photon.Pun;
+using TMPro;
 using UnityEditor;
 
 
@@ -25,7 +26,9 @@ public class GameManagerScr : MonoBehaviour
     [SerializeField] private Button suicideBtn;
     [SerializeField] public RpcConnector rpcConnector;
     public bool isGameAR = false;
+
     public bool isDebug = false;
+
     // Change only in single playet mode
     public int numTeams = 1;
 
@@ -36,6 +39,7 @@ public class GameManagerScr : MonoBehaviour
 
     // private Person _currPerson = null;
     private Person _currPerson = null;
+
     // private Teams _currTeam = Teams.White;
     private Teams _currTeam = Teams.White;
 
@@ -109,13 +113,13 @@ public class GameManagerScr : MonoBehaviour
     }
 
 
-
     void EndRound()
     {
         if (LayerMask.LayerToName(_personScr.gameObject.layer) == "Circles")
         {
             _personScr.gameObject.layer = LayerMask.NameToLayer("Person");
         }
+
         _layerMask = 1 << LayerMask.NameToLayer("Person");
 
         // find drunk persons
@@ -143,11 +147,11 @@ public class GameManagerScr : MonoBehaviour
                 CurrentGame.drunkTeams -= teamMask;
             }
         }
-        
-        
+
+
         _personScr = null;
     }
-    
+
     void DetachedMovePerson()
     {
         if ((Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began) ||
@@ -186,9 +190,9 @@ public class GameManagerScr : MonoBehaviour
                             if (_personScr.isWithCoin)
                             {
                                 _personScr.isWithCoin = false;
-                                CurrentGame.PlayingField[_personScr.Position.x, _personScr.Position.z].Coins++;
+                                IncCoins();
                             }
-                            
+
                             suicideBtn.gameObject.SetActive(false);
 
                             _personScr.DestroyCircles();
@@ -272,7 +276,7 @@ public class GameManagerScr : MonoBehaviour
     public void TakeCoin()
     {
         _personScr.isWithCoin = true;
-        CurrentGame.PlayingField[_personScr.Position.x, _personScr.Position.z].Coins--;
+        DecCoins();
         CurrentGame.TakeCoinBtn.gameObject.SetActive(false);
         CurrentGame.PutCoinBtn.gameObject.SetActive(true);
         _personScr.DestroyCircles(false);
@@ -282,7 +286,8 @@ public class GameManagerScr : MonoBehaviour
     public void PutCoin()
     {
         _personScr.isWithCoin = false;
-        CurrentGame.PlayingField[_personScr.Position.x, _personScr.Position.z].Coins++;
+        Card currCard = CurrentGame.PlayingField[_personScr.Position.x, _personScr.Position.z];
+        IncCoins();
         CurrentGame.PutCoinBtn.gameObject.SetActive(false);
         CurrentGame.TakeCoinBtn.gameObject.SetActive(true);
         _personScr.DestroyCircles(false);
@@ -299,6 +304,7 @@ public class GameManagerScr : MonoBehaviour
                 CurrentGame.PlayingField[_personScr.Position.x, _personScr.Position.z].Figures[i] = null;
             }
         }
+
         _personScr.gameObject.layer = LayerMask.NameToLayer("Person");
         _layerMask = 1 << LayerMask.NameToLayer("Person");
         _personScr = null;
@@ -325,9 +331,8 @@ public class GameManagerScr : MonoBehaviour
                 float newY = firstCardPosition.y;
                 float newZ = firstCardPosition.z + j * CurrentGame.sizeCardPrefab.z;
                 Vector3 newPosition = new Vector3(newX, newY, newZ);
-                
-                
-                
+
+
                 GameObject cardGO = Instantiate(cardPrefab, newPosition, Quaternion.Euler(0, 180, 0));
 
                 CurrentGame.GOCards[i, j] = cardGO;
@@ -355,7 +360,9 @@ public class GameManagerScr : MonoBehaviour
         float firstCardZ = midCardPosition.z - 6 * CurrentGame.sizeCardPrefab.z;
 
         Debug.Log(PhotonNetwork.PlayerList.Length);
-        for (var currentTeam = CurrentGame.currentNumTeam; currentTeam < PhotonNetwork.PlayerList.Length + numTeams - 1; ++currentTeam)
+        for (var currentTeam = CurrentGame.currentNumTeam;
+             currentTeam < PhotonNetwork.PlayerList.Length + numTeams - 1;
+             ++currentTeam)
         {
             const int numPersonsInTeam = 3;
             Person[] personsInTeam = new Person[numPersonsInTeam];
@@ -372,13 +379,13 @@ public class GameManagerScr : MonoBehaviour
                 GameObject personGO = Instantiate(placedObjectPrefab, persPosition, Quaternion.identity);
                 personGO.SetActive(true);
                 Person pers = personGO.GetComponent<Person>();
-                
+
                 pers.currGame = CurrentGame;
                 pers.rpcConnector = rpcConnector;
                 pers.team = (Teams)currentTeam;
                 pers.Position = new IntVector2(shipPosition);
                 pers.personNumber = player;
-                
+
                 // Add person to card's list of persons
                 CurrentGame.PlayingField[shipPosition.x, shipPosition.z].Figures[player] = pers;
 
@@ -389,5 +396,36 @@ public class GameManagerScr : MonoBehaviour
         }
 
         CurrentGame.currentNumTeam = PhotonNetwork.PlayerList.Length;
+    }
+
+    void DecCoins()
+    {
+        Card currCard = CurrentGame.PlayingField[_personScr.Position.x, _personScr.Position.z];
+        currCard.Coins--;
+        if (currCard.Coins == 0)
+        {
+            Destroy(currCard.CoinGO);
+            currCard.CoinGO = null;
+        }
+        else
+        {
+            currCard.CoinGO.transform.GetChild(0).GetComponent<TextMeshPro>().text = currCard.Coins.ToString();
+        }
+    }
+
+    void IncCoins()
+    {
+        Card currCard = CurrentGame.PlayingField[_personScr.Position.x, _personScr.Position.z];
+        currCard.Coins++;
+        if (currCard.Coins == 1)
+        {
+            GameObject coinGO = Resources.Load("Prefabs/coin", typeof(GameObject)) as GameObject;
+            currCard.CoinGO = Instantiate(coinGO, currCard.OwnGO.transform.position, Quaternion.Euler(0, 180, 0));
+            currCard.CoinGO.transform.GetChild(0).GetComponent<TextMeshPro>().text = "1";
+        }
+        else
+        {
+            currCard.CoinGO.transform.GetChild(0).GetComponent<TextMeshPro>().text = currCard.Coins.ToString();
+        }
     }
 }
