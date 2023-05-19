@@ -286,8 +286,8 @@ public class GameManagerScr : MonoBehaviour
 
     public void TakeCoin()
     {
+        _personScr.isWithCoin = true;
         DecCoins();
-        rpcConnector.TakeCoinPersonRpc(_personScr);
         CurrentGame.TakeCoinBtn.gameObject.SetActive(false);
         CurrentGame.PutCoinBtn.gameObject.SetActive(true);
         _personScr.DestroyCircles(false);
@@ -296,9 +296,9 @@ public class GameManagerScr : MonoBehaviour
 
     public void PutCoin()
     {
-        //Don't add IncCoins and DicCoins in RPC
+        _personScr.isWithCoin = false;
+        Card currCard = CurrentGame.PlayingField[_personScr.Position.x, _personScr.Position.z];
         IncCoins();
-        rpcConnector.PutCoinPersonRpc(_personScr);
         CurrentGame.PutCoinBtn.gameObject.SetActive(false);
         CurrentGame.TakeCoinBtn.gameObject.SetActive(true);
         _personScr.DestroyCircles(false);
