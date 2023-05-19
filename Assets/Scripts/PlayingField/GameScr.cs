@@ -31,8 +31,7 @@ public class Game
     public int drunkTeams = 0;
 
     public Button SuicideBtn;
-
-    public Teams CurrTeam;
+    public Person ShouldMove = null;
 
     public Game(bool isMaster)
     {

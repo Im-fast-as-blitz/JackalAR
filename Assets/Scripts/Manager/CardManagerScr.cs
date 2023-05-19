@@ -464,7 +464,8 @@ public class RumCard : Card
 public static class Cards
 {
     public static List<PairCardInt> AllCards = new List<PairCardInt>();
-    public static Dictionary<CardType, Card> createCardByType = new Dictionary<CardType, Card>();
+    public static HashSet<CardType> OnCurrentStep = new HashSet<CardType>();
+    public static Dictionary<CardType, Card> CreateCardByType = new Dictionary<CardType, Card>();
 }
 
 
@@ -506,21 +507,32 @@ public class CardManagerScr : MonoBehaviour
 
         foreach (var pairCardInt in Cards.AllCards)
         {
-            Cards.createCardByType.Add(pairCardInt.CardPair.Type, pairCardInt.CardPair);
+            Cards.CreateCardByType.Add(pairCardInt.CardPair.Type, pairCardInt.CardPair);
         }
 
-        Cards.createCardByType.Add(CardType.Ship, new WaterCard());
-        Cards.createCardByType.Add(CardType.Arrow3, new Arrow3());
-        Cards.createCardByType.Add(CardType.ArrowStraight, new ArrowStraight());
-        Cards.createCardByType.Add(CardType.ArrowDiagonal, new ArrowDiagonal());
-        Cards.createCardByType.Add(CardType.ArrowDiagonal2, new ArrowDiagonal2());
-        Cards.createCardByType.Add(CardType.ArrowDiagonal4, new ArrowDiagonal4());
-        Cards.createCardByType.Add(CardType.ArrowStraight2, new ArrowStraight2());
-        Cards.createCardByType.Add(CardType.ArrowStraight4, new ArrowStraight4());
-        Cards.createCardByType.Add(CardType.Turntable2, new TurntableCard2());
-        Cards.createCardByType.Add(CardType.Turntable3, new TurntableCard3());
-        Cards.createCardByType.Add(CardType.Turntable4, new TurntableCard4());
-        Cards.createCardByType.Add(CardType.Turntable5, new TurntableCard5());
+        Cards.CreateCardByType.Add(CardType.Ship, new WaterCard());
+        Cards.CreateCardByType.Add(CardType.Arrow3, new Arrow3());
+        Cards.CreateCardByType.Add(CardType.ArrowStraight, new ArrowStraight());
+        Cards.CreateCardByType.Add(CardType.ArrowDiagonal, new ArrowDiagonal());
+        Cards.CreateCardByType.Add(CardType.ArrowDiagonal2, new ArrowDiagonal2());
+        Cards.CreateCardByType.Add(CardType.ArrowDiagonal4, new ArrowDiagonal4());
+        Cards.CreateCardByType.Add(CardType.ArrowStraight2, new ArrowStraight2());
+        Cards.CreateCardByType.Add(CardType.ArrowStraight4, new ArrowStraight4());
+        Cards.CreateCardByType.Add(CardType.Turntable2, new TurntableCard2());
+        Cards.CreateCardByType.Add(CardType.Turntable3, new TurntableCard3());
+        Cards.CreateCardByType.Add(CardType.Turntable4, new TurntableCard4());
+        Cards.CreateCardByType.Add(CardType.Turntable5, new TurntableCard5());
+
+        Cards.OnCurrentStep.Add(CardType.Ice);
+        Cards.OnCurrentStep.Add(CardType.Balloon);
+        Cards.OnCurrentStep.Add(CardType.Horse);
+        Cards.OnCurrentStep.Add(CardType.Cannon);
+        Cards.OnCurrentStep.Add(CardType.ArrowStraight);
+        Cards.OnCurrentStep.Add(CardType.ArrowDiagonal);
+        Cards.OnCurrentStep.Add(CardType.ArrowDiagonal2);
+        Cards.OnCurrentStep.Add(CardType.ArrowDiagonal4);
+        Cards.OnCurrentStep.Add(CardType.ArrowStraight2);
+        Cards.OnCurrentStep.Add(CardType.ArrowStraight4);
 
         Ships.GenerateShips();
     }
