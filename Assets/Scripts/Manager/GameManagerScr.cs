@@ -380,8 +380,30 @@ public class GameManagerScr : MonoBehaviour
 
                 GameObject personGO = Instantiate(placedObjectPrefab, persPosition, Quaternion.identity);
                 personGO.SetActive(true);
-                Person pers = personGO.GetComponent<Person>();
 
+                string currMaterial = "Persons/";
+                switch (currentTeam)
+                {
+                    case 0:
+                        currMaterial += "white";
+                        break;
+                    case 1:
+                        currMaterial += "red";
+                        break;
+                    case 2:
+                        currMaterial += "black";
+                        break;
+                    case 3:
+                        currMaterial += "yellow";
+                        break;
+
+                }
+                personGO.transform.GetChild(1).GetComponent<Renderer>().material =
+                    Resources.Load(currMaterial, typeof(Material)) as Material;
+                personGO.transform.GetChild(2).GetComponent<Renderer>().material =
+                    Resources.Load(currMaterial, typeof(Material)) as Material;
+                
+                Person pers = personGO.GetComponent<Person>();
                 pers.currGame = CurrentGame;
                 pers.rpcConnector = rpcConnector;
                 pers.team = (Teams)currentTeam;
