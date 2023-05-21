@@ -33,14 +33,14 @@ public class Game
     public bool IsGameEnded = false;
 
     public Button SuicideBtn;
+    public Person ShouldMove = null;
 
-    public Teams CurrTeam;
-
-    public Game(bool isMaster)
+    public Game(bool isMaster, int teamCount)
     {
         SelectTeemRotation();
         if (isMaster)
         {
+            NumTeams = teamCount;
             FillAndShufflePlayingField();
             PlaceShips();
         }
@@ -48,7 +48,14 @@ public class Game
     
     public void ChangeTeam()
     {
-        curTeam = curTeam == Teams.White ? Teams.Red : Teams.White;
+        if (NumTeams == 2)
+        {
+            curTeam = curTeam == Teams.White ? Teams.Red : Teams.White;
+        }
+        else
+        {
+            curTeam = (Teams)(((int)curTeam + 1) % NumTeams);
+        }
     }
 
     private void RandomCard(ref Card ownCard)
@@ -184,17 +191,26 @@ public class Game
         TeemRotation[(int)Teams.White, 1] = new Vector3(-1, 0, -1);
         TeemRotation[(int)Teams.White, 2] = new Vector3(1, 0, -1);
 
-        TeemRotation[(int)Teams.Red, 0] = new Vector3(-1, 0, 0);
-        TeemRotation[(int)Teams.Red, 1] = new Vector3(1, 0, -1);
-        TeemRotation[(int)Teams.Red, 2] = new Vector3(1, 0, 1);
+        if (MenuManager.playersNumb == 2)
+        {
+            TeemRotation[(int)Teams.Red, 0] = new Vector3(0, 0, -1);
+            TeemRotation[(int)Teams.Red, 1] = new Vector3(1, 0, 1);
+            TeemRotation[(int)Teams.Red, 2] = new Vector3(-1, 0, 1);
+        }
+        else
+        {
+            TeemRotation[(int)Teams.Red, 0] = new Vector3(-1, 0, 0);
+            TeemRotation[(int)Teams.Red, 1] = new Vector3(1, 0, -1);
+            TeemRotation[(int)Teams.Red, 2] = new Vector3(1, 0, 1);
+        }
+        
+        TeemRotation[(int)Teams.Black, 0] = new Vector3(0, 0, -1);
+        TeemRotation[(int)Teams.Black, 1] = new Vector3(1, 0, 1);
+        TeemRotation[(int)Teams.Black, 2] = new Vector3(-1, 0, 1);
 
-        TeemRotation[(int)Teams.Yellow, 0] = new Vector3(0, 0, -1);
-        TeemRotation[(int)Teams.Yellow, 1] = new Vector3(1, 0, 1);
-        TeemRotation[(int)Teams.Yellow, 2] = new Vector3(-1, 0, 1);
-
-        TeemRotation[(int)Teams.Black, 0] = new Vector3(1, 0, 0);
-        TeemRotation[(int)Teams.Black, 1] = new Vector3(-1, 0, 1);
-        TeemRotation[(int)Teams.Black, 2] = new Vector3(-1, 0, -1);
+        TeemRotation[(int)Teams.Yellow, 0] = new Vector3(1, 0, 0);
+        TeemRotation[(int)Teams.Yellow, 1] = new Vector3(-1, 0, 1);
+        TeemRotation[(int)Teams.Yellow, 2] = new Vector3(-1, 0, -1);
     }
 
     private void FillAndShufflePlayingField()
@@ -261,16 +277,24 @@ public class Game
 
     public void PlaceShips()
     {
+        int i = 0;
         foreach (var pair in Ships.AllShips)
         {
+            if (i == NumTeams)
+            {
+                break;
+            }
+
             WaterCard waterCard = PlayingField[pair.Value.Position.x, pair.Value.Position.z] as WaterCard;
             if (waterCard == null)
             {
                 throw new Exception("Wrong ship or water card position");
             }
-
+            
             waterCard.OwnShip = pair.Value;
             waterCard.Type = CardType.Ship;
+            
+            ++i;
         }
     }
 }

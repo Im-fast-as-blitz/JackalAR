@@ -53,7 +53,7 @@ public class Person : MonoBehaviour
                 {
                     prev_pers = i;
                     Vector3 beautiPos;
-                    if (team == Teams.White || team == Teams.Yellow)
+                    if (team == Teams.White || team == Teams.Black || (currGame.NumTeams == 2 && team == Teams.Red))
                     {
                         beautiPos = new Vector3(0.025f, 0, 0);
                     }
@@ -119,6 +119,7 @@ public class Person : MonoBehaviour
     private bool CreateMovement(IntVector2 addPos, PersonManagerScr.PossibilityToWalk possByType,
         PersonManagerScr.PossibilityToWalk possByRotation, PersonManagerScr.PossibilityToWalk possByCoin)
     {
+
         IntVector2 newPos = Position + addPos;
 
         if ((newPos.x is >= 0 and <= 12) && (newPos.z is >= 0 and <= 12) && possByType(newPos) &&
@@ -179,7 +180,7 @@ public class Person : MonoBehaviour
         List<IntVector2> directions = PersonManagerScr.DirectionsToWalkByType[currentCard.Type];
         PersonManagerScr.PossibilityToWalk possByRotation = PersonManagerScr.RotationDefault;
 
-        if (currentCard.Type != CardType.Trap) // na vsyakiy sluchay))
+        if (currentCard.Type != CardType.Trap) // na vsyakiy sluchay))0)
         {
             isInTrap = false;
         }
@@ -296,13 +297,20 @@ public class Person : MonoBehaviour
         }
     }
 
-    public void Move(Vector3 newPos, bool isMainMove = true)
+    public void SuicidePerson()
     {
-        if (isMainMove)
+        Death();
+        for (int i = 0; i < 3; i++)
         {
-            rpcConnector.MovePersonRpc(newPos, team, personNumber);
+            if (currGame.PlayingField[Position.x, Position.z].Figures[i] == this)
+            {
+                currGame.PlayingField[Position.x, Position.z].Figures[i] = null;
+            }
         }
+    }
 
+    public void Move(Vector3 newPos)
+    {
         DestroyCircles();
 
         //Remove person from prev card
@@ -362,7 +370,7 @@ public class Person : MonoBehaviour
                 else
                 {
                     Vector3 beautiPos;
-                    if (team == Teams.White || team == Teams.Yellow)
+                    if (team == Teams.White || team == Teams.Black || (currGame.NumTeams == 2 && team == Teams.Red))
                     {
                         beautiPos = new Vector3(0.025f, 0, 0);
                     }
@@ -405,10 +413,16 @@ public class Person : MonoBehaviour
 
         Card curCard = currGame.PlayingField[Position.x, Position.z];
 
-        if (curCard.Type != CardType.Ice)
+        if (!Cards.OnCurrentStep.Contains(curCard.Type))
         {
             currGame.ChangeTeam();
+            currGame.ShouldMove = null;
         }
+        else
+        {
+            currGame.ShouldMove = this;
+        }
+        
 
         if (prevCard.Type == CardType.Ship && curCard.Type == CardType.Water)
         {
@@ -418,6 +432,7 @@ public class Person : MonoBehaviour
                 if (prevCard.Figures[i] && prevCard.Figures[i] != this)
                 {
                     prevCard.Figures[i].Move(newPos);
+                    currGame.ChangeTeam();
                 }
             }
         }
@@ -516,7 +531,7 @@ public class Person : MonoBehaviour
                     {
                         prev_pers = i;
                         Vector3 beautiPos;
-                        if (team == Teams.White || team == Teams.Yellow)
+                        if (team == Teams.White || team == Teams.Black || (currGame.NumTeams == 2 && team == Teams.Red))
                         {
                             beautiPos = new Vector3(0.025f, 0, 0);
                         }
@@ -645,5 +660,17 @@ public class Person : MonoBehaviour
 
         currGame.IsGameEnded = true;
         currGame.EndGameTitle.SetActive(true);
+    }
+    
+    public void TakeCoinByPerson()
+    {
+        isWithCoin = true;
+        currGame.PlayingField[Position.x, Position.z].Coins--;
+    }
+    
+    public void PutCoinPersonByPerson()
+    {
+        isWithCoin = false;
+        currGame.PlayingField[Position.x, Position.z].Coins++;
     }
 }

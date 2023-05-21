@@ -45,6 +45,10 @@ MonoBehaviour:
   - ChangeCurTeam
   - CreateNewTeam
   - MovePerson
+  - SuicedPerson
+  - PutCoinPerson
+  - TakeCoinPerson
+  - ReviveRpcPerson
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1
