@@ -489,10 +489,18 @@ public static class Ships
     public static void GenerateShips()
     {
         AllShips.Add(Teams.White, new Ship(Teams.White, "Ships/white", new IntVector2(6, 0)));
-        AllShips.Add(Teams.Red, new Ship(Teams.Red, "Ships/red", new IntVector2(12, 6)));
-        AllShips.Add(Teams.Black, new Ship(Teams.Black, "Ships/black", new IntVector2(0, 6)));
+        if (MenuManager.playersNumb == 2)
+        {
+            AllShips.Add(Teams.Red, new Ship(Teams.Red, "Ships/red", new IntVector2(6, 12)));
+            AllShips.Add(Teams.Black, new Ship(Teams.Black, "Ships/black", new IntVector2(12, 6)));
+        }
+        else
+        {
+            AllShips.Add(Teams.Red, new Ship(Teams.Red, "Ships/red", new IntVector2(12, 6)));
+            AllShips.Add(Teams.Black, new Ship(Teams.Black, "Ships/black", new IntVector2(6, 12)));
+        }
         AllShips.Add(Teams.Yellow,
-            new Ship(Teams.Yellow, "Ships/yellow", new IntVector2(6, 12)));
+            new Ship(Teams.Yellow, "Ships/yellow", new IntVector2(0, 6)));
     }
 }
 

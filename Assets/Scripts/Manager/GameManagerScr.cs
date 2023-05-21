@@ -51,8 +51,8 @@ public class GameManagerScr : MonoBehaviour
         _arRaycastManagerScript = FindObjectOfType<ARRaycastManager>();
         _layerMask = 1 << LayerMask.NameToLayer("Person");
 
-        CurrentGame = new Game(PhotonNetwork.IsMasterClient);
-        CurrentGame.NumTeams = numTeams;
+        numTeams = MenuManager.playersNumb;
+        CurrentGame = new Game(PhotonNetwork.IsMasterClient, numTeams);
 
         CurrentGame.ShamanBtn = shamanBtn;
         CurrentGame.TakeCoinBtn = takeCoinBtn;

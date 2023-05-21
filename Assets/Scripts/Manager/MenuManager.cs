@@ -13,10 +13,13 @@ public class MenuManager : MonoBehaviourPunCallbacks
     // Start is called before the first frame update
 
     public InputField createInput;
+    public InputField playersNumbInput;
     public InputField joinInput;
     public GameObject pausePanel;
     public GameObject pauseBtn;
     private GameManagerScr _gameManager;
+
+    public static int playersNumb = 0;
 
     public void Start()
     {
@@ -25,8 +28,26 @@ public class MenuManager : MonoBehaviourPunCallbacks
     
     public void CreateRoom()
     {
+        if (createInput.text.Length == 0)
+        {
+            return;
+        }
+
+        try
+        {
+            playersNumb = int.Parse(playersNumbInput.text);
+            if (playersNumb < 1 || playersNumb > 4)
+            {
+                throw new Exception();
+            }
+        }
+        catch (Exception)
+        {
+            return;
+        }
+        
         RoomOptions roomOptions = new RoomOptions();
-        roomOptions.MaxPlayers = 4;
+        roomOptions.MaxPlayers = (byte)playersNumb;
         PhotonNetwork.CreateRoom(createInput.text, roomOptions);
     }
 
