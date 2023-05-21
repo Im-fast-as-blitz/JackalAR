@@ -510,21 +510,21 @@ public class CardManagerScr : MonoBehaviour
     {
         // Total 169 cards (52 water cards + 117 other). Water must stay first
         Cards.AllCards.Add(new PairCardInt(new WaterCard(), 52));
-        Cards.AllCards.Add(new PairCardInt(new EmptyCard(), 20));
-        Cards.AllCards.Add(new PairCardInt(new HorseCard(), 10));
-        Cards.AllCards.Add(new PairCardInt(new CannonCard(), 11));
-        Cards.AllCards.Add(new PairCardInt(new OgreCard(), 1));
-        Cards.AllCards.Add(new PairCardInt(new ArrowCard(), 15));
-        Cards.AllCards.Add(new PairCardInt(new ShamanCard(), 5));
-        Cards.AllCards.Add(new PairCardInt(new FortressCard(), 5));
-        Cards.AllCards.Add(new PairCardInt(new TurntableCard(), 5));
-        Cards.AllCards.Add(new PairCardInt(new ChestCard(), 45));
-        Cards.AllCards.Add(new PairCardInt(new IceCard(), 5));
-        Cards.AllCards.Add(new PairCardInt(new CrocodileCard(), 2));
-        Cards.AllCards.Add(new PairCardInt(new HelicopterCard(), 8));
-        Cards.AllCards.Add(new PairCardInt(new BalloonCard(), 5));
-        Cards.AllCards.Add(new PairCardInt(new TrapCard(), 5));
-        Cards.AllCards.Add(new PairCardInt(new RumCard(), 5));
+        Cards.AllCards.Add(new PairCardInt(new EmptyCard(), 40)); // 40
+        Cards.AllCards.Add(new PairCardInt(new HorseCard(), 2)); // 2
+        Cards.AllCards.Add(new PairCardInt(new CannonCard(), 2)); // 2
+        Cards.AllCards.Add(new PairCardInt(new OgreCard(), 1)); // 1
+        Cards.AllCards.Add(new PairCardInt(new ArrowCard(), 21)); // 21
+        Cards.AllCards.Add(new PairCardInt(new ShamanCard(), 1)); // 1
+        Cards.AllCards.Add(new PairCardInt(new FortressCard(), 2)); // 2
+        Cards.AllCards.Add(new PairCardInt(new TurntableCard(), 12)); // 12
+        Cards.AllCards.Add(new PairCardInt(new ChestCard(), 16)); // 16
+        Cards.AllCards.Add(new PairCardInt(new IceCard(), 6)); // 6
+        Cards.AllCards.Add(new PairCardInt(new CrocodileCard(), 4)); // 4
+        Cards.AllCards.Add(new PairCardInt(new HelicopterCard(), 1)); // 1
+        Cards.AllCards.Add(new PairCardInt(new BalloonCard(), 2)); // 2
+        Cards.AllCards.Add(new PairCardInt(new TrapCard(), 3)); // 3
+        Cards.AllCards.Add(new PairCardInt(new RumCard(), 4)); // 4
 
         foreach (var pairCardInt in Cards.AllCards)
         {
