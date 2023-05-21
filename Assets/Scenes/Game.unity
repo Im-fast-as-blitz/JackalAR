@@ -1158,6 +1158,36 @@ PrefabInstance:
       propertyPath: m_AnchorMin.x
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3289662140733975115, guid: f9388a690e3af3a4eb91e6679ea0affd,
+        type: 3}
+      propertyPath: m_Text
+      value: Music
+      objectReference: {fileID: 0}
+    - target: {fileID: 3289662140733975124, guid: f9388a690e3af3a4eb91e6679ea0affd,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 174
+      objectReference: {fileID: 0}
+    - target: {fileID: 3289662141213948377, guid: f9388a690e3af3a4eb91e6679ea0affd,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 3289662141213948377, guid: f9388a690e3af3a4eb91e6679ea0affd,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 57
+      objectReference: {fileID: 0}
+    - target: {fileID: 3289662141252758082, guid: f9388a690e3af3a4eb91e6679ea0affd,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: -252.7491
+      objectReference: {fileID: 0}
+    - target: {fileID: 3289662141252758082, guid: f9388a690e3af3a4eb91e6679ea0affd,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 116.37451
+      objectReference: {fileID: 0}
     - target: {fileID: 3289662141278531990, guid: f9388a690e3af3a4eb91e6679ea0affd,
         type: 3}
       propertyPath: m_AnchorMax.x
