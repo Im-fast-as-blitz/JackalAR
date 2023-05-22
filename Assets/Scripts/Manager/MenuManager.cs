@@ -63,7 +63,7 @@ public class MenuManager : MonoBehaviourPunCallbacks
         {
             PhotonNetwork.LoadLevel("Game");
         }
-        //SceneManager.LoadScene("GameAR");
+        // SceneManager.LoadScene("GameAR");
         // SceneManager.LoadScene("Game");
     }
 
@@ -103,6 +103,7 @@ public class MenuManager : MonoBehaviourPunCallbacks
         }
         
         _gameManager.endGameTitle.SetActive(false);
+        _gameManager.currTeamTitle.SetActive(false);
     }
 
     public void ClosePausePanel()
@@ -114,7 +115,8 @@ public class MenuManager : MonoBehaviourPunCallbacks
         }
         pauseBtn.SetActive(true);
         pausePanel.SetActive(false);
-
+        
+        _gameManager.currTeamTitle.SetActive(true);
         if (_gameManager.CurrentGame.IsGameEnded)
         {
             _gameManager.endGameTitle.SetActive(true);

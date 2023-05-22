@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.XR.ARFoundation;
@@ -7,6 +8,7 @@ using UnityEngine.XR.ARSubsystems;
 using Random = UnityEngine.Random;
 using Vector3 = UnityEngine.Vector3;
 using Photon.Pun;
+using TMPro;
 
 
 public class Game
@@ -25,6 +27,7 @@ public class Game
     public Vector3[,] TeemRotation = new Vector3[4, 3];
 
     public GameObject EndGameTitle;
+    public GameObject CurrTeamTitle;
     public Button TakeCoinBtn;
     public Button PutCoinBtn;
     public int TotalCoins = 0;
@@ -34,6 +37,8 @@ public class Game
 
     public Button SuicideBtn;
     public Person ShouldMove = null;
+    
+    public List<String> teamNames = Enum.GetNames(typeof(Teams)).ToList();
 
     public Game(bool isMaster, int teamCount)
     {
@@ -56,6 +61,16 @@ public class Game
         {
             curTeam = (Teams)(((int)curTeam + 1) % NumTeams);
         }
+
+        if (CurrTeamTitle == null)
+        {
+            Debug.Log("Title");
+        }
+        if (CurrTeamTitle.GetComponent<Text>() == null)
+        {
+            Debug.Log("Component");
+        }
+        CurrTeamTitle.GetComponent<Text>().text = "Now Turn: " + teamNames[(int)curTeam];
     }
 
     private void RandomCard(ref Card ownCard)
