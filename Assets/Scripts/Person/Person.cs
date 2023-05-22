@@ -415,7 +415,6 @@ public class Person : MonoBehaviour
 
         if (!Cards.OnCurrentStep.Contains(curCard.Type))
         {
-            currGame.ChangeTeam();
             currGame.ShouldMove = null;
         }
         else
@@ -432,7 +431,6 @@ public class Person : MonoBehaviour
                 if (prevCard.Figures[i] && prevCard.Figures[i] != this)
                 {
                     prevCard.Figures[i].Move(newPos);
-                    currGame.ChangeTeam();
                 }
             }
         }

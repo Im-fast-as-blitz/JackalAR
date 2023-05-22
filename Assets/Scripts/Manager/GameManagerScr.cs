@@ -126,32 +126,37 @@ public class GameManagerScr : MonoBehaviour
 
         _layerMask = 1 << LayerMask.NameToLayer("Person");
 
-        // find drunk persons
-        int teamMask = 1 << (int)_personScr.team;
-        if ((CurrentGame.drunkTeams & teamMask) != 0)
+        if (!CurrentGame.ShouldMove)
         {
-            bool flag = true;
-            foreach (var per in CurrentGame.Persons[_personScr.team])
+            // find drunk persons
+            int teamMask = 1 << (int)_personScr.team;
+            if ((CurrentGame.drunkTeams & teamMask) != 0)
             {
-                if (per.drunkCount > 0)
+                bool flag = true;
+                foreach (var per in CurrentGame.Persons[_personScr.team])
                 {
-                    if (--per.drunkCount == 0)
+                    if (per.drunkCount > 0)
                     {
-                        per.gameObject.layer = LayerMask.NameToLayer("Person");
-                    }
-                    else
-                    {
-                        flag = false;
+                        if (--per.drunkCount == 0)
+                        {
+                            per.gameObject.layer = LayerMask.NameToLayer("Person");
+                        }
+                        else
+                        {
+                            flag = false;
+                        }
                     }
                 }
-            }
 
-            if (flag)
-            {
-                CurrentGame.drunkTeams -= teamMask;
+                if (flag)
+                {
+                    CurrentGame.drunkTeams -= teamMask;
+                }
             }
+            _personScr = null;
+        
+            CurrentGame.ChangeTeam();
         }
-        _personScr = null;
     }
 
     void DetachedMovePerson()
@@ -281,7 +286,6 @@ public class GameManagerScr : MonoBehaviour
 
         _personScr.DestroyCircles();
         EndRound();
-        CurrentGame.ChangeTeam();
     }
 
     public void TakeCoin()
