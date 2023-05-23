@@ -211,7 +211,7 @@ public class GameManagerScr : MonoBehaviour
                             if (_personScr.isWithCoin)
                             {
                                 _personScr.isWithCoin = false;
-                                IncCoins();
+                                IncCoins(_personScr.Position.x, _personScr.Position.z);
                             }
 
                             suicideBtn.gameObject.SetActive(false);
@@ -299,31 +299,36 @@ public class GameManagerScr : MonoBehaviour
 
     public void TakeCoin()
     {
-        _personScr.isWithCoin = true;
-        DecCoins();
-        CurrentGame.TakeCoinBtn.gameObject.SetActive(false);
+        rpcConnector.TakeCoinPersonRpc(_personScr);
         CurrentGame.PutCoinBtn.gameObject.SetActive(true);
-        _personScr.DestroyCircles(false);
-        _personScr.GenerateMovements(false);
+        CurrentGame.TakeCoinBtn.gameObject.SetActive(false);
+        
+        // _personScr.isWithCoin = true;
+        // DecCoins();
+        // CurrentGame.TakeCoinBtn.gameObject.SetActive(false);
+        // CurrentGame.PutCoinBtn.gameObject.SetActive(true);
+        // _personScr.DestroyCircles(false);
+        // _personScr.GenerateMovements(false);
     }
 
     public void PutCoin()
     {
-        _personScr.isWithCoin = false;
-        Card currCard = CurrentGame.PlayingField[_personScr.Position.x, _personScr.Position.z];
-        IncCoins();
+        rpcConnector.PutCoinPersonRpc(_personScr);
         CurrentGame.PutCoinBtn.gameObject.SetActive(false);
         CurrentGame.TakeCoinBtn.gameObject.SetActive(true);
-        _personScr.DestroyCircles(false);
-        _personScr.GenerateMovements(false);
+        
+        // _personScr.isWithCoin = false;
+        // Card currCard = CurrentGame.PlayingField[_personScr.Position.x, _personScr.Position.z];
+        // IncCoins();
+        // CurrentGame.PutCoinBtn.gameObject.SetActive(false);
+        // CurrentGame.TakeCoinBtn.gameObject.SetActive(true);
+        // _personScr.DestroyCircles(false);
+        // _personScr.GenerateMovements(false);
     }
 
-    public void Suicide(bool isMainCalled = true)
+    public void Suicide()
     {
-        if (isMainCalled)
-        {
-            rpcConnector.SuicidePersonRpc(_personScr);
-        }
+        rpcConnector.SuicidePersonRpc(_personScr);
     }
 
     public void BuildPlayingField(Vector3 middleCardPosition)
@@ -436,9 +441,9 @@ public class GameManagerScr : MonoBehaviour
         CurrentGame.currentNumTeam = PhotonNetwork.PlayerList.Length;
     }
 
-    void DecCoins()
+    public void DecCoins(int x, int z)
     {
-        Card currCard = CurrentGame.PlayingField[_personScr.Position.x, _personScr.Position.z];
+        Card currCard = CurrentGame.PlayingField[x, z];
         currCard.Coins--;
         if (currCard.Coins == 0)
         {
@@ -451,9 +456,9 @@ public class GameManagerScr : MonoBehaviour
         }
     }
 
-    void IncCoins()
+    public void IncCoins(int x, int z)
     {
-        Card currCard = CurrentGame.PlayingField[_personScr.Position.x, _personScr.Position.z];
+        Card currCard = CurrentGame.PlayingField[x, z];
         currCard.Coins++;
         if (currCard.Coins == 1)
         {

@@ -127,8 +127,15 @@ public class RpcConnector : MonoBehaviourPun
     [PunRPC]
     void TakeCoinPerson(int team, int personNum)
     {
+        
         Debug.Log(string.Format("TakeCoinPersonCalled"));
-        currGame.Persons[(Teams)team][personNum].TakeCoinByPerson();
+        Person currPerson = currGame.Persons[(Teams)team][personNum];
+        currPerson.isWithCoin = true;
+        currPerson.TakeCoinByPerson();
+        gameManagerScr.DecCoins(currPerson.Position.x, currPerson.Position.z);
+        currPerson.DestroyCircles(false);
+        currPerson.GenerateMovements(false);
+        
     }
     
     public void TakeCoinPersonRpc(Person person)
@@ -141,7 +148,12 @@ public class RpcConnector : MonoBehaviourPun
     void PutCoinPerson(int team, int personNum)
     {
         Debug.Log(string.Format("PutCoinPersonCalled"));
-        currGame.Persons[(Teams)team][personNum].PutCoinPersonByPerson();
+        Person currPerson = currGame.Persons[(Teams)team][personNum];
+        currPerson.isWithCoin = false;
+        currPerson.PutCoinByPerson();
+        gameManagerScr.IncCoins(currPerson.Position.x, currPerson.Position.z);
+        currPerson.DestroyCircles(false);
+        currPerson.GenerateMovements(false); 
     }
     
     public void PutCoinPersonRpc(Person person)

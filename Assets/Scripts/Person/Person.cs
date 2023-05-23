@@ -668,7 +668,7 @@ public class Person : MonoBehaviour
         currGame.PlayingField[Position.x, Position.z].Coins--;
     }
     
-    public void PutCoinPersonByPerson()
+    public void PutCoinByPerson()
     {
         isWithCoin = false;
         currGame.PlayingField[Position.x, Position.z].Coins++;
