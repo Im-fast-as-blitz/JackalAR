@@ -26,6 +26,7 @@ public class GameManagerScr : MonoBehaviour
     [SerializeField] private Button suicideBtn;
     [SerializeField] public RpcConnector rpcConnector;
     [SerializeField] public GameObject endGameTitle;
+    [SerializeField] public GameObject currTeamTitle;
     public bool isGameAR = false;
 
     public bool isDebug = false;
@@ -63,6 +64,7 @@ public class GameManagerScr : MonoBehaviour
         CurrentGame.PutCoinBtn = putCoinBtn;
         CurrentGame.SuicideBtn = suicideBtn;
         CurrentGame.EndGameTitle = endGameTitle;
+        CurrentGame.CurrTeamTitle = currTeamTitle;
 
         rpcConnector.SetGameObj(CurrentGame);
 

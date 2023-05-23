@@ -577,6 +577,7 @@ public class Person : MonoBehaviour
         }
 
         curCard.StepAction();
+        
     }
 
     private void PutCoinToCard(ref Card curCard)
@@ -636,8 +637,7 @@ public class Person : MonoBehaviour
         {
             teamsCoins.Add(new KeyValuePair<int, int>(currTeam, currGame.CoinsInTeam[currTeam]));
         }
-
-        List<String> teamNames = Enum.GetNames(typeof(Teams)).ToList();
+        
         for (int place = 0; place < currGame.NumTeams; place++)
         {
             int maxIter = 0;
@@ -652,10 +652,12 @@ public class Person : MonoBehaviour
             teamsCoins.RemoveAt(maxIter);
             
             GameObject teamContent = content.transform.GetChild(place).gameObject;
-            teamContent.transform.GetChild(1).GetComponent<Text>().text = teamNames[currTeam];
+            teamContent.transform.GetChild(1).GetComponent<Text>().text = currGame.teamNames[currTeam];
             teamContent.transform.GetChild(4).GetComponent<Text>().text = currGame.CoinsInTeam[currTeam].ToString();
         }
 
+        currGame.CurrTeamTitle.SetActive(false);
+        
         currGame.IsGameEnded = true;
         currGame.EndGameTitle.SetActive(true);
     }
