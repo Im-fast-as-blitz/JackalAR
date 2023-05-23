@@ -578,8 +578,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 17.5, y: -142.85}
-  m_SizeDelta: {x: 522.655, y: 175}
+  m_AnchoredPosition: {x: 9.9973, y: -196}
+  m_SizeDelta: {x: 752.4612, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &68682141
 MonoBehaviour:
@@ -1687,7 +1687,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 96, y: -114}
+  m_AnchoredPosition: {x: 140.2, y: -164}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &354467289
@@ -4344,8 +4344,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 36, y: 23}
-  m_SizeDelta: {x: -724.4469, y: -82.4371}
+  m_AnchoredPosition: {x: 43.754517, y: 15.7764}
+  m_SizeDelta: {x: -1100.938, y: -106.8846}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &883408830
 MonoBehaviour:
@@ -5936,7 +5936,7 @@ RectTransform:
   m_GameObject: {fileID: 1145760114}
   m_LocalRotation: {x: -0, y: 0, z: -1, w: -0.000005992112}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3.2097, y: 3.2097, z: 3.2097}
+  m_LocalScale: {x: 4, y: 4, z: 4}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1370926079}
@@ -5945,7 +5945,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 9180}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -228, y: -150}
+  m_AnchoredPosition: {x: -282, y: -184}
   m_SizeDelta: {x: 190, y: 42}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1145760116
@@ -7752,7 +7752,7 @@ RectTransform:
   m_GameObject: {fileID: 1447831398}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3.2097, y: 3.2097, z: 3.2097}
+  m_LocalScale: {x: 4, y: 4, z: 4}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2033466285}
@@ -7761,7 +7761,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 209, y: 123}
+  m_AnchoredPosition: {x: 258, y: 182}
   m_SizeDelta: {x: 190, y: 42}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1447831400
@@ -8029,8 +8029,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 11.377014, y: 101}
-  m_SizeDelta: {x: 522.655, y: 175}
+  m_AnchoredPosition: {x: 28.333, y: 158}
+  m_SizeDelta: {x: 789.13, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1487104688
 MonoBehaviour:
@@ -9119,8 +9119,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 11.377075, y: -14.046204}
-  m_SizeDelta: {x: -167.4243, y: -432.60144}
+  m_AnchoredPosition: {x: 4.0427246, y: 0.62231445}
+  m_SizeDelta: {x: -172.3137, y: -589.0653}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1684781386
 MonoBehaviour:
@@ -9301,8 +9301,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -7.750122, y: 23.071602}
-  m_SizeDelta: {x: -687.0356, y: -104.5802}
+  m_AnchoredPosition: {x: -40.024536, y: 23.071602}
+  m_SizeDelta: {x: -1083.0847, y: -104.5802}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1701146334
 MonoBehaviour:
@@ -9351,7 +9351,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 63
+  m_fontSize: 72
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -10211,7 +10211,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 677476545}
   m_Direction: 2
   m_Value: 1
-  m_Size: 0.26587972
+  m_Size: 0.33818695
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -10913,9 +10913,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   createInput: {fileID: 0}
+  playersNumbInput: {fileID: 0}
   joinInput: {fileID: 0}
   pausePanel: {fileID: 0}
   pauseBtn: {fileID: 0}
+  playersNumb: 0
 --- !u!4 &2037386118
 Transform:
   m_ObjectHideFlags: 0

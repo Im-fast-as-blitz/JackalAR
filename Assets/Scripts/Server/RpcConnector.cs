@@ -98,13 +98,13 @@ public class RpcConnector : MonoBehaviourPun
     {
         Debug.Log(string.Format("MovePersonCalled"));
         currGame.Persons[(Teams)team][personNum].Move(new Vector3(x, y, z));
+        gameManagerScr.EndRound(team);
     }
     
     public void MovePersonRpc(Vector3 pos, Teams team, int personNum)
     {
         Debug.Log(string.Format("RpcMovePersonCalled"));
         photonView.RPC("MovePerson", RpcTarget.AllBuffered, pos.x, pos.y, pos.z, (int)team, personNum);
-        gameManagerScr.EndRound();
     }
     
     [PunRPC]

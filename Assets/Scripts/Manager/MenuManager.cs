@@ -19,7 +19,7 @@ public class MenuManager : MonoBehaviourPunCallbacks
     public GameObject pauseBtn;
     private GameManagerScr _gameManager;
 
-    public static int playersNumb = 0;
+    public int playersNumb = 0;
 
     public void Start()
     {

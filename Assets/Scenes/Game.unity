@@ -834,8 +834,8 @@ MonoBehaviour:
   rpcConnector: {fileID: 911730210}
   endGameTitle: {fileID: 1399725445}
   isGameAR: 0
-  isDebug: 1
-  numTeams: 2
+  isDebug: 0
+  numTeams: 1
   _personScr: {fileID: 0}
   _layerMask:
     serializedVersion: 2
@@ -868,9 +868,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   createInput: {fileID: 0}
+  playersNumbInput: {fileID: 0}
   joinInput: {fileID: 0}
   pausePanel: {fileID: 1026187800}
   pauseBtn: {fileID: 1371240075}
+  playersNumb: 0
 --- !u!1 &911730207
 GameObject:
   m_ObjectHideFlags: 0

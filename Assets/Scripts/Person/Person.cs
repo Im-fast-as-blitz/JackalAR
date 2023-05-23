@@ -53,7 +53,7 @@ public class Person : MonoBehaviour
                 {
                     prev_pers = i;
                     Vector3 beautiPos;
-                    if (team == Teams.White || team == Teams.Black || (currGame.NumTeams == 2 && team == Teams.Red))
+                    if (team == Teams.White || team == Teams.Black || (Game.MaxCountInRoom == 2 && team == Teams.Red))
                     {
                         beautiPos = new Vector3(0.025f, 0, 0);
                     }
@@ -370,7 +370,7 @@ public class Person : MonoBehaviour
                 else
                 {
                     Vector3 beautiPos;
-                    if (team == Teams.White || team == Teams.Black || (currGame.NumTeams == 2 && team == Teams.Red))
+                    if (team == Teams.White || team == Teams.Black || (Game.MaxCountInRoom == 2 && team == Teams.Red))
                     {
                         beautiPos = new Vector3(0.025f, 0, 0);
                     }
@@ -529,7 +529,7 @@ public class Person : MonoBehaviour
                     {
                         prev_pers = i;
                         Vector3 beautiPos;
-                        if (team == Teams.White || team == Teams.Black || (currGame.NumTeams == 2 && team == Teams.Red))
+                        if (team == Teams.White || team == Teams.Black || (Game.MaxCountInRoom == 2 && team == Teams.Red))
                         {
                             beautiPos = new Vector3(0.025f, 0, 0);
                         }

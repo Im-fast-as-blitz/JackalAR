@@ -50,9 +50,13 @@ public class GameManagerScr : MonoBehaviour
     {
         _arRaycastManagerScript = FindObjectOfType<ARRaycastManager>();
         _layerMask = 1 << LayerMask.NameToLayer("Person");
+        
+        CurrentGame = new Game(PhotonNetwork.IsMasterClient);
 
-        numTeams = MenuManager.playersNumb;
-        CurrentGame = new Game(PhotonNetwork.IsMasterClient, numTeams);
+        if (isDebug)
+        {
+            numTeams = PhotonNetwork.CurrentRoom.MaxPlayers;
+        }
 
         CurrentGame.ShamanBtn = shamanBtn;
         CurrentGame.TakeCoinBtn = takeCoinBtn;
@@ -117,23 +121,26 @@ public class GameManagerScr : MonoBehaviour
 
 
 
-    public void EndRound()
+    public void EndRound(int currTeamRound)
     {
-        if (LayerMask.LayerToName(_personScr.gameObject.layer) == "Circles")
+        if (_personScr)
         {
-            _personScr.gameObject.layer = LayerMask.NameToLayer("Person");
-        }
+            if (LayerMask.LayerToName(_personScr.gameObject.layer) == "Circles")
+            {
+                _personScr.gameObject.layer = LayerMask.NameToLayer("Person");
+            }
 
-        _layerMask = 1 << LayerMask.NameToLayer("Person");
+            _layerMask = 1 << LayerMask.NameToLayer("Person");
+        }
 
         if (!CurrentGame.ShouldMove)
         {
             // find drunk persons
-            int teamMask = 1 << (int)_personScr.team;
+            int teamMask = 1 << currTeamRound;
             if ((CurrentGame.drunkTeams & teamMask) != 0)
             {
                 bool flag = true;
-                foreach (var per in CurrentGame.Persons[_personScr.team])
+                foreach (var per in CurrentGame.Persons[(Teams)currTeamRound])
                 {
                     if (per.drunkCount > 0)
                     {
@@ -285,7 +292,7 @@ public class GameManagerScr : MonoBehaviour
         }
 
         _personScr.DestroyCircles();
-        EndRound();
+        EndRound((int)_personScr.team);
     }
 
     public void TakeCoin()
@@ -365,6 +372,7 @@ public class GameManagerScr : MonoBehaviour
         float firstCardY = midCardPosition.y;
         float firstCardZ = midCardPosition.z - 6 * CurrentGame.sizeCardPrefab.z;
 
+        
         Debug.Log(PhotonNetwork.PlayerList.Length);
         for (var currentTeam = CurrentGame.currentNumTeam;
              currentTeam < PhotonNetwork.PlayerList.Length + numTeams - 1;

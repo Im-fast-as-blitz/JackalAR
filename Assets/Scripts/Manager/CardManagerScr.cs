@@ -489,7 +489,7 @@ public static class Ships
     public static void GenerateShips()
     {
         AllShips.Add(Teams.White, new Ship(Teams.White, "Ships/white", new IntVector2(6, 0)));
-        if (MenuManager.playersNumb == 2)
+        if (Game.MaxCountInRoom == 2)
         {
             AllShips.Add(Teams.Red, new Ship(Teams.Red, "Ships/red", new IntVector2(6, 12)));
             AllShips.Add(Teams.Black, new Ship(Teams.Black, "Ships/black", new IntVector2(12, 6)));
@@ -555,6 +555,6 @@ public class CardManagerScr : MonoBehaviour
         Cards.OnCurrentStep.Add(CardType.ArrowStraight2);
         Cards.OnCurrentStep.Add(CardType.ArrowStraight4);
 
-        Ships.GenerateShips();
+        //Ships.GenerateShips();
     }
 }

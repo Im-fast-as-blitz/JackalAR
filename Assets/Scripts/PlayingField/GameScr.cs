@@ -18,6 +18,7 @@ public class Game
     public int currentNumTeam = 0;
     public Teams curTeam = Teams.White;
     public int NumTeams = 2;
+    public static int MaxCountInRoom = 0;
     public Vector3 sizeCardPrefab = new Vector3(0, 0, 0);
     public Button ShamanBtn;
     public int rotMassSize = 0; 
@@ -35,12 +36,12 @@ public class Game
     public Button SuicideBtn;
     public Person ShouldMove = null;
 
-    public Game(bool isMaster, int teamCount)
+    public Game(bool isMaster)
     {
+        MaxCountInRoom = PhotonNetwork.CurrentRoom.MaxPlayers;
         SelectTeemRotation();
         if (isMaster)
         {
-            NumTeams = teamCount;
             FillAndShufflePlayingField();
             PlaceShips();
         }
@@ -48,13 +49,13 @@ public class Game
     
     public void ChangeTeam()
     {
-        if (NumTeams == 2)
+        if (MaxCountInRoom == 2)
         {
             curTeam = curTeam == Teams.White ? Teams.Red : Teams.White;
         }
         else
         {
-            curTeam = (Teams)(((int)curTeam + 1) % NumTeams);
+            curTeam = (Teams)(((int)curTeam + 1) % MaxCountInRoom);
         }
     }
 
@@ -191,7 +192,7 @@ public class Game
         TeemRotation[(int)Teams.White, 1] = new Vector3(-1, 0, -1);
         TeemRotation[(int)Teams.White, 2] = new Vector3(1, 0, -1);
 
-        if (MenuManager.playersNumb == 2)
+        if (MaxCountInRoom == 2)
         {
             TeemRotation[(int)Teams.Red, 0] = new Vector3(0, 0, -1);
             TeemRotation[(int)Teams.Red, 1] = new Vector3(1, 0, 1);
@@ -277,10 +278,11 @@ public class Game
 
     public void PlaceShips()
     {
+        Ships.GenerateShips();
         int i = 0;
         foreach (var pair in Ships.AllShips)
         {
-            if (i == NumTeams)
+            if (i == MaxCountInRoom)
             {
                 break;
             }
