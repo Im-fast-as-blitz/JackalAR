@@ -49,6 +49,8 @@ public class GameManagerScr : MonoBehaviour
 
     void Start()
     {
+        isGameAR = MenuManager.isAR;
+        
         _arRaycastManagerScript = FindObjectOfType<ARRaycastManager>();
         _layerMask = 1 << LayerMask.NameToLayer("Person");
         
@@ -80,7 +82,7 @@ public class GameManagerScr : MonoBehaviour
             }
 
             _placedMap = true;
-            arCamera.transform.position = new Vector3(0, 2f, 0);
+            //arCamera.transform.position = new Vector3(0, 2f, 0);
         }
 
         planeMarkerPrefab.SetActive(false);
@@ -111,12 +113,16 @@ public class GameManagerScr : MonoBehaviour
         if (Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began)
         {
             startText.SetActive(false);
-            Vector3 gamePos = hits[0].pose.position + new Vector3(0, 0.03f, 0);
+            CurrentGame.addPositionInGame = hits[0].pose.position + new Vector3(0, 0.03f, 0);
 
 
             planeMarkerPrefab.SetActive(false);
-            BuildPlayingField(gamePos);
-            CreateTeam();
+            if (PhotonNetwork.IsMasterClient)
+            {
+                BuildPlayingField(CurrentGame.addPositionInGame);
+                CreateTeam();
+                rpcConnector.SyncCardsRpc();
+            }
             _placedMap = true;
         }
     }
@@ -225,7 +231,8 @@ public class GameManagerScr : MonoBehaviour
                 }
                 else if (hitObject.collider.CompareTag("Movement"))
                 {
-                    rpcConnector.MovePersonRpc(hitObject.collider.gameObject.transform.position, _personScr.team, _personScr.personNumber);
+                    rpcConnector.MovePersonRpc(hitObject.collider.gameObject.transform.position - CurrentGame.addPositionInGame, 
+                        _personScr.team, _personScr.personNumber);
                 }
             }
         }

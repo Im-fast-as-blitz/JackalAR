@@ -40,6 +40,8 @@ public class Game
     public Person ShouldMove = null;
     
     public List<String> teamNames = Enum.GetNames(typeof(Teams)).ToList();
+    
+    public Vector3 addPositionInGame = new Vector3(0, 0, 0);
 
     public Game(bool isMaster)
     {

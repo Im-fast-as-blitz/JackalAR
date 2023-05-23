@@ -836,7 +836,7 @@ MonoBehaviour:
   endGameTitle: {fileID: 1399725445}
   currTeamTitle: {fileID: 4009333074570868874}
   isGameAR: 0
-  isDebug: 1
+  isDebug: 0
   numTeams: 1
   _personScr: {fileID: 0}
   _layerMask:
@@ -874,7 +874,8 @@ MonoBehaviour:
   joinInput: {fileID: 0}
   pausePanel: {fileID: 1026187800}
   pauseBtn: {fileID: 1371240075}
-  playersNumb: 0
+  isARCreate: {fileID: 0}
+  isARJoin: {fileID: 0}
 --- !u!1 &911730207
 GameObject:
   m_ObjectHideFlags: 0
@@ -1142,6 +1143,16 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2862193244308095326, guid: f9388a690e3af3a4eb91e6679ea0affd,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -150
+      objectReference: {fileID: 0}
+    - target: {fileID: 2862193244308095326, guid: f9388a690e3af3a4eb91e6679ea0affd,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -100
+      objectReference: {fileID: 0}
     - target: {fileID: 2862193244308095327, guid: f9388a690e3af3a4eb91e6679ea0affd,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -1266,7 +1277,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -67, y: -69}
+  m_AnchoredPosition: {x: -150, y: -100}
   m_SizeDelta: {x: 130, y: 131}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1371240077
@@ -1504,8 +1515,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 608459067508f46edb3a160d56329737, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  zoomMin: 1
-  zoomMax: 2
+  zoomMin: 0.1
+  zoomMax: 2.5
 --- !u!1001 &1767935499
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2403,12 +2414,12 @@ PrefabInstance:
     - target: {fileID: 7021863762698141867, guid: d82660bb586a8c641ac2bf9bdde9d638,
         type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 60
       objectReference: {fileID: 0}
     - target: {fileID: 7021863762698141867, guid: d82660bb586a8c641ac2bf9bdde9d638,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -34.5
+      value: -100
       objectReference: {fileID: 0}
     - target: {fileID: 7021863762698141867, guid: d82660bb586a8c641ac2bf9bdde9d638,
         type: 3}
@@ -2424,6 +2435,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8615825009457468339, guid: d82660bb586a8c641ac2bf9bdde9d638,
+        type: 3}
+      propertyPath: m_FontData.m_MinSize
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8615825009457468339, guid: d82660bb586a8c641ac2bf9bdde9d638,
+        type: 3}
+      propertyPath: m_FontData.m_FontSize
+      value: 75
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

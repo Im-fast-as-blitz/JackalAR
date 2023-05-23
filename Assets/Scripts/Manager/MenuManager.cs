@@ -17,9 +17,13 @@ public class MenuManager : MonoBehaviourPunCallbacks
     public InputField joinInput;
     public GameObject pausePanel;
     public GameObject pauseBtn;
+    public Toggle isARCreate;
+    public Toggle isARJoin;
+    
     private GameManagerScr _gameManager;
 
-    public int playersNumb = 0;
+    private int playersNumb = 0;
+    public static bool isAR = false;
 
     public void Start()
     {
@@ -28,6 +32,7 @@ public class MenuManager : MonoBehaviourPunCallbacks
     
     public void CreateRoom()
     {
+        isAR = isARCreate.isOn;
         if (createInput.text.Length == 0)
         {
             return;
@@ -53,6 +58,7 @@ public class MenuManager : MonoBehaviourPunCallbacks
 
     public void JoinRoom()
     {
+        isAR = isARJoin.isOn;
         PhotonNetwork.JoinRoom(joinInput.text);
     }
 

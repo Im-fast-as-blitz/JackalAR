@@ -312,6 +312,8 @@ public class Person : MonoBehaviour
 
     public void Move(Vector3 newPos)
     {
+        newPos += currGame.addPositionInGame;
+        
         DestroyCircles();
 
         //Remove person from prev card
