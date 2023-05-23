@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8914289364441132635}
   - component: {fileID: 3341771447203797925}
-  m_Layer: 7
+  m_Layer: 9
   m_Name: coin
   m_TagString: Movement
   m_Icon: {fileID: 0}

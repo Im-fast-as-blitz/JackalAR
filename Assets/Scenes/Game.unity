@@ -837,7 +837,7 @@ MonoBehaviour:
   currTeamTitle: {fileID: 4009333074570868874}
   isGameAR: 0
   isDebug: 0
-  numTeams: 2
+  numTeams: 1
   _personScr: {fileID: 0}
   _layerMask:
     serializedVersion: 2

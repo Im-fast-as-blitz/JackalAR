@@ -170,7 +170,8 @@ public class Game
             TotalCoins += randomedCoins;
         }
 
-        ChestCard.CardsCount++;
+        ++ChestCard.CardsCount;
+        ++rotMassSize;
     }
 
     private TurntableCard RandomTurntableCard()
@@ -289,6 +290,8 @@ public class Game
                 RandomCard(ref PlayingField[i, j]);
             }
         }
+        
+        ++rotMassSize;
     }
 
     public void PlaceShips()

@@ -662,15 +662,10 @@ public class Person : MonoBehaviour
         currGame.EndGameTitle.SetActive(true);
     }
     
-    public void TakeCoinByPerson()
+    public void TakePutCoinByPerson(bool withCoin)
     {
-        isWithCoin = true;
-        currGame.PlayingField[Position.x, Position.z].Coins--;
-    }
-    
-    public void PutCoinByPerson()
-    {
-        isWithCoin = false;
-        currGame.PlayingField[Position.x, Position.z].Coins++;
+        isWithCoin = withCoin;
+        DestroyCircles(false);
+        GenerateMovements(false);
     }
 }

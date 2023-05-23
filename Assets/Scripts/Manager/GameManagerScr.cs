@@ -76,7 +76,7 @@ public class GameManagerScr : MonoBehaviour
             {
                 BuildPlayingField(new Vector3(0, 0, 0));
                 CreateTeam();
-                rpcConnector.SyncCardsRpc(CurrentGame.rotMassSize);
+                rpcConnector.SyncCardsRpc();
             }
 
             _placedMap = true;
