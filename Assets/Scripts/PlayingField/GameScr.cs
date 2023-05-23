@@ -29,12 +29,15 @@ public class Game
 
     public GameObject EndGameTitle;
     public GameObject CurrTeamTitle;
+    public GameObject CurrCoinTitle;
     public Button TakeCoinBtn;
     public Button PutCoinBtn;
     public int TotalCoins = 0;
     public int[] CoinsInTeam = new int[4];
     public int drunkTeams = 0;
     public bool IsGameEnded = false;
+    
+    public Teams playerTeam;
 
     public Button SuicideBtn;
     public Person ShouldMove = null;
@@ -43,6 +46,7 @@ public class Game
 
     public Game(bool isMaster)
     {
+        playerTeam = (Teams)(PhotonNetwork.PlayerList.Length - 1);
         MaxCountInRoom = PhotonNetwork.CurrentRoom.MaxPlayers;
         SelectTeemRotation();
         if (isMaster)
@@ -63,14 +67,6 @@ public class Game
             curTeam = (Teams)(((int)curTeam + 1) % MaxCountInRoom);
         }
 
-        if (CurrTeamTitle == null)
-        {
-            Debug.Log("Title");
-        }
-        if (CurrTeamTitle.GetComponent<Text>() == null)
-        {
-            Debug.Log("Component");
-        }
         CurrTeamTitle.GetComponent<Text>().text = "Now Turn: " + teamNames[(int)curTeam];
     }
 

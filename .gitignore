@@ -59,3 +59,5 @@ sysinfo.txt
 # Crashlytics generated file
 crashlytics-build.properties
 
+# I don't know why this dir didn't ignore 
+UserSettings/EditorUserSettings.asset

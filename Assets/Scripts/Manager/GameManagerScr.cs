@@ -27,7 +27,9 @@ public class GameManagerScr : MonoBehaviour
     [SerializeField] public RpcConnector rpcConnector;
     [SerializeField] public GameObject endGameTitle;
     [SerializeField] public GameObject currTeamTitle;
+    [SerializeField] public GameObject currCoinTitle;
     public bool isGameAR = false;
+    
 
     public bool isDebug = false;
 
@@ -49,6 +51,7 @@ public class GameManagerScr : MonoBehaviour
 
     void Start()
     {
+        
         _arRaycastManagerScript = FindObjectOfType<ARRaycastManager>();
         _layerMask = 1 << LayerMask.NameToLayer("Person");
         
@@ -65,6 +68,7 @@ public class GameManagerScr : MonoBehaviour
         CurrentGame.SuicideBtn = suicideBtn;
         CurrentGame.EndGameTitle = endGameTitle;
         CurrentGame.CurrTeamTitle = currTeamTitle;
+        CurrentGame.CurrCoinTitle = currCoinTitle;
 
         rpcConnector.SetGameObj(CurrentGame);
 
@@ -231,6 +235,67 @@ public class GameManagerScr : MonoBehaviour
         }
     }
 
+    // public void RevivePerson2()
+    // {
+    //     Person zombie = null;
+    //     foreach (var per in CurrentGame.Persons[CurrentGame.curTeam])
+    //     {
+    //         if (!per._isAlive)
+    //         {
+    //             zombie = per;
+    //             break;
+    //         }
+    //     }
+    //
+    //     Person prev_pers = null;
+    //     int teammates_count = 0;
+    //     foreach (var per in CurrentGame.Persons[CurrentGame.curTeam])
+    //     {
+    //         if (CurrentGame.PlayingField[per.Position.x, per.Position.z].Type == CardType.Shaman)
+    //         {
+    //             ++teammates_count;
+    //             if (teammates_count == 1)
+    //             {
+    //                 prev_pers = per;
+    //                 zombie.Position = new IntVector2(per.Position);
+    //                 zombie.gameObject.SetActive(true);
+    //                 zombie._isAlive = true;
+    //
+    //                 Vector3 beautiPos;
+    //                 if (CurrentGame.curTeam == Teams.White || CurrentGame.curTeam == Teams.Yellow)
+    //                 {
+    //                     beautiPos = new Vector3(0.025f, 0, 0);
+    //                 }
+    //                 else
+    //                 {
+    //                     beautiPos = new Vector3(0, 0, 0.025f);
+    //                 }
+    //
+    //                 zombie.transform.position = per.gameObject.transform.position +
+    //                                             new Vector3(CurrentGame.TeemRotation[(int)_currTeam, 1].x * beautiPos.x,
+    //                                                 0, beautiPos.z * CurrentGame.TeemRotation[(int)_currTeam, 1].z);
+    //                 ;
+    //                 per.transform.position += new Vector3(CurrentGame.TeemRotation[(int)_currTeam, 2].x * beautiPos.x,
+    //                     0, beautiPos.z * CurrentGame.TeemRotation[(int)_currTeam, 2].z);
+    //             }
+    //             else
+    //             {
+    //                 prev_pers.transform.position = per.transform.position +
+    //                                                new Vector3(CurrentGame.TeemRotation[(int)_currTeam, 2].x * 0.025f,
+    //                                                    0, 0.025f * CurrentGame.TeemRotation[(int)_currTeam, 2].z);
+    //                 transform.position = per.transform.position +
+    //                                      new Vector3(CurrentGame.TeemRotation[(int)_currTeam, 0].x * 0.025f, 0,
+    //                                          0.025f * CurrentGame.TeemRotation[(int)_currTeam, 0].z);
+    //                 per.transform.position += new Vector3(CurrentGame.TeemRotation[(int)_currTeam, 1].x * 0.025f, 0,
+    //                     0.025f * CurrentGame.TeemRotation[(int)_currTeam, 1].z);
+    //             }
+    //         }
+    //     }
+    //
+    //     _personScr.DestroyCircles();
+    //     EndRound();
+    //     CurrentGame.ChangeTeam();
+    // }
     public void CalledRevivePerson()
     {
         rpcConnector.RevivePersonRpc();
@@ -302,13 +367,6 @@ public class GameManagerScr : MonoBehaviour
         rpcConnector.TakeCoinPersonRpc(_personScr);
         CurrentGame.PutCoinBtn.gameObject.SetActive(true);
         CurrentGame.TakeCoinBtn.gameObject.SetActive(false);
-        
-        // _personScr.isWithCoin = true;
-        // DecCoins();
-        // CurrentGame.TakeCoinBtn.gameObject.SetActive(false);
-        // CurrentGame.PutCoinBtn.gameObject.SetActive(true);
-        // _personScr.DestroyCircles(false);
-        // _personScr.GenerateMovements(false);
     }
 
     public void PutCoin()
@@ -316,14 +374,6 @@ public class GameManagerScr : MonoBehaviour
         rpcConnector.PutCoinPersonRpc(_personScr);
         CurrentGame.PutCoinBtn.gameObject.SetActive(false);
         CurrentGame.TakeCoinBtn.gameObject.SetActive(true);
-        
-        // _personScr.isWithCoin = false;
-        // Card currCard = CurrentGame.PlayingField[_personScr.Position.x, _personScr.Position.z];
-        // IncCoins();
-        // CurrentGame.PutCoinBtn.gameObject.SetActive(false);
-        // CurrentGame.TakeCoinBtn.gameObject.SetActive(true);
-        // _personScr.DestroyCircles(false);
-        // _personScr.GenerateMovements(false);
     }
 
     public void Suicide()

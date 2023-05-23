@@ -63,8 +63,6 @@ public class MenuManager : MonoBehaviourPunCallbacks
         {
             PhotonNetwork.LoadLevel("Game");
         }
-        // SceneManager.LoadScene("GameAR");
-        // SceneManager.LoadScene("Game");
     }
 
     public void BackToMainMenu()

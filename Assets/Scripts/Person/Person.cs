@@ -586,6 +586,10 @@ public class Person : MonoBehaviour
         {
             currGame.TotalCoins--;
             currGame.CoinsInTeam[(int)team]++;
+            if (currGame.playerTeam == (curCard as WaterCard).OwnShip.team)
+            {
+                currGame.CurrCoinTitle.GetComponent<Text>().text = "Now Coins: " + currGame.CoinsInTeam[(int)team];
+            }
         }
         else if (curCard is WaterCard || curCard.Type == CardType.Ogre)
         {
@@ -657,6 +661,7 @@ public class Person : MonoBehaviour
         }
 
         currGame.CurrTeamTitle.SetActive(false);
+        currGame.CurrCoinTitle.SetActive(false);
         
         currGame.IsGameEnded = true;
         currGame.EndGameTitle.SetActive(true);

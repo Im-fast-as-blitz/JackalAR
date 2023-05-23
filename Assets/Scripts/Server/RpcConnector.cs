@@ -6,7 +6,7 @@ using Photon.Pun;
 
 public class RpcConnector : MonoBehaviourPun
 {
-    private Game currGame;
+    public Game currGame;
     public GameManagerScr gameManagerScr;
 
     public void SetGameObj(Game game)
