@@ -49,6 +49,8 @@ public class GameManagerScr : MonoBehaviour
     private Vector3 midCardPosition;
 
     private Teams _userTeam;
+    private int _countOfReadyUsers = 0;
+    private bool _gameIsGoingOn = false;
 
     void Start()
     {
@@ -86,7 +88,8 @@ public class GameManagerScr : MonoBehaviour
             }
 
             _placedMap = true;
-            arCamera.transform.position = new Vector3(0, 2f, 0);
+            rpcConnector.UserIsReadyRpc();
+            //arCamera.transform.position = new Vector3(0, 2f, 0);
         }
 
         planeMarkerPrefab.SetActive(false);
@@ -98,9 +101,19 @@ public class GameManagerScr : MonoBehaviour
         {
             ShowMarker();
         }
-        else
+        else if (_gameIsGoingOn)
         {
             DetachedMovePerson();
+        }
+    }
+
+    public void UserIsReady()
+    {
+        ++_countOfReadyUsers;
+        if (_countOfReadyUsers == PhotonNetwork.CurrentRoom.MaxPlayers)
+        {
+            startText.SetActive(false);
+            _gameIsGoingOn = true;
         }
     }
 
@@ -116,7 +129,7 @@ public class GameManagerScr : MonoBehaviour
 
         if (Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began)
         {
-            startText.SetActive(false);
+            startText.GetComponent<Text>().text = "Please wait for the rest of the players";
             CurrentGame.addPositionInGame = hits[0].pose.position + new Vector3(0, 0.03f, 0);
 
 
@@ -128,6 +141,8 @@ public class GameManagerScr : MonoBehaviour
             {
                 rpcConnector.SyncCardsRpc();
             }
+
+            rpcConnector.UserIsReadyRpc();
         }
     }
 
