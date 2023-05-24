@@ -9,6 +9,7 @@ using Vector3 = UnityEngine.Vector3;
 using Photon.Pun;
 using TMPro;
 using UnityEditor;
+using UnityEngine.SceneManagement;
 
 
 public class GameManagerScr : MonoBehaviour
@@ -49,8 +50,11 @@ public class GameManagerScr : MonoBehaviour
 
     private Vector3 midCardPosition;
 
+    public int lol = 0;
+
     void Start()
     {
+        isGameAR = SceneManager.GetActiveScene().name == "GameAR";
         
         _arRaycastManagerScript = FindObjectOfType<ARRaycastManager>();
         _layerMask = 1 << LayerMask.NameToLayer("Person");
@@ -115,18 +119,21 @@ public class GameManagerScr : MonoBehaviour
         if (Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began)
         {
             startText.SetActive(false);
-            Vector3 gamePos = hits[0].pose.position + new Vector3(0, 0.03f, 0);
+            CurrentGame.addPositionInGame = hits[0].pose.position + new Vector3(0, 0.03f, 0);
 
 
             planeMarkerPrefab.SetActive(false);
-            BuildPlayingField(gamePos);
-            CreateTeam();
+            if (PhotonNetwork.IsMasterClient)
+            {
+                BuildPlayingField(CurrentGame.addPositionInGame);
+                CreateTeam();
+                rpcConnector.SyncCardsRpc();
+            }
             _placedMap = true;
         }
     }
 
-
-
+    
     public void EndRound(int currTeamRound)
     {
         if (_personScr)
@@ -138,7 +145,6 @@ public class GameManagerScr : MonoBehaviour
 
             _layerMask = 1 << LayerMask.NameToLayer("Person");
         }
-
         if (!CurrentGame.ShouldMove)
         {
             // find drunk persons
@@ -229,7 +235,8 @@ public class GameManagerScr : MonoBehaviour
                 }
                 else if (hitObject.collider.CompareTag("Movement"))
                 {
-                    rpcConnector.MovePersonRpc(hitObject.collider.gameObject.transform.position, _personScr.team, _personScr.personNumber);
+                    rpcConnector.MovePersonRpc(hitObject.collider.gameObject.transform.position - CurrentGame.addPositionInGame, 
+                        _personScr.team, _personScr.personNumber);
                 }
             }
         }
