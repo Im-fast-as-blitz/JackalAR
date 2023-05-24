@@ -40,6 +40,8 @@ public class Game
     public Person ShouldMove = null;
     
     public List<String> teamNames = Enum.GetNames(typeof(Teams)).ToList();
+    
+    public Vector3 addPositionInGame = new Vector3(0, 0, 0);
 
     public Game(bool isMaster)
     {
@@ -170,7 +172,8 @@ public class Game
             TotalCoins += randomedCoins;
         }
 
-        ChestCard.CardsCount++;
+        ++ChestCard.CardsCount;
+        ++rotMassSize;
     }
 
     private TurntableCard RandomTurntableCard()
@@ -289,6 +292,8 @@ public class Game
                 RandomCard(ref PlayingField[i, j]);
             }
         }
+        
+        ++rotMassSize;
     }
 
     public void PlaceShips()

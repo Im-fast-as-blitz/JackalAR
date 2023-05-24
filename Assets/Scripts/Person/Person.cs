@@ -307,10 +307,13 @@ public class Person : MonoBehaviour
                 currGame.PlayingField[Position.x, Position.z].Figures[i] = null;
             }
         }
+        gameObject.layer = LayerMask.NameToLayer("Person");
     }
 
     public void Move(Vector3 newPos)
     {
+        newPos += currGame.addPositionInGame;
+        
         DestroyCircles();
 
         //Remove person from prev card
@@ -430,7 +433,7 @@ public class Person : MonoBehaviour
             {
                 if (prevCard.Figures[i] && prevCard.Figures[i] != this)
                 {
-                    prevCard.Figures[i].Move(newPos);
+                    prevCard.Figures[i].Move(newPos - currGame.addPositionInGame);
                 }
             }
         }
@@ -460,7 +463,7 @@ public class Person : MonoBehaviour
         //Look at new card
         if (curCard.Type == CardType.Ship && (curCard as WaterCard).OwnShip.team != team)
         {
-            Death();
+            SuicidePerson();
             return;
         }
         else if (turnTables.Contains(curCard.Type))
@@ -662,15 +665,10 @@ public class Person : MonoBehaviour
         currGame.EndGameTitle.SetActive(true);
     }
     
-    public void TakeCoinByPerson()
+    public void TakePutCoinByPerson(bool withCoin)
     {
-        isWithCoin = true;
-        currGame.PlayingField[Position.x, Position.z].Coins--;
-    }
-    
-    public void PutCoinPersonByPerson()
-    {
-        isWithCoin = false;
-        currGame.PlayingField[Position.x, Position.z].Coins++;
+        isWithCoin = withCoin;
+        DestroyCircles(false);
+        GenerateMovements(false);
     }
 }

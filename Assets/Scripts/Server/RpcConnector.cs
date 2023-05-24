@@ -43,27 +43,32 @@ public class RpcConnector : MonoBehaviourPun
                 if (curCard is ArrowCard arrowCard && curType != CardType.ArrowStraight4 && curType != CardType.ArrowDiagonal4)
                 {
                     arrowCard.Rotation = (Rotation)rotMass[rotInd++];
-                } else if (curCard is CannonCard card)
+                } else if (curCard is CannonCard cannonCard)
                 {
-                    card.Rotation = (Rotation)rotMass[rotInd++];
+                    cannonCard.Rotation = (Rotation)rotMass[rotInd++];
+                }
+                else if (curCard is ChestCard chestCard)
+                {
+                    chestCard.Coins = rotMass[rotInd++];
                 }
             }
         }
 
+        currGame.TotalCoins = rotMass[rotInd];
         currGame.PlaceShips();
         gameManagerScr.BuildPlayingField(new Vector3(0, 0, 0));
         CreateNewTeamRpc();
     }
 
-    public void SyncCardsRpc(int massSize)
+    public void SyncCardsRpc()
     {
         Debug.Log(string.Format("SyncCardsFromRpcCalled"));
         var cardTypes = new int[currGame.PlayingField.GetLength(0)][];
-        var rotMass = new int[massSize];
+        var rotMass = new int[currGame.rotMassSize];
         var rotIndex = 0;
         for (var i = 0; i < currGame.PlayingField.GetLength(0); ++i)
         {
-            cardTypes[i] = new int[massSize + currGame.PlayingField.GetLength(1)];
+            cardTypes[i] = new int[currGame.rotMassSize + currGame.PlayingField.GetLength(1)];
             for (var j = 0; j < currGame.PlayingField.GetLength(1); ++j)
             {
                 var curCard = currGame.PlayingField[i, j];
@@ -76,9 +81,14 @@ public class RpcConnector : MonoBehaviourPun
                 } else if (curCard is CannonCard cannonCard)
                 {
                     rotMass[rotIndex++] = (int)cannonCard.Rotation;
+                } else if (curCard is ChestCard chestCard)
+                {
+                    rotMass[rotIndex++] = chestCard.Coins;
                 }
             }
         }
+
+        rotMass[rotIndex] = currGame.TotalCoins; 
         photonView.RPC("SyncCards", RpcTarget.OthersBuffered, cardTypes, rotMass);
     }
 
@@ -127,8 +137,12 @@ public class RpcConnector : MonoBehaviourPun
     [PunRPC]
     void TakeCoinPerson(int team, int personNum)
     {
+        
         Debug.Log(string.Format("TakeCoinPersonCalled"));
-        currGame.Persons[(Teams)team][personNum].TakeCoinByPerson();
+        Person currPerson = currGame.Persons[(Teams)team][personNum];
+        currPerson.TakePutCoinByPerson(true);
+        gameManagerScr.DecCoins(currPerson.Position.x, currPerson.Position.z);
+        
     }
     
     public void TakeCoinPersonRpc(Person person)
@@ -141,7 +155,9 @@ public class RpcConnector : MonoBehaviourPun
     void PutCoinPerson(int team, int personNum)
     {
         Debug.Log(string.Format("PutCoinPersonCalled"));
-        currGame.Persons[(Teams)team][personNum].PutCoinPersonByPerson();
+        Person currPerson = currGame.Persons[(Teams)team][personNum];
+        currPerson.TakePutCoinByPerson(false);
+        gameManagerScr.IncCoins(currPerson.Position.x, currPerson.Position.z);
     }
     
     public void PutCoinPersonRpc(Person person)

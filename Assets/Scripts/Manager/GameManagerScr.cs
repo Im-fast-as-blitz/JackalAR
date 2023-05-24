@@ -9,6 +9,7 @@ using Vector3 = UnityEngine.Vector3;
 using Photon.Pun;
 using TMPro;
 using UnityEditor;
+using UnityEngine.SceneManagement;
 
 
 public class GameManagerScr : MonoBehaviour
@@ -47,8 +48,13 @@ public class GameManagerScr : MonoBehaviour
 
     private Vector3 midCardPosition;
 
+    private Teams _userTeam;
+
     void Start()
     {
+        _userTeam = (Teams)(PhotonNetwork.PlayerList.Length - 1);
+        isGameAR = SceneManager.GetActiveScene().name == "GameAR";
+        
         _arRaycastManagerScript = FindObjectOfType<ARRaycastManager>();
         _layerMask = 1 << LayerMask.NameToLayer("Person");
         
@@ -76,7 +82,7 @@ public class GameManagerScr : MonoBehaviour
             {
                 BuildPlayingField(new Vector3(0, 0, 0));
                 CreateTeam();
-                rpcConnector.SyncCardsRpc(CurrentGame.rotMassSize);
+                rpcConnector.SyncCardsRpc();
             }
 
             _placedMap = true;
@@ -111,18 +117,21 @@ public class GameManagerScr : MonoBehaviour
         if (Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began)
         {
             startText.SetActive(false);
-            Vector3 gamePos = hits[0].pose.position + new Vector3(0, 0.03f, 0);
+            CurrentGame.addPositionInGame = hits[0].pose.position + new Vector3(0, 0.03f, 0);
 
 
             planeMarkerPrefab.SetActive(false);
-            BuildPlayingField(gamePos);
-            CreateTeam();
             _placedMap = true;
+            BuildPlayingField(CurrentGame.addPositionInGame);
+            CreateTeam();
+            if (PhotonNetwork.IsMasterClient)
+            {
+                rpcConnector.SyncCardsRpc();
+            }
         }
     }
 
-
-
+    
     public void EndRound(int currTeamRound)
     {
         if (_personScr)
@@ -134,7 +143,6 @@ public class GameManagerScr : MonoBehaviour
 
             _layerMask = 1 << LayerMask.NameToLayer("Person");
         }
-
         if (!CurrentGame.ShouldMove)
         {
             // find drunk persons
@@ -191,7 +199,7 @@ public class GameManagerScr : MonoBehaviour
                 if (hitObject.collider.CompareTag("Person"))
                 {
                     Person currentPerson = hitObject.collider.gameObject.GetComponent<Person>();
-                    if (currentPerson.team == CurrentGame.curTeam)
+                    if (currentPerson.team == CurrentGame.curTeam && (isDebug || _userTeam == CurrentGame.curTeam))
                     {
                         if (CurrentGame.ShouldMove && currentPerson != CurrentGame.ShouldMove)
                         {
@@ -211,7 +219,7 @@ public class GameManagerScr : MonoBehaviour
                             if (_personScr.isWithCoin)
                             {
                                 _personScr.isWithCoin = false;
-                                IncCoins();
+                                IncCoins(_personScr.Position.x, _personScr.Position.z);
                             }
 
                             suicideBtn.gameObject.SetActive(false);
@@ -225,7 +233,8 @@ public class GameManagerScr : MonoBehaviour
                 }
                 else if (hitObject.collider.CompareTag("Movement"))
                 {
-                    rpcConnector.MovePersonRpc(hitObject.collider.gameObject.transform.position, _personScr.team, _personScr.personNumber);
+                    rpcConnector.MovePersonRpc(hitObject.collider.gameObject.transform.position - CurrentGame.addPositionInGame, 
+                        _personScr.team, _personScr.personNumber);
                 }
             }
         }
@@ -263,7 +272,8 @@ public class GameManagerScr : MonoBehaviour
                     zombie._isAlive = true;
 
                     Vector3 beautiPos;
-                    if (CurrentGame.curTeam == Teams.White || CurrentGame.curTeam == Teams.Yellow)
+                    if (CurrentGame.curTeam == Teams.White || CurrentGame.curTeam == Teams.Black || 
+                        (Game.MaxCountInRoom == 2 && CurrentGame.curTeam == Teams.Red))
                     {
                         beautiPos = new Vector3(0.025f, 0, 0);
                     }
@@ -299,35 +309,45 @@ public class GameManagerScr : MonoBehaviour
 
     public void TakeCoin()
     {
-        _personScr.isWithCoin = true;
-        DecCoins();
-        CurrentGame.TakeCoinBtn.gameObject.SetActive(false);
+        rpcConnector.TakeCoinPersonRpc(_personScr);
         CurrentGame.PutCoinBtn.gameObject.SetActive(true);
-        _personScr.DestroyCircles(false);
-        _personScr.GenerateMovements(false);
+        CurrentGame.TakeCoinBtn.gameObject.SetActive(false);
+        
+        // _personScr.isWithCoin = true;
+        // DecCoins();
+        // CurrentGame.TakeCoinBtn.gameObject.SetActive(false);
+        // CurrentGame.PutCoinBtn.gameObject.SetActive(true);
+        // _personScr.DestroyCircles(false);
+        // _personScr.GenerateMovements(false);
     }
 
     public void PutCoin()
     {
-        _personScr.isWithCoin = false;
-        Card currCard = CurrentGame.PlayingField[_personScr.Position.x, _personScr.Position.z];
-        IncCoins();
+        rpcConnector.PutCoinPersonRpc(_personScr);
         CurrentGame.PutCoinBtn.gameObject.SetActive(false);
         CurrentGame.TakeCoinBtn.gameObject.SetActive(true);
-        _personScr.DestroyCircles(false);
-        _personScr.GenerateMovements(false);
+        
+        // _personScr.isWithCoin = false;
+        // Card currCard = CurrentGame.PlayingField[_personScr.Position.x, _personScr.Position.z];
+        // IncCoins();
+        // CurrentGame.PutCoinBtn.gameObject.SetActive(false);
+        // CurrentGame.TakeCoinBtn.gameObject.SetActive(true);
+        // _personScr.DestroyCircles(false);
+        // _personScr.GenerateMovements(false);
     }
 
-    public void Suicide(bool isMainCalled = true)
+    public void Suicide()
     {
-        if (isMainCalled)
-        {
-            rpcConnector.SuicidePersonRpc(_personScr);
-        }
+        rpcConnector.SuicidePersonRpc(_personScr);
     }
 
     public void BuildPlayingField(Vector3 middleCardPosition)
     {
+        if (isGameAR && !_placedMap)
+        {
+            return;
+        }
+        
         midCardPosition = middleCardPosition;
         MeshRenderer rendererCardPrefab = cardPrefab.GetComponent<MeshRenderer>();
         CurrentGame.sizeCardPrefab = rendererCardPrefab.bounds.size;
@@ -370,6 +390,11 @@ public class GameManagerScr : MonoBehaviour
     // Generate persons on ships
     public void CreateTeam()
     {
+        if (isGameAR && !_placedMap)
+        {
+            return;
+        }
+        
         float firstCardX = midCardPosition.x - 6 * CurrentGame.sizeCardPrefab.x;
         float firstCardY = midCardPosition.y;
         float firstCardZ = midCardPosition.z - 6 * CurrentGame.sizeCardPrefab.z;
@@ -436,9 +461,9 @@ public class GameManagerScr : MonoBehaviour
         CurrentGame.currentNumTeam = PhotonNetwork.PlayerList.Length;
     }
 
-    void DecCoins()
+    public void DecCoins(int x, int z)
     {
-        Card currCard = CurrentGame.PlayingField[_personScr.Position.x, _personScr.Position.z];
+        Card currCard = CurrentGame.PlayingField[x, z];
         currCard.Coins--;
         if (currCard.Coins == 0)
         {
@@ -451,9 +476,9 @@ public class GameManagerScr : MonoBehaviour
         }
     }
 
-    void IncCoins()
+    public void IncCoins(int x, int z)
     {
-        Card currCard = CurrentGame.PlayingField[_personScr.Position.x, _personScr.Position.z];
+        Card currCard = CurrentGame.PlayingField[x, z];
         currCard.Coins++;
         if (currCard.Coins == 1)
         {
