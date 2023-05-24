@@ -6930,7 +6930,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Material: {fileID: 2100000, guid: e4ead8a9b09ac47289b0d0c71e9415bd, type: 2}
+  m_Material: {fileID: 2100000, guid: 2722201f0afdd44348ceab2c249f44f6, type: 2}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
@@ -9119,8 +9119,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 4.0427246, y: 0.62231445}
-  m_SizeDelta: {x: -172.3137, y: -589.0653}
+  m_AnchoredPosition: {x: 12.5737, y: 0.62231445}
+  m_SizeDelta: {x: -189.3758, y: -589.0653}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1684781386
 MonoBehaviour:
@@ -10919,6 +10919,7 @@ MonoBehaviour:
   pauseBtn: {fileID: 0}
   isARCreate: {fileID: 0}
   isARJoin: {fileID: 0}
+  isAR: 0
 --- !u!4 &2037386118
 Transform:
   m_ObjectHideFlags: 0
