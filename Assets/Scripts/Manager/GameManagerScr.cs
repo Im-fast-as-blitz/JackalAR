@@ -121,13 +121,13 @@ public class GameManagerScr : MonoBehaviour
 
 
             planeMarkerPrefab.SetActive(false);
+            _placedMap = true;
+            BuildPlayingField(CurrentGame.addPositionInGame);
+            CreateTeam();
             if (PhotonNetwork.IsMasterClient)
             {
-                BuildPlayingField(CurrentGame.addPositionInGame);
-                CreateTeam();
                 rpcConnector.SyncCardsRpc();
             }
-            _placedMap = true;
         }
     }
 
@@ -343,6 +343,11 @@ public class GameManagerScr : MonoBehaviour
 
     public void BuildPlayingField(Vector3 middleCardPosition)
     {
+        if (isGameAR && !_placedMap)
+        {
+            return;
+        }
+        
         midCardPosition = middleCardPosition;
         MeshRenderer rendererCardPrefab = cardPrefab.GetComponent<MeshRenderer>();
         CurrentGame.sizeCardPrefab = rendererCardPrefab.bounds.size;
@@ -385,6 +390,11 @@ public class GameManagerScr : MonoBehaviour
     // Generate persons on ships
     public void CreateTeam()
     {
+        if (isGameAR && !_placedMap)
+        {
+            return;
+        }
+        
         float firstCardX = midCardPosition.x - 6 * CurrentGame.sizeCardPrefab.x;
         float firstCardY = midCardPosition.y;
         float firstCardZ = midCardPosition.z - 6 * CurrentGame.sizeCardPrefab.z;
