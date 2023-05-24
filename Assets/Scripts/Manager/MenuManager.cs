@@ -28,6 +28,7 @@ public class MenuManager : MonoBehaviourPunCallbacks
     public void Start()
     {
         _gameManager = GetComponent<GameManagerScr>();
+        PhotonNetwork.AutomaticallySyncScene = false;
     }
     
     public void CreateRoom()
@@ -66,7 +67,8 @@ public class MenuManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        if (PhotonNetwork.IsMasterClient)
+        //PhotonNetwork.IsMasterClient
+        if (true)
         {
             Debug.Log(isAR);
             if (isAR)

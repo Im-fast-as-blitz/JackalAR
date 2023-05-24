@@ -509,7 +509,6 @@ public class CardManagerScr : MonoBehaviour
     public void Awake()
     {
         // Total 169 cards (52 water cards + 117 other). Water must stay first
-        /*
         Cards.AllCards.Add(new PairCardInt(new WaterCard(), 52));
         Cards.AllCards.Add(new PairCardInt(new EmptyCard(), 40)); // 40
         Cards.AllCards.Add(new PairCardInt(new HorseCard(), 2)); // 2
@@ -526,10 +525,6 @@ public class CardManagerScr : MonoBehaviour
         Cards.AllCards.Add(new PairCardInt(new BalloonCard(), 2)); // 2
         Cards.AllCards.Add(new PairCardInt(new TrapCard(), 3)); // 3
         Cards.AllCards.Add(new PairCardInt(new RumCard(), 4)); // 4
-        */
-        
-        Cards.AllCards.Add(new PairCardInt(new WaterCard(), 52));
-        Cards.AllCards.Add(new PairCardInt(new TurntableCard(), 117));
 
         foreach (var pairCardInt in Cards.AllCards)
         {
