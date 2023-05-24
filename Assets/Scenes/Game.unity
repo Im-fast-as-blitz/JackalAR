@@ -842,6 +842,7 @@ MonoBehaviour:
   _layerMask:
     serializedVersion: 2
     m_Bits: 0
+  lol: 0
 --- !u!4 &777055588
 Transform:
   m_ObjectHideFlags: 0
@@ -876,6 +877,7 @@ MonoBehaviour:
   pauseBtn: {fileID: 1371240075}
   isARCreate: {fileID: 0}
   isARJoin: {fileID: 0}
+  isAR: 0
 --- !u!1 &911730207
 GameObject:
   m_ObjectHideFlags: 0

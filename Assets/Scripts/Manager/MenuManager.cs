@@ -68,19 +68,15 @@ public class MenuManager : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         //PhotonNetwork.IsMasterClient
-        if (true)
+        if (isAR)
         {
-            Debug.Log(isAR);
-            if (isAR)
-            {
-                Debug.Log("Joined to AR room");
-                PhotonNetwork.LoadLevel("GameAR");
-            }
-            else
-            {
-                Debug.Log("Joined to room");
-                PhotonNetwork.LoadLevel("Game");
-            }
+            Debug.Log("Joined to AR room");
+            PhotonNetwork.LoadLevel("GameAR");
+        }
+        else
+        {
+            Debug.Log("Joined to room");
+            PhotonNetwork.LoadLevel("Game");
         }
         // SceneManager.LoadScene("GameAR");
         // SceneManager.LoadScene("Game");

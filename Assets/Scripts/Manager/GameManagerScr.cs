@@ -48,10 +48,11 @@ public class GameManagerScr : MonoBehaviour
 
     private Vector3 midCardPosition;
 
-    public int lol = 0;
+    private Teams _userTeam;
 
     void Start()
     {
+        _userTeam = (Teams)(PhotonNetwork.PlayerList.Length - 1);
         isGameAR = SceneManager.GetActiveScene().name == "GameAR";
         
         _arRaycastManagerScript = FindObjectOfType<ARRaycastManager>();
@@ -198,7 +199,7 @@ public class GameManagerScr : MonoBehaviour
                 if (hitObject.collider.CompareTag("Person"))
                 {
                     Person currentPerson = hitObject.collider.gameObject.GetComponent<Person>();
-                    if (currentPerson.team == CurrentGame.curTeam)
+                    if (currentPerson.team == CurrentGame.curTeam && (isDebug || _userTeam == CurrentGame.curTeam))
                     {
                         if (CurrentGame.ShouldMove && currentPerson != CurrentGame.ShouldMove)
                         {
