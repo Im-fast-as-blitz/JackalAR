@@ -328,7 +328,8 @@ public class GameManagerScr : MonoBehaviour
                     zombie._isAlive = true;
 
                     Vector3 beautiPos;
-                    if (CurrentGame.curTeam == Teams.White || CurrentGame.curTeam == Teams.Yellow)
+                    if (CurrentGame.curTeam == Teams.White || CurrentGame.curTeam == Teams.Black || 
+                        (Game.MaxCountInRoom == 2 && CurrentGame.curTeam == Teams.Red))
                     {
                         beautiPos = new Vector3(0.025f, 0, 0);
                     }

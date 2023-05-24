@@ -307,6 +307,7 @@ public class Person : MonoBehaviour
                 currGame.PlayingField[Position.x, Position.z].Figures[i] = null;
             }
         }
+        gameObject.layer = LayerMask.NameToLayer("Person");
     }
 
     public void Move(Vector3 newPos)
@@ -460,7 +461,7 @@ public class Person : MonoBehaviour
         //Look at new card
         if (curCard.Type == CardType.Ship && (curCard as WaterCard).OwnShip.team != team)
         {
-            Death();
+            SuicidePerson();
             return;
         }
         else if (turnTables.Contains(curCard.Type))
