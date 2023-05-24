@@ -433,7 +433,7 @@ public class Person : MonoBehaviour
             {
                 if (prevCard.Figures[i] && prevCard.Figures[i] != this)
                 {
-                    prevCard.Figures[i].Move(newPos);
+                    prevCard.Figures[i].Move(newPos - currGame.addPositionInGame);
                 }
             }
         }

@@ -23,7 +23,7 @@ public class MenuManager : MonoBehaviourPunCallbacks
     private GameManagerScr _gameManager;
 
     private int playersNumb = 0;
-    public static bool isAR = false;
+    public bool isAR = false;
 
     public void Start()
     {
@@ -33,6 +33,8 @@ public class MenuManager : MonoBehaviourPunCallbacks
     public void CreateRoom()
     {
         isAR = isARCreate.isOn;
+        Debug.Log(isAR);
+        Debug.Log(isARCreate.isOn);
         if (createInput.text.Length == 0)
         {
             return;
@@ -64,10 +66,19 @@ public class MenuManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        Debug.Log("Joined to room");
         if (PhotonNetwork.IsMasterClient)
         {
-            PhotonNetwork.LoadLevel("Game");
+            Debug.Log(isAR);
+            if (isAR)
+            {
+                Debug.Log("Joined to AR room");
+                PhotonNetwork.LoadLevel("GameAR");
+            }
+            else
+            {
+                Debug.Log("Joined to room");
+                PhotonNetwork.LoadLevel("Game");
+            }
         }
         // SceneManager.LoadScene("GameAR");
         // SceneManager.LoadScene("Game");

@@ -209,7 +209,7 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_IsOn: 0
+  m_IsOn: 1
 --- !u!1 &116884352
 GameObject:
   m_ObjectHideFlags: 0
@@ -1113,7 +1113,7 @@ MonoBehaviour:
   onValueChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_IsOn: 0
+  m_IsOn: 1
 --- !u!1 &1025843264
 GameObject:
   m_ObjectHideFlags: 0
@@ -2051,9 +2051,9 @@ MonoBehaviour:
   joinInput: {fileID: 2033134934}
   pausePanel: {fileID: 0}
   pauseBtn: {fileID: 0}
-  isARCreate: {fileID: 843848516}
-  isARJoin: {fileID: 55498511}
-  playersNumb: 0
+  isARCreate: {fileID: 843848518}
+  isARJoin: {fileID: 55498513}
+  isAR: 0
 --- !u!4 &1901456989
 Transform:
   m_ObjectHideFlags: 0

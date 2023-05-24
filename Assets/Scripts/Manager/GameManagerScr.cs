@@ -9,6 +9,7 @@ using Vector3 = UnityEngine.Vector3;
 using Photon.Pun;
 using TMPro;
 using UnityEditor;
+using UnityEngine.SceneManagement;
 
 
 public class GameManagerScr : MonoBehaviour
@@ -47,9 +48,11 @@ public class GameManagerScr : MonoBehaviour
 
     private Vector3 midCardPosition;
 
+    public int lol = 0;
+
     void Start()
     {
-        isGameAR = MenuManager.isAR;
+        isGameAR = SceneManager.GetActiveScene().name == "GameAR";
         
         _arRaycastManagerScript = FindObjectOfType<ARRaycastManager>();
         _layerMask = 1 << LayerMask.NameToLayer("Person");
@@ -82,7 +85,7 @@ public class GameManagerScr : MonoBehaviour
             }
 
             _placedMap = true;
-            //arCamera.transform.position = new Vector3(0, 2f, 0);
+            arCamera.transform.position = new Vector3(0, 2f, 0);
         }
 
         planeMarkerPrefab.SetActive(false);
@@ -127,8 +130,7 @@ public class GameManagerScr : MonoBehaviour
         }
     }
 
-
-
+    
     public void EndRound(int currTeamRound)
     {
         if (_personScr)
@@ -140,7 +142,6 @@ public class GameManagerScr : MonoBehaviour
 
             _layerMask = 1 << LayerMask.NameToLayer("Person");
         }
-
         if (!CurrentGame.ShouldMove)
         {
             // find drunk persons

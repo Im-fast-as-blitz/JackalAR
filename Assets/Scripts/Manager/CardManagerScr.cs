@@ -348,8 +348,8 @@ public class TurntableCard2 : TurntableCard
         Type = CardType.Turntable2;
 
         StepCount = 2;
-        StepPos.Add(new Vector3(0.03f, 0, 0.03f));
         StepPos.Add(new Vector3(-0.03f, 0, -0.03f));
+        StepPos.Add(new Vector3(0.03f, 0, 0.03f));
     }
 }
 
@@ -361,9 +361,9 @@ public class TurntableCard3 : TurntableCard
         Type = CardType.Turntable3;
 
         StepCount = 3;
-        StepPos.Add(new Vector3(-0.03f, 0, 0.03f));
-        StepPos.Add(new Vector3(0.01f, 0, 0));
-        StepPos.Add(new Vector3(-0.03f, 0, -0.03f));
+        StepPos.Add(new Vector3(0.03f, 0, -0.03f));
+        StepPos.Add(new Vector3(-0.01f, 0, 0));
+        StepPos.Add(new Vector3(0.03f, 0, 0.03f));
     }
 }
 
@@ -375,10 +375,10 @@ public class TurntableCard4 : TurntableCard
         Type = CardType.Turntable4;
 
         StepCount = 4;
-        StepPos.Add(new Vector3(-0.03f, 0, 0.035f));
-        StepPos.Add(new Vector3(0.03f, 0, 0.015f));
-        StepPos.Add(new Vector3(-0.025f, 0, -0.02f));
-        StepPos.Add(new Vector3(+0.02f, 0, -0.035f));
+        StepPos.Add(new Vector3(0.03f, 0, -0.035f));
+        StepPos.Add(new Vector3(-0.03f, 0, -0.015f));
+        StepPos.Add(new Vector3(0.025f, 0, 0.02f));
+        StepPos.Add(new Vector3(-0.02f, 0, 0.035f));
     }
 }
 
@@ -390,11 +390,11 @@ public class TurntableCard5 : TurntableCard
         Type = CardType.Turntable5;
 
         StepCount = 5;
-        StepPos.Add(new Vector3(-0.035f, 0, -0.03f));
-        StepPos.Add(new Vector3(0, 0, -0.03f));
-        StepPos.Add(new Vector3(0.03f, 0, -0.01f));
-        StepPos.Add(new Vector3(0.02f, 0, 0.03f));
-        StepPos.Add(new Vector3(-0.035f, 0, 0.03f));
+        StepPos.Add(new Vector3(0.035f, 0, 0.03f));
+        StepPos.Add(new Vector3(0, 0, 0.03f));
+        StepPos.Add(new Vector3(-0.03f, 0, 0.01f));
+        StepPos.Add(new Vector3(-0.02f, 0, -0.03f));
+        StepPos.Add(new Vector3(0.035f, 0, -0.03f));
     }
 }
 
@@ -509,6 +509,7 @@ public class CardManagerScr : MonoBehaviour
     public void Awake()
     {
         // Total 169 cards (52 water cards + 117 other). Water must stay first
+        /*
         Cards.AllCards.Add(new PairCardInt(new WaterCard(), 52));
         Cards.AllCards.Add(new PairCardInt(new EmptyCard(), 40)); // 40
         Cards.AllCards.Add(new PairCardInt(new HorseCard(), 2)); // 2
@@ -525,6 +526,10 @@ public class CardManagerScr : MonoBehaviour
         Cards.AllCards.Add(new PairCardInt(new BalloonCard(), 2)); // 2
         Cards.AllCards.Add(new PairCardInt(new TrapCard(), 3)); // 3
         Cards.AllCards.Add(new PairCardInt(new RumCard(), 4)); // 4
+        */
+        
+        Cards.AllCards.Add(new PairCardInt(new WaterCard(), 52));
+        Cards.AllCards.Add(new PairCardInt(new TurntableCard(), 117));
 
         foreach (var pairCardInt in Cards.AllCards)
         {
