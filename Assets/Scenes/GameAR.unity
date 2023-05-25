@@ -2112,7 +2112,7 @@ MonoBehaviour:
   rpcConnector: {fileID: 1271876060}
   endGameTitle: {fileID: 1257106488}
   currTeamTitle: {fileID: 1555050083}
-  currCoinTitle: {fileID: 0}
+  currCoinTitle: {fileID: 1477649369}
   isGameAR: 1
   isDebug: 0
   numTeams: 1
@@ -2621,6 +2621,12 @@ PrefabInstance:
 --- !u!224 &1477649368 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 7021863762698141867, guid: d82660bb586a8c641ac2bf9bdde9d638,
+    type: 3}
+  m_PrefabInstance: {fileID: 1477649367}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &1477649369 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4357096864051023144, guid: d82660bb586a8c641ac2bf9bdde9d638,
     type: 3}
   m_PrefabInstance: {fileID: 1477649367}
   m_PrefabAsset: {fileID: 0}
