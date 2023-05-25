@@ -548,6 +548,8 @@ public class CardManagerScr : MonoBehaviour
         Cards.OnCurrentStep.Add(CardType.Balloon);
         Cards.OnCurrentStep.Add(CardType.Horse);
         Cards.OnCurrentStep.Add(CardType.Cannon);
+        Cards.OnCurrentStep.Add(CardType.Crocodile);
+        Cards.OnCurrentStep.Add(CardType.Arrow3);
         Cards.OnCurrentStep.Add(CardType.ArrowStraight);
         Cards.OnCurrentStep.Add(CardType.ArrowDiagonal);
         Cards.OnCurrentStep.Add(CardType.ArrowDiagonal2);
