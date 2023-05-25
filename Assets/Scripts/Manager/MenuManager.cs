@@ -28,6 +28,7 @@ public class MenuManager : MonoBehaviourPunCallbacks
     public void Start()
     {
         _gameManager = GetComponent<GameManagerScr>();
+        PhotonNetwork.AutomaticallySyncScene = false;
     }
     
     public void CreateRoom()
@@ -66,19 +67,16 @@ public class MenuManager : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom()
     {
-        if (PhotonNetwork.IsMasterClient)
+        //PhotonNetwork.IsMasterClient
+        if (isAR)
         {
-            Debug.Log(isAR);
-            if (isAR)
-            {
-                Debug.Log("Joined to AR room");
-                PhotonNetwork.LoadLevel("GameAR");
-            }
-            else
-            {
-                Debug.Log("Joined to room");
-                PhotonNetwork.LoadLevel("Game");
-            }
+            Debug.Log("Joined to AR room");
+            PhotonNetwork.LoadLevel("GameAR");
+        }
+        else
+        {
+            Debug.Log("Joined to room");
+            PhotonNetwork.LoadLevel("Game");
         }
     }
 

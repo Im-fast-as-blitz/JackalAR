@@ -50,10 +50,13 @@ public class GameManagerScr : MonoBehaviour
 
     private Vector3 midCardPosition;
 
-    public int lol = 0;
+    private Teams _userTeam;
+    private int _countOfReadyUsers = 0;
+    private bool _gameIsGoingOn = false;
 
     void Start()
     {
+        _userTeam = (Teams)(PhotonNetwork.PlayerList.Length - 1);
         isGameAR = SceneManager.GetActiveScene().name == "GameAR";
         
         _arRaycastManagerScript = FindObjectOfType<ARRaycastManager>();
@@ -88,7 +91,8 @@ public class GameManagerScr : MonoBehaviour
             }
 
             _placedMap = true;
-            arCamera.transform.position = new Vector3(0, 2f, 0);
+            rpcConnector.UserIsReadyRpc();
+            //arCamera.transform.position = new Vector3(0, 2f, 0);
         }
 
         planeMarkerPrefab.SetActive(false);
@@ -100,9 +104,19 @@ public class GameManagerScr : MonoBehaviour
         {
             ShowMarker();
         }
-        else
+        else if (_gameIsGoingOn)
         {
             DetachedMovePerson();
+        }
+    }
+
+    public void UserIsReady()
+    {
+        ++_countOfReadyUsers;
+        if (_countOfReadyUsers == PhotonNetwork.CurrentRoom.MaxPlayers)
+        {
+            startText.SetActive(false);
+            _gameIsGoingOn = true;
         }
     }
 
@@ -118,18 +132,20 @@ public class GameManagerScr : MonoBehaviour
 
         if (Input.touchCount > 0 && Input.touches[0].phase == TouchPhase.Began)
         {
-            startText.SetActive(false);
+            startText.GetComponent<Text>().text = "Please wait for the rest of the players";
             CurrentGame.addPositionInGame = hits[0].pose.position + new Vector3(0, 0.03f, 0);
 
 
             planeMarkerPrefab.SetActive(false);
+            _placedMap = true;
+            BuildPlayingField(CurrentGame.addPositionInGame);
+            CreateTeam();
             if (PhotonNetwork.IsMasterClient)
             {
-                BuildPlayingField(CurrentGame.addPositionInGame);
-                CreateTeam();
                 rpcConnector.SyncCardsRpc();
             }
-            _placedMap = true;
+
+            rpcConnector.UserIsReadyRpc();
         }
     }
 
@@ -201,7 +217,7 @@ public class GameManagerScr : MonoBehaviour
                 if (hitObject.collider.CompareTag("Person"))
                 {
                     Person currentPerson = hitObject.collider.gameObject.GetComponent<Person>();
-                    if (currentPerson.team == CurrentGame.curTeam)
+                    if (currentPerson.team == CurrentGame.curTeam && (isDebug || _userTeam == CurrentGame.curTeam))
                     {
                         if (CurrentGame.ShouldMove && currentPerson != CurrentGame.ShouldMove)
                         {
@@ -391,6 +407,11 @@ public class GameManagerScr : MonoBehaviour
 
     public void BuildPlayingField(Vector3 middleCardPosition)
     {
+        if (isGameAR && !_placedMap)
+        {
+            return;
+        }
+        
         midCardPosition = middleCardPosition;
         MeshRenderer rendererCardPrefab = cardPrefab.GetComponent<MeshRenderer>();
         CurrentGame.sizeCardPrefab = rendererCardPrefab.bounds.size;
@@ -433,6 +454,11 @@ public class GameManagerScr : MonoBehaviour
     // Generate persons on ships
     public void CreateTeam()
     {
+        if (isGameAR && !_placedMap)
+        {
+            return;
+        }
+        
         float firstCardX = midCardPosition.x - 6 * CurrentGame.sizeCardPrefab.x;
         float firstCardY = midCardPosition.y;
         float firstCardZ = midCardPosition.z - 6 * CurrentGame.sizeCardPrefab.z;

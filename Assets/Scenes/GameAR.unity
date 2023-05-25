@@ -811,6 +811,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 240939016}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &240939018 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8476125434305399287, guid: 59a880162a05cc84182c07bf319936ee,
+    type: 3}
+  m_PrefabInstance: {fileID: 240939016}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &422218013
 GameObject:
   m_ObjectHideFlags: 0
@@ -1160,6 +1172,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 699066104}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &699066106 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8476125434305399287, guid: 013190949a107451eabcd54fd7e087b5,
+    type: 3}
+  m_PrefabInstance: {fileID: 699066104}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &931570069
 GameObject:
   m_ObjectHideFlags: 0
@@ -2000,7 +2024,7 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents: []
-  sceneViewId: 2
+  sceneViewId: 1
   InstantiationId: 0
   isRuntimeInstantiated: 0
 --- !u!114 &1271876060
@@ -2081,14 +2105,10 @@ MonoBehaviour:
   placedObjectPrefab: {fileID: 1405789545}
   arCamera: {fileID: 931570075}
   startText: {fileID: 1038866961}
-  shamanBtn: {fileID: 8476125434305399287, guid: 013190949a107451eabcd54fd7e087b5,
-    type: 3}
-  takeCoinBtn: {fileID: 8476125434305399287, guid: 69dd9216feb3fec418396a9fd7ddde35,
-    type: 3}
-  putCoinBtn: {fileID: 8476125434305399287, guid: 52ea1e8df12f717488a01569fae4ca8b,
-    type: 3}
-  suicideBtn: {fileID: 8476125434305399287, guid: 59a880162a05cc84182c07bf319936ee,
-    type: 3}
+  shamanBtn: {fileID: 699066106}
+  takeCoinBtn: {fileID: 1986743960}
+  putCoinBtn: {fileID: 1405260934}
+  suicideBtn: {fileID: 240939018}
   rpcConnector: {fileID: 1271876060}
   endGameTitle: {fileID: 1257106488}
   currTeamTitle: {fileID: 1555050083}
@@ -2316,6 +2336,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1405260932}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1405260934 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8476125434305399287, guid: 013190949a107451eabcd54fd7e087b5,
+    type: 3}
+  m_PrefabInstance: {fileID: 1405260932}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1405789544
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2751,7 +2783,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_AdditionalShaderChannelsFlag: 0
+  m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
   m_SortingOrder: 0
@@ -2954,6 +2986,18 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 1986743958}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1986743960 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8476125434305399287, guid: 013190949a107451eabcd54fd7e087b5,
+    type: 3}
+  m_PrefabInstance: {fileID: 1986743958}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2146954709
 PrefabInstance:
   m_ObjectHideFlags: 0

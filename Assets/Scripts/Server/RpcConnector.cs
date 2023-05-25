@@ -14,6 +14,21 @@ public class RpcConnector : MonoBehaviourPun
         Debug.Log("SetGameObjCalled");
         currGame = game;
     }
+    
+    
+    [PunRPC]
+    void UserIsReady()
+    {
+        Debug.Log("User is ready");
+        gameManagerScr.UserIsReady();
+    }
+
+    public void UserIsReadyRpc()
+    {
+        Debug.Log("User is ready");
+        photonView.RPC("UserIsReady", RpcTarget.AllBuffered);
+    }
+    
 
     [PunRPC]
     void DebugRpc(int x, int y)
