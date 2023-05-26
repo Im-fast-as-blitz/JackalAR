@@ -131,10 +131,60 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -1986777915481045310, guid: 0b65a31b83b1745ad8806e675e203260,
+        type: 3}
+      propertyPath: _Music.Array.size
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: -1986777915481045310, guid: 0b65a31b83b1745ad8806e675e203260,
+        type: 3}
+      propertyPath: _Music.Array.data[0]
+      value: 
+      objectReference: {fileID: 8300000, guid: fc03c384fe6ea1149a4d1a5876d43fd2, type: 3}
+    - target: {fileID: -1986777915481045310, guid: 0b65a31b83b1745ad8806e675e203260,
+        type: 3}
+      propertyPath: _Music.Array.data[1]
+      value: 
+      objectReference: {fileID: 8300000, guid: 4b5cd678e8116fc42a798cf6125f6bd0, type: 3}
+    - target: {fileID: -1986777915481045310, guid: 0b65a31b83b1745ad8806e675e203260,
+        type: 3}
+      propertyPath: _Music.Array.data[2]
+      value: 
+      objectReference: {fileID: 8300000, guid: 0116dda942e8b2441b92948d188ee93e, type: 3}
+    - target: {fileID: -1986777915481045310, guid: 0b65a31b83b1745ad8806e675e203260,
+        type: 3}
+      propertyPath: _Music.Array.data[3]
+      value: 
+      objectReference: {fileID: 8300000, guid: 31a507d7b10175d43a37d50d122c7066, type: 3}
+    - target: {fileID: -1986777915481045310, guid: 0b65a31b83b1745ad8806e675e203260,
+        type: 3}
+      propertyPath: _Music.Array.data[4]
+      value: 
+      objectReference: {fileID: 8300000, guid: 85c1bdeda6a0dd04ab31bc4346d17744, type: 3}
+    - target: {fileID: -1986777915481045310, guid: 0b65a31b83b1745ad8806e675e203260,
+        type: 3}
+      propertyPath: _Music.Array.data[5]
+      value: 
+      objectReference: {fileID: 8300000, guid: 0a6bb92a2b29ed844babb54eeb63687e, type: 3}
+    - target: {fileID: -1986777915481045310, guid: 0b65a31b83b1745ad8806e675e203260,
+        type: 3}
+      propertyPath: _Music.Array.data[6]
+      value: 
+      objectReference: {fileID: 8300000, guid: ded2d11ea88d697468232cb3632f2983, type: 3}
+    - target: {fileID: -1986777915481045310, guid: 0b65a31b83b1745ad8806e675e203260,
+        type: 3}
+      propertyPath: _Music.Array.data[7]
+      value: 
+      objectReference: {fileID: 8300000, guid: af7cc93d19989cb4aaf5576e582ae887, type: 3}
     - target: {fileID: 7374792223104709516, guid: 0b65a31b83b1745ad8806e675e203260,
         type: 3}
       propertyPath: m_Name
       value: SoundSystem
+      objectReference: {fileID: 0}
+    - target: {fileID: 7374792223104709516, guid: 0b65a31b83b1745ad8806e675e203260,
+        type: 3}
+      propertyPath: m_TagString
+      value: Sound System
       objectReference: {fileID: 0}
     - target: {fileID: 7374792223104709518, guid: 0b65a31b83b1745ad8806e675e203260,
         type: 3}

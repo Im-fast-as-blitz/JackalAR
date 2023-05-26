@@ -11,8 +11,10 @@ public class SoundManager : MonoBehaviour
     
     [SerializeField] private Slider _Slider;
     [SerializeField] private AudioSource _AudioSurce;
+    [SerializeField] private AudioClip[] _Music;
 
     private float _Volume = 0.5f;
+    public int currMusic = 0;
     void Start()
     {
         _AudioSurce.volume = _Volume;
@@ -50,5 +52,26 @@ public class SoundManager : MonoBehaviour
             _Volume = _Slider.value;
             _AudioSurce.volume = _Volume;
         }
+    }
+
+    public bool NextSound()
+    {
+        ++currMusic;
+        _AudioSurce.clip = _Music[currMusic];
+        _AudioSurce.Play();
+        return currMusic != (_Music.Length - 1);
+    }
+
+    public bool PrevSound()
+    {
+        --currMusic;
+        _AudioSurce.clip = _Music[currMusic];
+        _AudioSurce.Play();
+        return currMusic != 0;
+    }
+
+    public int GetSize()
+    {
+        return _Music.Length;
     }
 }
