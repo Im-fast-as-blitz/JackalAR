@@ -161,6 +161,7 @@ public class Person : MonoBehaviour
                 {
                     result.transform.GetChild(0).gameObject.SetActive(true);
                     result.transform.GetChild(0).GetComponent<TextMeshPro>().text = (CellDepth + 1).ToString();
+                    result.transform.GetChild(1).GetComponent<MeshRenderer>().material = Resources.Load("Game Circles/Plane Marker", typeof(Material)) as Material;
                 }
 
                 _moveCircles.Add(result);
