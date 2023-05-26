@@ -7,12 +7,13 @@ using UnityEngine.XR.ARSubsystems;
 using Random = UnityEngine.Random;
 using Vector3 = UnityEngine.Vector3;
 using Photon.Pun;
+using Photon.Realtime;
 using TMPro;
 using UnityEditor;
 using UnityEngine.SceneManagement;
 
 
-public class GameManagerScr : MonoBehaviour
+public class GameManagerScr : MonoBehaviourPunCallbacks
 {
     public Game CurrentGame;
     public GameObject cardPrefab;
@@ -30,7 +31,8 @@ public class GameManagerScr : MonoBehaviour
     [SerializeField] public GameObject currTeamTitle;
     [SerializeField] public GameObject currCoinTitle;
     public bool isGameAR = false;
-    
+
+    private Dictionary<Player, Teams> photonPlayerToTeams;
 
     public bool isDebug = false;
 
@@ -554,5 +556,20 @@ public class GameManagerScr : MonoBehaviour
         {
             currCard.CoinGO.transform.GetChild(0).GetComponent<TextMeshPro>().text = currCard.Coins.ToString();
         }
+    }
+
+    public override void OnPlayerLeftRoom(Player player)
+    {
+        Debug.Log("Player left room");
+        foreach (var person in CurrentGame.Persons[photonPlayerToTeams[player]])
+        {
+            Destroy(person);
+        }
+    }
+    
+    public override void OnPlayerEnteredRoom(Player player)
+    {
+        Debug.Log("Player entered room");
+        photonPlayerToTeams[player] = (Teams)(PhotonNetwork.PlayerList.Length - 1);
     }
 }

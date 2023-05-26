@@ -139,5 +139,6 @@ public class MenuManager : MonoBehaviourPunCallbacks
     public void ExitGame()
     {
         Debug.Log("Exit");
+        Application.Quit();
     }
 }
