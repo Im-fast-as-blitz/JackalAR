@@ -60,6 +60,7 @@ public class GameManagerScr : MonoBehaviourPunCallbacks
     {
         _userTeam = (Teams)(PhotonNetwork.PlayerList.Length - 1);
         isGameAR = SceneManager.GetActiveScene().name == "GameAR";
+        Debug.Log(isGameAR);
         
         _arRaycastManagerScript = FindObjectOfType<ARRaycastManager>();
         _layerMask = 1 << LayerMask.NameToLayer("Person");

@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Person
   - Movement
+  - Sound System
+  - RpcConnector
   layers:
   - Default
   - TransparentFX

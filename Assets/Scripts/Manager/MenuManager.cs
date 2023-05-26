@@ -23,7 +23,7 @@ public class MenuManager : MonoBehaviourPunCallbacks
     private GameManagerScr _gameManager;
 
     private int playersNumb = 0;
-    public bool isAR = false;
+    private bool isAR = false;
 
     public void Start()
     {
@@ -139,6 +139,9 @@ public class MenuManager : MonoBehaviourPunCallbacks
     public void ExitGame()
     {
         Debug.Log("Exit");
-        Application.Quit();
+        //Application.Quit();
+        Cards.DeleteAllData();
+        PhotonNetwork.LeaveRoom();
+        SceneManager.LoadScene("Menu");
     }
 }

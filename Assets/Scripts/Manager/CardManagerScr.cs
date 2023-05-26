@@ -479,6 +479,16 @@ public static class Cards
     public static List<PairCardInt> AllCards = new List<PairCardInt>();
     public static HashSet<CardType> OnCurrentStep = new HashSet<CardType>();
     public static Dictionary<CardType, Card> CreateCardByType = new Dictionary<CardType, Card>();
+
+    public static void DeleteAllData()
+    {
+        Ships.AllShips.Clear();
+        AllCards.Clear();
+        OnCurrentStep.Clear();
+        CreateCardByType.Clear();
+        TurntableCard.turntableCount = 0;
+        ChestCard.CardsCount = 0;
+    }
 }
 
 
