@@ -263,7 +263,7 @@ public class GameManagerScr : MonoBehaviour
 
     public void CalledRevivePerson()
     {
-        rpcConnector.RevivePersonRpc();
+        rpcConnector.RevivePersonRpc(CurrentGame.curTeam);
     }
     
     public void RevivePerson()
@@ -282,7 +282,7 @@ public class GameManagerScr : MonoBehaviour
         int teammates_count = 0;
         foreach (var per in CurrentGame.Persons[CurrentGame.curTeam])
         {
-            if (CurrentGame.PlayingField[per.Position.x, per.Position.z].Type == CardType.Shaman)
+            if (per != zombie && CurrentGame.PlayingField[per.Position.x, per.Position.z].Type == CardType.Shaman)
             {
                 Card curCard = CurrentGame.PlayingField[per.Position.x, per.Position.z];
                 ++teammates_count;
@@ -292,6 +292,14 @@ public class GameManagerScr : MonoBehaviour
                     zombie.Position = new IntVector2(per.Position);
                     zombie.gameObject.SetActive(true);
                     zombie._isAlive = true;
+                    for (int i = 0; i < curCard.Figures.Count; ++i)
+                    {
+                        if (!curCard.Figures[i])
+                        {
+                            curCard.Figures[i] = zombie;
+                            break;
+                        }
+                    }
 
                     Vector3 beautiPos;
                     if (CurrentGame.curTeam == Teams.White || CurrentGame.curTeam == Teams.Black || 
@@ -332,8 +340,11 @@ public class GameManagerScr : MonoBehaviour
             }
         }
 
-        _personScr.DestroyCircles();
-        EndRound((int)_personScr.team);
+
+        if (_personScr)
+        {
+            _personScr.DestroyCircles();
+        }
     }
 
     public void TakeCoin()

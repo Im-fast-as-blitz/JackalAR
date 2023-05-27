@@ -194,15 +194,16 @@ public class RpcConnector : MonoBehaviourPun
     }
     
     [PunRPC]
-    public void ReviveRpcPerson()
+    public void ReviveRpcPerson(int team)
     {
         Debug.Log(string.Format("ReviveRpcPersonCalled"));
         gameManagerScr.RevivePerson();
+        gameManagerScr.EndRound(team);
     }
     
-    public void RevivePersonRpc()
+    public void RevivePersonRpc(Teams team)
     {
         Debug.Log(string.Format("RpcRevivePersonCalled"));
-        photonView.RPC("ReviveRpcPerson", RpcTarget.AllBuffered);
+        photonView.RPC("ReviveRpcPerson", RpcTarget.AllBuffered, (int)team);
     }
 }
