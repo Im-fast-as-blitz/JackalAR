@@ -191,10 +191,10 @@ public class GameManagerScr : MonoBehaviour
                     CurrentGame.drunkTeams -= teamMask;
                 }
             }
-            _personScr = null;
-        
+
             CurrentGame.ChangeTeam();
         }
+        _personScr = null;
     }
 
     void DetachedMovePerson()

@@ -520,11 +520,11 @@ public class CardManagerScr : MonoBehaviour
     {
         // Total 169 cards (52 water cards + 117 other). Water must stay first
         Cards.AllCards.Add(new PairCardInt(new WaterCard(), 52));
-        Cards.AllCards.Add(new PairCardInt(new EmptyCard(), 40)); // 40
+        Cards.AllCards.Add(new PairCardInt(new EmptyCard(), 0)); // 40
         Cards.AllCards.Add(new PairCardInt(new HorseCard(), 2)); // 2
         Cards.AllCards.Add(new PairCardInt(new CannonCard(), 2)); // 2
         Cards.AllCards.Add(new PairCardInt(new OgreCard(), 1)); // 1
-        Cards.AllCards.Add(new PairCardInt(new ArrowCard(), 21)); // 21
+        Cards.AllCards.Add(new PairCardInt(new ArrowCard(), 61)); // 21
         Cards.AllCards.Add(new PairCardInt(new ShamanCard(), 1)); // 1
         Cards.AllCards.Add(new PairCardInt(new FortressCard(), 2)); // 2
         Cards.AllCards.Add(new PairCardInt(new TurntableCard(), 12)); // 12
