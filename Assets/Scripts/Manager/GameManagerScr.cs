@@ -13,7 +13,7 @@ using UnityEditor;
 using UnityEngine.SceneManagement;
 
 
-public class GameManagerScr : MonoBehaviourPunCallbacks
+public class GameManagerScr : MonoBehaviour
 {
     public Game CurrentGame;
     public GameObject cardPrefab;
@@ -558,19 +558,13 @@ public class GameManagerScr : MonoBehaviourPunCallbacks
             currCard.CoinGO.transform.GetChild(0).GetComponent<TextMeshPro>().text = currCard.Coins.ToString();
         }
     }
-
-    public override void OnPlayerLeftRoom(Player player)
-    {
-        Debug.Log("Player left room");
-        foreach (var person in CurrentGame.Persons[photonPlayerToTeams[player]])
-        {
-            Destroy(person);
-        }
-    }
     
-    public override void OnPlayerEnteredRoom(Player player)
+    
+    public void ExitGame()
     {
-        Debug.Log("Player entered room");
-        photonPlayerToTeams[player] = (Teams)(PhotonNetwork.PlayerList.Length - 1);
+        Debug.Log("Exit");
+        Cards.DeleteAllData();
+        PhotonNetwork.LeaveRoom();
+        SceneManager.LoadScene("Menu");
     }
 }

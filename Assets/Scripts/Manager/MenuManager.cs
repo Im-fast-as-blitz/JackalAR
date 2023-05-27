@@ -136,12 +136,5 @@ public class MenuManager : MonoBehaviourPunCallbacks
         }
     }
 
-    public void ExitGame()
-    {
-        Debug.Log("Exit");
-        //Application.Quit();
-        Cards.DeleteAllData();
-        PhotonNetwork.LeaveRoom();
-        SceneManager.LoadScene("Menu");
-    }
+
 }

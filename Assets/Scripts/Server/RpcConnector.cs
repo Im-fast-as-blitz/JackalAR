@@ -17,7 +17,7 @@ public class RpcConnector : MonoBehaviourPun
     
     
     [PunRPC]
-    void UserIsReady()
+    public void UserIsReady()
     {
         Debug.Log("User is ready");
         gameManagerScr.UserIsReady();
@@ -31,7 +31,7 @@ public class RpcConnector : MonoBehaviourPun
     
 
     [PunRPC]
-    void DebugRpc(int x, int y)
+    public void DebugRpc(int x, int y)
     {
         Debug.Log("DebugRpcCalled");
         currGame.PlayingField[x, y].Open();
@@ -42,12 +42,24 @@ public class RpcConnector : MonoBehaviourPun
         Debug.Log("DebugFromPrcCalled");
         photonView.RPC("DebugRpc", RpcTarget.AllBuffered, 2, 4);
     }
+    
+    [PunRPC]
+    public void LeavePlayer()
+    {
+        gameManagerScr.ExitGame();
+    }
+
+    public void LeavePlayerRpc()
+    {
+        Debug.Log("DebugFromPrcCalled");
+        photonView.RPC("LeavePlayer", RpcTarget.AllBuffered);
+    }
 
     [PunRPC]
-    void SyncCards(IReadOnlyList<int[]> cardTypes, IReadOnlyList<int> rotMass)
+    public void SyncCards(IReadOnlyList<int[]> cardTypes, IReadOnlyList<int> rotMass)
     {
         Debug.Log("SyncCardsCalled");
-        int rotInd = 0;
+        var rotInd = 0;
         for (var i = 0; i < currGame.PlayingField.GetLength(0); ++i)
         {
             for (var j = 0; j < currGame.PlayingField.GetLength(1); ++j)
@@ -108,7 +120,7 @@ public class RpcConnector : MonoBehaviourPun
     }
 
     [PunRPC]
-    void CreateNewTeam()
+    public void CreateNewTeam()
     {
         gameManagerScr.CreateTeam();
     }
@@ -119,7 +131,7 @@ public class RpcConnector : MonoBehaviourPun
     }
     
     [PunRPC]
-    void MovePerson(float x, float y, float z, int team, int personNum)
+    public void MovePerson(float x, float y, float z, int team, int personNum)
     {
         Debug.Log(string.Format("MovePersonCalled"));
         currGame.Persons[(Teams)team][personNum].Move(new Vector3(x, y, z));
@@ -133,7 +145,7 @@ public class RpcConnector : MonoBehaviourPun
     }
     
     [PunRPC]
-    void SuicedPerson(int team, int personNum)
+    public void SuicedPerson(int team, int personNum)
     {
         Debug.Log(string.Format("SuicedPersonCalled"));
         currGame.Persons[(Teams)team][personNum].SuicidePerson();
@@ -150,7 +162,7 @@ public class RpcConnector : MonoBehaviourPun
     
     
     [PunRPC]
-    void TakeCoinPerson(int team, int personNum)
+    public void TakeCoinPerson(int team, int personNum)
     {
         
         Debug.Log(string.Format("TakeCoinPersonCalled"));
@@ -167,10 +179,10 @@ public class RpcConnector : MonoBehaviourPun
     }
     
     [PunRPC]
-    void PutCoinPerson(int team, int personNum)
+    public void PutCoinPerson(int team, int personNum)
     {
         Debug.Log(string.Format("PutCoinPersonCalled"));
-        Person currPerson = currGame.Persons[(Teams)team][personNum];
+        var currPerson = currGame.Persons[(Teams)team][personNum];
         currPerson.TakePutCoinByPerson(false);
         gameManagerScr.IncCoins(currPerson.Position.x, currPerson.Position.z);
     }
@@ -182,7 +194,7 @@ public class RpcConnector : MonoBehaviourPun
     }
     
     [PunRPC]
-    void ReviveRpcPerson()
+    public void ReviveRpcPerson()
     {
         Debug.Log(string.Format("ReviveRpcPersonCalled"));
         gameManagerScr.RevivePerson();
