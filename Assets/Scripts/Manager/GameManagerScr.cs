@@ -261,67 +261,6 @@ public class GameManagerScr : MonoBehaviour
         }
     }
 
-    // public void RevivePerson2()
-    // {
-    //     Person zombie = null;
-    //     foreach (var per in CurrentGame.Persons[CurrentGame.curTeam])
-    //     {
-    //         if (!per._isAlive)
-    //         {
-    //             zombie = per;
-    //             break;
-    //         }
-    //     }
-    //
-    //     Person prev_pers = null;
-    //     int teammates_count = 0;
-    //     foreach (var per in CurrentGame.Persons[CurrentGame.curTeam])
-    //     {
-    //         if (CurrentGame.PlayingField[per.Position.x, per.Position.z].Type == CardType.Shaman)
-    //         {
-    //             ++teammates_count;
-    //             if (teammates_count == 1)
-    //             {
-    //                 prev_pers = per;
-    //                 zombie.Position = new IntVector2(per.Position);
-    //                 zombie.gameObject.SetActive(true);
-    //                 zombie._isAlive = true;
-    //
-    //                 Vector3 beautiPos;
-    //                 if (CurrentGame.curTeam == Teams.White || CurrentGame.curTeam == Teams.Yellow)
-    //                 {
-    //                     beautiPos = new Vector3(0.025f, 0, 0);
-    //                 }
-    //                 else
-    //                 {
-    //                     beautiPos = new Vector3(0, 0, 0.025f);
-    //                 }
-    //
-    //                 zombie.transform.position = per.gameObject.transform.position +
-    //                                             new Vector3(CurrentGame.TeemRotation[(int)_currTeam, 1].x * beautiPos.x,
-    //                                                 0, beautiPos.z * CurrentGame.TeemRotation[(int)_currTeam, 1].z);
-    //                 ;
-    //                 per.transform.position += new Vector3(CurrentGame.TeemRotation[(int)_currTeam, 2].x * beautiPos.x,
-    //                     0, beautiPos.z * CurrentGame.TeemRotation[(int)_currTeam, 2].z);
-    //             }
-    //             else
-    //             {
-    //                 prev_pers.transform.position = per.transform.position +
-    //                                                new Vector3(CurrentGame.TeemRotation[(int)_currTeam, 2].x * 0.025f,
-    //                                                    0, 0.025f * CurrentGame.TeemRotation[(int)_currTeam, 2].z);
-    //                 transform.position = per.transform.position +
-    //                                      new Vector3(CurrentGame.TeemRotation[(int)_currTeam, 0].x * 0.025f, 0,
-    //                                          0.025f * CurrentGame.TeemRotation[(int)_currTeam, 0].z);
-    //                 per.transform.position += new Vector3(CurrentGame.TeemRotation[(int)_currTeam, 1].x * 0.025f, 0,
-    //                     0.025f * CurrentGame.TeemRotation[(int)_currTeam, 1].z);
-    //             }
-    //         }
-    //     }
-    //
-    //     _personScr.DestroyCircles();
-    //     EndRound();
-    //     CurrentGame.ChangeTeam();
-    // }
     public void CalledRevivePerson()
     {
         rpcConnector.RevivePersonRpc();
@@ -345,6 +284,7 @@ public class GameManagerScr : MonoBehaviour
         {
             if (CurrentGame.PlayingField[per.Position.x, per.Position.z].Type == CardType.Shaman)
             {
+                Card curCard = CurrentGame.PlayingField[per.Position.x, per.Position.z];
                 ++teammates_count;
                 if (teammates_count == 1)
                 {
@@ -367,20 +307,27 @@ public class GameManagerScr : MonoBehaviour
                     zombie.transform.position = per.gameObject.transform.position +
                                                 new Vector3(CurrentGame.TeemRotation[(int)_currTeam, 1].x * beautiPos.x,
                                                     0, beautiPos.z * CurrentGame.TeemRotation[(int)_currTeam, 1].z);
-                    ;
+                    
                     per.transform.position += new Vector3(CurrentGame.TeemRotation[(int)_currTeam, 2].x * beautiPos.x,
                         0, beautiPos.z * CurrentGame.TeemRotation[(int)_currTeam, 2].z);
                 }
                 else
                 {
-                    prev_pers.transform.position = per.transform.position +
-                                                   new Vector3(CurrentGame.TeemRotation[(int)_currTeam, 2].x * 0.025f,
-                                                       0, 0.025f * CurrentGame.TeemRotation[(int)_currTeam, 2].z);
-                    transform.position = per.transform.position +
-                                         new Vector3(CurrentGame.TeemRotation[(int)_currTeam, 0].x * 0.025f, 0,
-                                             0.025f * CurrentGame.TeemRotation[(int)_currTeam, 0].z);
-                    per.transform.position += new Vector3(CurrentGame.TeemRotation[(int)_currTeam, 1].x * 0.025f, 0,
-                        0.025f * CurrentGame.TeemRotation[(int)_currTeam, 1].z);
+                    zombie.transform.position = curCard.OwnGO.transform.position +
+                                                                       new Vector3(
+                                                                           CurrentGame.TeemRotation[(int)_currTeam, 1].x *
+                                                                           0.025f, 0,
+                                                                           0.025f * CurrentGame.TeemRotation[(int)_currTeam, 1]
+                                                                               .z);
+                    prev_pers.transform.position = curCard.OwnGO.transform.position +
+                                                                               new Vector3(
+                                                                                   CurrentGame.TeemRotation[(int)_currTeam, 2]
+                                                                                       .x * 0.025f, 0,
+                                                                                   0.025f * CurrentGame
+                                                                                       .TeemRotation[(int)_currTeam, 2].z);
+                    per.transform.position = curCard.OwnGO.transform.position + new Vector3(
+                        CurrentGame.TeemRotation[(int)_currTeam, 0].x * 0.025f, 0,
+                        0.025f * CurrentGame.TeemRotation[(int)_currTeam, 0].z);
                 }
             }
         }
