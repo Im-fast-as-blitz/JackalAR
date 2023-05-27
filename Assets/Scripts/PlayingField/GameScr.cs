@@ -23,7 +23,7 @@ public class Game
     public static int MaxCountInRoom = 0;
     public Vector3 sizeCardPrefab = new Vector3(0, 0, 0);
     public Button ShamanBtn;
-    public int rotMassSize = 0; 
+    public int rotMassSize = 0;
 
     public Vector3[,] TeemRotation = new Vector3[4, 3];
 
@@ -36,15 +36,19 @@ public class Game
     public int[] CoinsInTeam = new int[4];
     public int drunkTeams = 0;
     public bool IsGameEnded = false;
-    
+
     public Teams playerTeam;
 
     public Button SuicideBtn;
     public Person ShouldMove = null;
-    
+
     public List<String> teamNames = Enum.GetNames(typeof(Teams)).ToList();
-    
+
     public Vector3 addPositionInGame = new Vector3(0, 0, 0);
+    
+    // special cards
+    List<int> TurntablesSizes = new List<int>();
+    List<int> ChestsCoins = new List<int>();
 
     public Game(bool isMaster)
     {
@@ -57,7 +61,7 @@ public class Game
             PlaceShips();
         }
     }
-    
+
     public void ChangeTeam()
     {
         if (MaxCountInRoom == 2)
@@ -136,55 +140,28 @@ public class Game
 
     private void RandomChestCard(ref Card ownCard)
     {
-        if (ChestCard.CardsCount < 5)
-        {
-            ownCard.Coins = 1;
-            TotalCoins += 1;
-        }
-        else if (ChestCard.CardsCount < 10)
-        {
-            ownCard.Coins = 2;
-            TotalCoins += 2;
-        }
-        else if (ChestCard.CardsCount < 13)
-        {
-            ownCard.Coins = 3;
-            TotalCoins += 3;
-        }
-        else if (ChestCard.CardsCount < 15)
-        {
-            ownCard.Coins = 4;
-            TotalCoins += 4;
-        }
-        else if (ChestCard.CardsCount < 16)
-        {
-            ownCard.Coins = 5;
-            TotalCoins += 5;
-        }
-        else
-        {
-            int randomedCoins = Random.Range(1, 6);
-            ownCard.Coins = randomedCoins;
-            TotalCoins += randomedCoins;
-        }
+        int coins = ChestsCoins.Last();
+        ChestsCoins.RemoveAt(ChestsCoins.Count - 1);
+        ownCard.Coins = coins;
+        TotalCoins += coins;
 
-        ++ChestCard.CardsCount;
         ++rotMassSize;
     }
 
     private TurntableCard RandomTurntableCard()
     {
-        ++TurntableCard.turntableCount;
-        var turntableCount = TurntableCard.turntableCount;
-        if (turntableCount <= 5)
+        Debug.Log(TurntablesSizes.Count);
+        int turntableSize = TurntablesSizes.Last();
+        TurntablesSizes.RemoveAt(TurntablesSizes.Count - 1);
+        if (turntableSize == 2)
         {
             return new TurntableCard2();
         }
-        else if (turntableCount <= 9)
+        else if (turntableSize == 3)
         {
             return new TurntableCard3();
         }
-        else if (turntableCount <= 11)
+        else if (turntableSize == 4)
         {
             return new TurntableCard4();
         }
@@ -218,7 +195,7 @@ public class Game
             TeemRotation[(int)Teams.Red, 1] = new Vector3(1, 0, -1);
             TeemRotation[(int)Teams.Red, 2] = new Vector3(1, 0, 1);
         }
-        
+
         TeemRotation[(int)Teams.Black, 0] = new Vector3(0, 0, -1);
         TeemRotation[(int)Teams.Black, 1] = new Vector3(1, 0, 1);
         TeemRotation[(int)Teams.Black, 2] = new Vector3(-1, 0, 1);
@@ -257,20 +234,22 @@ public class Game
             {
                 cardsWithoutWater.Add((Card)Cards.AllCards[i].CardPair.NewObj());
             }
+
+            if (Cards.AllCards[i].CardPair is ChestCard)
+            {
+                ChestCard.CardsCount = Cards.AllCards[i].Amount;
+            }
+            else if (Cards.AllCards[i].CardPair is TurntableCard)
+            {
+                TurntableCard.turntableCount = Cards.AllCards[i].Amount;
+            }
         }
 
-        // Shuffle temporary array
-        for (int i = 0; i < cardsWithoutWater.Count; i++)
-        {
-            Card temp = cardsWithoutWater[i];
-            int randomIndex = Random.Range(i, cardsWithoutWater.Count);
-            cardsWithoutWater[i] = cardsWithoutWater[randomIndex];
-            cardsWithoutWater[randomIndex] = temp;
-        }
+        Shuffle(ref cardsWithoutWater);
+        RandomSpecialCards();
 
         // Fill Playing Field by temporary array
         int tempArrayInd = 0;
-        int turntableCount = 0;
         for (int j = 1; j < secondDim - 1; j++)
         {
             for (int i = 1; i < firstDim - 1; i++)
@@ -288,7 +267,7 @@ public class Game
                 RandomCard(ref PlayingField[i, j]);
             }
         }
-        
+
         ++rotMassSize;
     }
 
@@ -308,11 +287,76 @@ public class Game
             {
                 throw new Exception("Wrong ship or water card position");
             }
-            
+
             waterCard.OwnShip = pair.Value;
             waterCard.Type = CardType.Ship;
-            
+
             ++i;
         }
+    }
+
+    private void Shuffle<T>(ref List<T> list)
+    {
+        for (int i = 0; i < list.Count; i++)
+        {
+            T temp = list[i];
+            int randomIndex = Random.Range(i, list.Count);
+            list[i] = list[randomIndex];
+            list[randomIndex] = temp;
+        }
+    }
+
+    private void RandomSpecialCards()
+    {
+        for (int i = 1; i <= TurntableCard.turntableCount; i++)
+        {
+            if (i <= 5)
+            {
+                TurntablesSizes.Add(2);
+            }
+            else if (i <= 9)
+            {
+                TurntablesSizes.Add(3);
+            }
+            else if (i <= 11)
+            {
+                TurntablesSizes.Add(4);
+            }
+            else
+            {
+                TurntablesSizes.Add(5);
+            }
+        }
+        Shuffle(ref TurntablesSizes);
+
+        for (int i = 0; i < ChestCard.CardsCount; i++)
+        {
+            if (i < 5)
+            {
+                ChestsCoins.Add(1);
+            }
+            else if (i < 10)
+            {
+                ChestsCoins.Add(2);
+            }
+            else if (i < 13)
+            {
+                ChestsCoins.Add(3);
+            }
+            else if (i < 15)
+            {
+                ChestsCoins.Add(4);
+            }
+            else if (i < 16)
+            {
+                ChestsCoins.Add(5);
+            }
+            else
+            {
+                ChestsCoins.Add(Random.Range(1, 6));
+            }
+        }
+        
+        Shuffle(ref ChestsCoins);
     }
 }
