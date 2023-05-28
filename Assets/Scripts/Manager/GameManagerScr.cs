@@ -162,6 +162,7 @@ public class GameManagerScr : MonoBehaviour
         }
         if (!CurrentGame.ShouldMove || skipRound)
         {
+            CurrentGame.ShouldMove = null;
             // find drunk persons
             int teamMask = 1 << (int)CurrentGame.curTeam;
             if ((CurrentGame.drunkTeams & teamMask) != 0)

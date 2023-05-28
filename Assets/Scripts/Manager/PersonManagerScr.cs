@@ -134,7 +134,6 @@ public class PersonManagerScr : MonoBehaviour
     {
         Card currCard = currGame.PlayingField[pos.x, pos.z];
         return currCard.IsOpen && currCard.Type != CardType.Fortress && currCard.Type != CardType.Shaman;
-        
     }
 
     private void Awake()

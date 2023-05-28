@@ -145,7 +145,7 @@ public class Person : MonoBehaviour
 
             if (EnemyOnCard(newPos, depth))
             {
-                if (currCard.Type != CardType.Fortress && currCard.Type != CardType.Shaman)
+                if (currCard.Type != CardType.Fortress && currCard.Type != CardType.Shaman && !isWithCoin)
                 {
                     result = Instantiate(attackCircle, currCard.OwnGO.transform.position, Quaternion.Euler(0, 180, 0));
                 }

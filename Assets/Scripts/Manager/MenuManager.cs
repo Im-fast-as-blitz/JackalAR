@@ -144,6 +144,4 @@ public class MenuManager : MonoBehaviourPunCallbacks
             _gameManager.endGameTitle.SetActive(true);
         }
     }
-
-
 }
