@@ -234,6 +234,6 @@ public class RpcConnector : MonoBehaviourPunCallbacks
     
     public void IncCoinsByTouchRpc(Person person)
     {
-        photonView.RPC("IncCoinsByTouch", RpcTarget.AllBuffered, person.Position.x, person.Position.z, person.personNumber, person.team);
+        photonView.RPC("IncCoinsByTouch", RpcTarget.AllBuffered, person.Position.x, person.Position.z, person.personNumber, (int)person.team);
     }
 }
