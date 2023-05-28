@@ -114,11 +114,9 @@ public class GameManagerScr : MonoBehaviour
     public void UserIsReady()
     {
         ++_countOfReadyUsers;
-        if (_countOfReadyUsers == PhotonNetwork.CurrentRoom.MaxPlayers)
-        {
-            startText.SetActive(false);
-            _gameIsGoingOn = true;
-        }
+        if (_countOfReadyUsers != PhotonNetwork.CurrentRoom.MaxPlayers) return;
+        startText.SetActive(false);
+        _gameIsGoingOn = true;
     }
 
     void ShowMarker()

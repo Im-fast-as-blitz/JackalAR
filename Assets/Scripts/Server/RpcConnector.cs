@@ -3,8 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using Photon.Realtime;
 
-public class RpcConnector : MonoBehaviourPun
+public class RpcConnector : MonoBehaviourPunCallbacks
 {
     public Game currGame;
     public GameManagerScr gameManagerScr;
@@ -49,6 +50,11 @@ public class RpcConnector : MonoBehaviourPun
         gameManagerScr.ExitGame();
     }
 
+    public override void OnPlayerLeftRoom(Player player)
+    {
+        if (!PhotonNetwork.InRoom) return;
+        gameManagerScr.ExitGame();
+    }
     public void LeavePlayerRpc()
     {
         Debug.Log("DebugFromPrcCalled");
