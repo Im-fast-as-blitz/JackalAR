@@ -226,13 +226,14 @@ public class RpcConnector : MonoBehaviourPunCallbacks
     }
     
     [PunRPC]
-    public void IncCoinsByTouch(int x, int z)
+    public void IncCoinsByTouch(int x, int z, int numPerson, int team)
     {
+        currGame.Persons[(Teams)team][numPerson].isWithCoin = false;
         gameManagerScr.IncCoins(x, z);
     }
     
     public void IncCoinsByTouchRpc(Person person)
     {
-        photonView.RPC("IncCoinsByTouch", RpcTarget.AllBuffered, person.Position.x, person.Position.z);
+        photonView.RPC("IncCoinsByTouch", RpcTarget.AllBuffered, person.Position.x, person.Position.z, person.personNumber, person.team);
     }
 }

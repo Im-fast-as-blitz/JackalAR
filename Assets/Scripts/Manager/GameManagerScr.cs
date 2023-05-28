@@ -237,7 +237,6 @@ public class GameManagerScr : MonoBehaviour
                             // put coin back from prev person
                             if (_personScr.isWithCoin)
                             {
-                                _personScr.isWithCoin = false;
                                 // IncCoins(_personScr.Position.x, _personScr.Position.z);
                                 rpcConnector.IncCoinsByTouchRpc(_personScr);
                             }
