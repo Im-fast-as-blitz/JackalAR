@@ -30,6 +30,7 @@ public class Game
     public GameObject EndGameTitle;
     public GameObject CurrTeamTitle;
     public GameObject CurrCoinTitle;
+    public GameObject skipMoveBtn;
     public Button TakeCoinBtn;
     public Button PutCoinBtn;
     public int TotalCoins = 0;

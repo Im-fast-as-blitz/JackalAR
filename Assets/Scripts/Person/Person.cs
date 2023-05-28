@@ -667,6 +667,7 @@ public class Person : MonoBehaviour
 
         currGame.CurrTeamTitle.SetActive(false);
         currGame.CurrCoinTitle.SetActive(false);
+        currGame.skipMoveBtn.SetActive(false);
         
         currGame.IsGameEnded = true;
         currGame.EndGameTitle.SetActive(true);

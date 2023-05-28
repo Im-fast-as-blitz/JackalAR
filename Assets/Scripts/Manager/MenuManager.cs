@@ -123,6 +123,7 @@ public class MenuManager : MonoBehaviourPunCallbacks
         _gameManager.endGameTitle.SetActive(false);
         _gameManager.currTeamTitle.SetActive(false);
         _gameManager.currCoinTitle.SetActive(false);
+        _gameManager.skipMoveBtn.SetActive(false);
     }
 
     public void ClosePausePanel()
@@ -137,6 +138,7 @@ public class MenuManager : MonoBehaviourPunCallbacks
         
         _gameManager.currTeamTitle.SetActive(true);
         _gameManager.currCoinTitle.SetActive(true);
+        _gameManager.skipMoveBtn.SetActive(true);
         if (_gameManager.CurrentGame.IsGameEnded)
         {
             _gameManager.endGameTitle.SetActive(true);

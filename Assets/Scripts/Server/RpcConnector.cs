@@ -54,6 +54,7 @@ public class RpcConnector : MonoBehaviourPun
         Debug.Log("DebugFromPrcCalled");
         photonView.RPC("LeavePlayer", RpcTarget.AllBuffered);
     }
+    
 
     [PunRPC]
     public void SyncCards(IReadOnlyList<int[]> cardTypes, IReadOnlyList<int> rotMass)
@@ -135,7 +136,7 @@ public class RpcConnector : MonoBehaviourPun
     {
         Debug.Log(string.Format("MovePersonCalled"));
         currGame.Persons[(Teams)team][personNum].Move(new Vector3(x, y, z));
-        gameManagerScr.EndRound(team);
+        gameManagerScr.EndRound();
     }
     
     public void MovePersonRpc(Vector3 pos, Teams team, int personNum)
@@ -198,12 +199,23 @@ public class RpcConnector : MonoBehaviourPun
     {
         Debug.Log(string.Format("ReviveRpcPersonCalled"));
         gameManagerScr.RevivePerson();
-        gameManagerScr.EndRound(team);
     }
     
     public void RevivePersonRpc(Teams team)
     {
         Debug.Log(string.Format("RpcRevivePersonCalled"));
         photonView.RPC("ReviveRpcPerson", RpcTarget.AllBuffered, (int)team);
+    }
+    
+    [PunRPC]
+    public void SkipRound()
+    {
+        gameManagerScr.EndRound();
+    }
+    
+    public void SkipRoundRpc()
+    {
+        if (currGame.curTeam != gameManagerScr._userTeam) return;
+        photonView.RPC("SkipRound", RpcTarget.AllBuffered);
     }
 }
