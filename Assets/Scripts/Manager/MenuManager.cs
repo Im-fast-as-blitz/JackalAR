@@ -105,6 +105,11 @@ public class MenuManager : MonoBehaviourPunCallbacks
         SceneManager.LoadScene("Rules");
     }
 
+    public void ToHowToPlayPanel()
+    {
+        SceneManager.LoadScene("How to play");
+    }
+
     public void OpenPausePanel()
     {
         pauseBtn.SetActive(false);
