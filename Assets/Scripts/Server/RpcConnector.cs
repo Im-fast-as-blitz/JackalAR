@@ -3,8 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using Photon.Realtime;
 
-public class RpcConnector : MonoBehaviourPun
+public class RpcConnector : MonoBehaviourPunCallbacks
 {
     public Game currGame;
     public GameManagerScr gameManagerScr;
@@ -49,11 +50,17 @@ public class RpcConnector : MonoBehaviourPun
         gameManagerScr.ExitGame();
     }
 
+    public override void OnPlayerLeftRoom(Player player)
+    {
+        if (!PhotonNetwork.InRoom) return;
+        gameManagerScr.ExitGame();
+    }
     public void LeavePlayerRpc()
     {
         Debug.Log("DebugFromPrcCalled");
         photonView.RPC("LeavePlayer", RpcTarget.AllBuffered);
     }
+    
 
     [PunRPC]
     public void SyncCards(IReadOnlyList<int[]> cardTypes, IReadOnlyList<int> rotMass)
@@ -135,7 +142,7 @@ public class RpcConnector : MonoBehaviourPun
     {
         Debug.Log(string.Format("MovePersonCalled"));
         currGame.Persons[(Teams)team][personNum].Move(new Vector3(x, y, z));
-        gameManagerScr.EndRound(team);
+        gameManagerScr.EndRound();
     }
     
     public void MovePersonRpc(Vector3 pos, Teams team, int personNum)
@@ -198,12 +205,23 @@ public class RpcConnector : MonoBehaviourPun
     {
         Debug.Log(string.Format("ReviveRpcPersonCalled"));
         gameManagerScr.RevivePerson();
-        gameManagerScr.EndRound(team);
     }
     
     public void RevivePersonRpc(Teams team)
     {
         Debug.Log(string.Format("RpcRevivePersonCalled"));
         photonView.RPC("ReviveRpcPerson", RpcTarget.AllBuffered, (int)team);
+    }
+    
+    [PunRPC]
+    public void SkipRound()
+    {
+        gameManagerScr.EndRound();
+    }
+    
+    public void SkipRoundRpc()
+    {
+        if (currGame.curTeam != gameManagerScr._userTeam) return;
+        photonView.RPC("SkipRound", RpcTarget.AllBuffered);
     }
 }

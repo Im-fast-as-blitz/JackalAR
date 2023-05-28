@@ -176,6 +176,7 @@ public class Person : MonoBehaviour
     //Create all circles to move
     public void GenerateMovements(bool IsSetActiveTakeCoin = true)
     {
+        if (currGame.curTeam != rpcConnector.gameManagerScr._userTeam) return;
         Card currentCard = currGame.PlayingField[Position.x, Position.z];
         PersonManagerScr.PossibilityToWalk possByType = PersonManagerScr.PossibilityToWalkByType[currentCard.Type];
         List<IntVector2> directions = PersonManagerScr.DirectionsToWalkByType[currentCard.Type];
@@ -666,6 +667,7 @@ public class Person : MonoBehaviour
 
         currGame.CurrTeamTitle.SetActive(false);
         currGame.CurrCoinTitle.SetActive(false);
+        currGame.skipMoveBtn.SetActive(false);
         
         currGame.IsGameEnded = true;
         currGame.EndGameTitle.SetActive(true);

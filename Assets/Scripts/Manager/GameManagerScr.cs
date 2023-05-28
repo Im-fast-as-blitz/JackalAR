@@ -30,6 +30,7 @@ public class GameManagerScr : MonoBehaviour
     [SerializeField] public GameObject endGameTitle;
     [SerializeField] public GameObject currTeamTitle;
     [SerializeField] public GameObject currCoinTitle;
+    [SerializeField] public GameObject skipMoveBtn;
     public bool isGameAR = false;
 
     private Dictionary<Player, Teams> photonPlayerToTeams;
@@ -44,15 +45,11 @@ public class GameManagerScr : MonoBehaviour
     public Person _personScr;
     public LayerMask _layerMask;
 
-    // private Person _currPerson = null;
     private Person _currPerson = null;
-
-    // private Teams _currTeam = Teams.White;
-    private Teams _currTeam = Teams.White;
 
     private Vector3 midCardPosition;
 
-    private Teams _userTeam;
+    public Teams _userTeam;
     private int _countOfReadyUsers = 0;
     private bool _gameIsGoingOn = false;
 
@@ -79,6 +76,7 @@ public class GameManagerScr : MonoBehaviour
         CurrentGame.EndGameTitle = endGameTitle;
         CurrentGame.CurrTeamTitle = currTeamTitle;
         CurrentGame.CurrCoinTitle = currCoinTitle;
+        CurrentGame.skipMoveBtn = skipMoveBtn;
 
         rpcConnector.SetGameObj(CurrentGame);
 
@@ -116,11 +114,9 @@ public class GameManagerScr : MonoBehaviour
     public void UserIsReady()
     {
         ++_countOfReadyUsers;
-        if (_countOfReadyUsers == PhotonNetwork.CurrentRoom.MaxPlayers)
-        {
-            startText.SetActive(false);
-            _gameIsGoingOn = true;
-        }
+        if (_countOfReadyUsers != PhotonNetwork.CurrentRoom.MaxPlayers) return;
+        startText.SetActive(false);
+        _gameIsGoingOn = true;
     }
 
     void ShowMarker()
@@ -153,7 +149,7 @@ public class GameManagerScr : MonoBehaviour
     }
 
     
-    public void EndRound(int currTeamRound)
+    public void EndRound()
     {
         if (_personScr)
         {
@@ -167,11 +163,11 @@ public class GameManagerScr : MonoBehaviour
         if (!CurrentGame.ShouldMove)
         {
             // find drunk persons
-            int teamMask = 1 << currTeamRound;
+            int teamMask = 1 << (int)CurrentGame.curTeam;
             if ((CurrentGame.drunkTeams & teamMask) != 0)
             {
                 bool flag = true;
-                foreach (var per in CurrentGame.Persons[(Teams)currTeamRound])
+                foreach (var per in CurrentGame.Persons[CurrentGame.curTeam])
                 {
                     if (per.drunkCount > 0)
                     {
@@ -194,6 +190,8 @@ public class GameManagerScr : MonoBehaviour
 
             CurrentGame.ChangeTeam();
         }
+        if (!_personScr) return;
+        _personScr.DestroyCircles();
         _personScr = null;
     }
 
@@ -222,7 +220,7 @@ public class GameManagerScr : MonoBehaviour
                     Person currentPerson = hitObject.collider.gameObject.GetComponent<Person>();
                     if (currentPerson.team == CurrentGame.curTeam && (isDebug || _userTeam == CurrentGame.curTeam))
                     {
-                        if (CurrentGame.ShouldMove && currentPerson != CurrentGame.ShouldMove)
+                        if (CurrentGame.ShouldMove && currentPerson != CurrentGame.ShouldMove || CurrentGame.curTeam != _userTeam)
                         {
                             return;
                         }
@@ -263,6 +261,7 @@ public class GameManagerScr : MonoBehaviour
 
     public void CalledRevivePerson()
     {
+        _personScr.DestroyCircles();
         rpcConnector.RevivePersonRpc(CurrentGame.curTeam);
     }
     
@@ -313,38 +312,33 @@ public class GameManagerScr : MonoBehaviour
                     }
 
                     zombie.transform.position = per.gameObject.transform.position +
-                                                new Vector3(CurrentGame.TeemRotation[(int)_currTeam, 1].x * beautiPos.x,
-                                                    0, beautiPos.z * CurrentGame.TeemRotation[(int)_currTeam, 1].z);
+                                                new Vector3(CurrentGame.TeemRotation[(int)CurrentGame.curTeam, 1].x * beautiPos.x,
+                                                    0, beautiPos.z * CurrentGame.TeemRotation[(int)CurrentGame.curTeam, 1].z);
                     
-                    per.transform.position += new Vector3(CurrentGame.TeemRotation[(int)_currTeam, 2].x * beautiPos.x,
-                        0, beautiPos.z * CurrentGame.TeemRotation[(int)_currTeam, 2].z);
+                    per.transform.position += new Vector3(CurrentGame.TeemRotation[(int)CurrentGame.curTeam, 2].x * beautiPos.x,
+                        0, beautiPos.z * CurrentGame.TeemRotation[(int)CurrentGame.curTeam, 2].z);
                 }
                 else
                 {
                     zombie.transform.position = curCard.OwnGO.transform.position +
                                                                        new Vector3(
-                                                                           CurrentGame.TeemRotation[(int)_currTeam, 1].x *
+                                                                           CurrentGame.TeemRotation[(int)CurrentGame.curTeam, 1].x *
                                                                            0.025f, 0,
-                                                                           0.025f * CurrentGame.TeemRotation[(int)_currTeam, 1]
+                                                                           0.025f * CurrentGame.TeemRotation[(int)CurrentGame.curTeam, 1]
                                                                                .z);
                     prev_pers.transform.position = curCard.OwnGO.transform.position +
                                                                                new Vector3(
-                                                                                   CurrentGame.TeemRotation[(int)_currTeam, 2]
+                                                                                   CurrentGame.TeemRotation[(int)CurrentGame.curTeam, 2]
                                                                                        .x * 0.025f, 0,
                                                                                    0.025f * CurrentGame
-                                                                                       .TeemRotation[(int)_currTeam, 2].z);
+                                                                                       .TeemRotation[(int)CurrentGame.curTeam, 2].z);
                     per.transform.position = curCard.OwnGO.transform.position + new Vector3(
-                        CurrentGame.TeemRotation[(int)_currTeam, 0].x * 0.025f, 0,
-                        0.025f * CurrentGame.TeemRotation[(int)_currTeam, 0].z);
+                        CurrentGame.TeemRotation[(int)CurrentGame.curTeam, 0].x * 0.025f, 0,
+                        0.025f * CurrentGame.TeemRotation[(int)CurrentGame.curTeam, 0].z);
                 }
             }
         }
-
-
-        if (_personScr)
-        {
-            _personScr.DestroyCircles();
-        }
+        EndRound();
     }
 
     public void TakeCoin()
