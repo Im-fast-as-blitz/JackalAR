@@ -48,7 +48,7 @@ public class GameManagerScr : MonoBehaviour
 
     private Vector3 midCardPosition;
 
-    private Teams _userTeam;
+    public Teams _userTeam;
     private int _countOfReadyUsers = 0;
     private bool _gameIsGoingOn = false;
 
@@ -218,7 +218,7 @@ public class GameManagerScr : MonoBehaviour
                     Person currentPerson = hitObject.collider.gameObject.GetComponent<Person>();
                     if (currentPerson.team == CurrentGame.curTeam && (isDebug || _userTeam == CurrentGame.curTeam))
                     {
-                        if (CurrentGame.ShouldMove && currentPerson != CurrentGame.ShouldMove)
+                        if (CurrentGame.ShouldMove && currentPerson != CurrentGame.ShouldMove || CurrentGame.curTeam != _userTeam)
                         {
                             return;
                         }
@@ -259,6 +259,7 @@ public class GameManagerScr : MonoBehaviour
 
     public void CalledRevivePerson()
     {
+        _personScr.DestroyCircles();
         rpcConnector.RevivePersonRpc(CurrentGame.curTeam);
     }
     
@@ -334,12 +335,6 @@ public class GameManagerScr : MonoBehaviour
                         0.025f * CurrentGame.TeemRotation[(int)CurrentGame.curTeam, 0].z);
                 }
             }
-        }
-
-
-        if (_personScr)
-        {
-            _personScr.DestroyCircles();
         }
     }
 
