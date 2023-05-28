@@ -310,6 +310,12 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 384169288}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &384169290 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8476125434305399273, guid: 013190949a107451eabcd54fd7e087b5,
+    type: 3}
+  m_PrefabInstance: {fileID: 384169288}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &435063038
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1008,7 +1014,7 @@ MonoBehaviour:
   endGameTitle: {fileID: 1399725445}
   currTeamTitle: {fileID: 4009333074570868874}
   currCoinTitle: {fileID: 789762028}
-  skipMoveBtn: {fileID: 0}
+  skipMoveBtn: {fileID: 384169290}
   isGameAR: 0
   isDebug: 0
   numTeams: 1
