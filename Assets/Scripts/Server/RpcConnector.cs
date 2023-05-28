@@ -216,7 +216,7 @@ public class RpcConnector : MonoBehaviourPunCallbacks
     [PunRPC]
     public void SkipRound()
     {
-        gameManagerScr.EndRound();
+        gameManagerScr.EndRound(true);
     }
     
     public void SkipRoundRpc()
