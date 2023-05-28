@@ -149,7 +149,7 @@ public class GameManagerScr : MonoBehaviour
     }
 
     
-    public void EndRound()
+    public void EndRound(bool skipRound = false)
     {
         if (_personScr)
         {
@@ -160,7 +160,7 @@ public class GameManagerScr : MonoBehaviour
 
             _layerMask = 1 << LayerMask.NameToLayer("Person");
         }
-        if (!CurrentGame.ShouldMove)
+        if (!CurrentGame.ShouldMove || skipRound)
         {
             // find drunk persons
             int teamMask = 1 << (int)CurrentGame.curTeam;
@@ -237,8 +237,8 @@ public class GameManagerScr : MonoBehaviour
                             // put coin back from prev person
                             if (_personScr.isWithCoin)
                             {
-                                _personScr.isWithCoin = false;
-                                IncCoins(_personScr.Position.x, _personScr.Position.z);
+                                // IncCoins(_personScr.Position.x, _personScr.Position.z);
+                                rpcConnector.IncCoinsByTouchRpc(_personScr);
                             }
 
                             suicideBtn.gameObject.SetActive(false);

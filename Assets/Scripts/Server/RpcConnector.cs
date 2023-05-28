@@ -216,12 +216,24 @@ public class RpcConnector : MonoBehaviourPunCallbacks
     [PunRPC]
     public void SkipRound()
     {
-        gameManagerScr.EndRound();
+        gameManagerScr.EndRound(true);
     }
     
     public void SkipRoundRpc()
     {
         if (currGame.curTeam != gameManagerScr._userTeam) return;
         photonView.RPC("SkipRound", RpcTarget.AllBuffered);
+    }
+    
+    [PunRPC]
+    public void IncCoinsByTouch(int x, int z, int numPerson, int team)
+    {
+        currGame.Persons[(Teams)team][numPerson].isWithCoin = false;
+        gameManagerScr.IncCoins(x, z);
+    }
+    
+    public void IncCoinsByTouchRpc(Person person)
+    {
+        photonView.RPC("IncCoinsByTouch", RpcTarget.AllBuffered, person.Position.x, person.Position.z, person.personNumber, (int)person.team);
     }
 }
