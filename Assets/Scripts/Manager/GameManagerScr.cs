@@ -238,7 +238,8 @@ public class GameManagerScr : MonoBehaviour
                             if (_personScr.isWithCoin)
                             {
                                 _personScr.isWithCoin = false;
-                                IncCoins(_personScr.Position.x, _personScr.Position.z);
+                                // IncCoins(_personScr.Position.x, _personScr.Position.z);
+                                rpcConnector.IncCoinsByTouchRpc(_personScr);
                             }
 
                             suicideBtn.gameObject.SetActive(false);
